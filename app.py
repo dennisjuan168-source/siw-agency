@@ -6,8 +6,9 @@ st.set_page_config(page_title="SIW 半導體顧問 AI", page_icon="🔬", layout
 st.title("🔬 SIW 半導體顧問 AI")
 st.caption("專業半導體產業分析 · Powered by Claude")
 
-# ── API Key 輸入（實際部署時改成環境變數）──────────────────
-api_key = st.sidebar.text_input("Anthropic API Key", type="password", placeholder="sk-ant-...")
+# ── API Key（從環境變數讀取，本機測試可在側欄輸入）──────────
+import os
+api_key = os.environ.get("ANTHROPIC_API_KEY") or st.sidebar.text_input("Anthropic API Key", type="password", placeholder="sk-ant-...")
 
 SYSTEM_PROMPT = """你是 SIW（石英積體電路顧問）的首席半導體產業顧問，具備 20 年台股半導體投資經驗。
 
