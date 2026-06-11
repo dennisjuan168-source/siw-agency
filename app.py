@@ -16,7 +16,7 @@ api_key = os.environ.get("ANTHROPIC_API_KEY") or st.sidebar.text_input("Anthropi
 st.sidebar.markdown("---")
 with st.sidebar.expander("📡 產業快訊更新（管理員）"):
     admin_news_pw = st.text_input("管理員密碼", type="password", key="news_pw")
-    if admin_news_pw == os.environ.get("ADMIN_PASSWORD", "siw2026"):
+    if admin_news_pw == os.environ.get("ADMIN_PASSWORD", "siw743137"):
         news_input = st.text_area(
             "貼上最新產業動態",
             value=st.session_state.get("industry_news", ""),
@@ -142,7 +142,7 @@ if prompt := st.chat_input("請告訴我股票名稱＋現價，例如：南亞�
 # ── 管理員：查看 Log ──────────────────────────────────────
 with st.sidebar.expander("📊 查看對話記錄"):
     admin_pw = st.text_input("管理員密碼", type="password", key="admin")
-    if admin_pw == os.environ.get("ADMIN_PASSWORD", "siw2026"):
+    if admin_pw == os.environ.get("ADMIN_PASSWORD", "siw743137"):
         if os.path.isfile(LOG_FILE):
             import pandas as pd
             df = pd.read_csv(LOG_FILE)
