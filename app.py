@@ -53,7 +53,9 @@ def save_log(question, answer):
     if sheet:
         sheet.append_row([datetime.now().strftime("%Y-%m-%d %H:%M:%S"), question, answer])
 
-SYSTEM_PROMPT = st.secrets.get("SYSTEM_PROMPT", "你是 SIW 半導體顧問 AI，請用繁體中文回答半導體產業問題。")
+_base_prompt = st.secrets.get("SYSTEM_PROMPT", "你是 SIW 半導體顧問 AI，請用繁體中文回答半導體產業問題。")
+_knowledge = st.secrets.get("KNOWLEDGE_BASE", "")
+SYSTEM_PROMPT = _base_prompt + ("\n\n## Dennis 技術知識庫\n" + _knowledge if _knowledge else "")
 
 # ── 對話記憶 ─────────────────────────────────────────────
 if "messages" not in st.session_state:
