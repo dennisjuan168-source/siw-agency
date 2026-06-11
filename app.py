@@ -1,16 +1,33 @@
 import streamlit as st
 import anthropic
+import os
+import csv
+from datetime import datetime
 
 # ── 頁面設定 ──────────────────────────────────────────────
 st.set_page_config(page_title="SIW 半導體顧問 AI", page_icon="🔬", layout="centered")
 st.title("🔬 SIW 半導體顧問 AI")
-st.caption("專業半導體產業分析 · Powered by Claude")
+st.caption("半導體產業分析框架與洞察 · Powered by Claude")
 
 # ── API Key（從環境變數讀取，本機測試可在側欄輸入）──────────
-import os
 api_key = os.environ.get("ANTHROPIC_API_KEY") or st.sidebar.text_input("Anthropic API Key", type="password", placeholder="sk-ant-...")
 
+# ── Log 功能 ──────────────────────────────────────────────
+LOG_FILE = "siw_chat_log.csv"
+
+def save_log(question, answer):
+    file_exists = os.path.isfile(LOG_FILE)
+    with open(LOG_FILE, "a", newline="", encoding="utf-8") as f:
+        writer = csv.writer(f)
+        if not file_exists:
+            writer.writerow(["時間", "問題", "回答"])
+        writer.writerow([datetime.now().strftime("%Y-%m-%d %H:%M:%S"), question, answer])
+
 SYSTEM_PROMPT = """你是 SIW（石英積體電路顧問）的首席半導體產業顧問，具備 20 年台股半導體投資經驗。
+
+**核心定位：Dennis 分享的是分析框架與產業洞察，不是報股價。**
+- 股價、EPS 等即時數字由用戶提供
+- SIW AI 提供的是：判斷邏輯、產業趨勢、風險評估、進出場框架
 
 ## 專業領域
 - HBM、先進封裝（CPO/TSV/TCB/W2W）
@@ -54,10 +71,16 @@ SYSTEM_PROMPT = """你是 SIW（石英積體電路顧問）的首席半導體產
   - 獲利下修（EPS↓）→ 減碼或出場
 - 「手上是現金，我現在還會買嗎？」（防FOMO）
 
+## 數據使用原則
+- **優先使用用戶提供的數字**（現價、EPS、毛利率等）
+- 若用戶未提供現價，主動詢問：「請告訴我目前股價，讓我給你更準確的分析」
+- 不要自己猜測或捏造股價數字
+- 產業趨勢與框架分析可依知識庫，但個股數字必須由用戶確認
+
 ## 回答原則
 1. 先給結論（一句話），再給理由
 2. 四步驟必須逐一評分（✅❌⚠️）
-3. 提供具體數字（EPS、毛利率、目標價、停損價）
+3. 數字用用戶提供的，沒有數字就問
 4. 指出真正風險（不是客套話）
 5. 繁體中文回答"""
 
@@ -71,17 +94,15 @@ for msg in st.session_state.messages:
         st.markdown(msg["content"])
 
 # ── 輸入框 ────────────────────────────────────────────────
-if prompt := st.chat_input("輸入你的問題，例如：南亞科現在可以進場嗎？"):
+if prompt := st.chat_input("請告訴我股票名稱＋現價，例如：南亞科 現價407，可以進場嗎？"):
     if not api_key:
         st.error("請在左側輸入 Anthropic API Key")
         st.stop()
 
-    # 顯示用戶訊息
     st.session_state.messages.append({"role": "user", "content": prompt})
     with st.chat_message("user"):
         st.markdown(prompt)
 
-    # 呼叫 Claude API
     client = anthropic.Anthropic(api_key=api_key)
 
     with st.chat_message("assistant"):
@@ -96,3 +117,16 @@ if prompt := st.chat_input("輸入你的問題，例如：南亞科現在可以�
             st.markdown(reply)
 
     st.session_state.messages.append({"role": "assistant", "content": reply})
+    save_log(prompt, reply)
+
+# ── 管理員：查看 Log ──────────────────────────────────────
+with st.sidebar.expander("📊 查看對話記錄"):
+    admin_pw = st.text_input("管理員密碼", type="password", key="admin")
+    if admin_pw == os.environ.get("ADMIN_PASSWORD", "siw2026"):
+        if os.path.isfile(LOG_FILE):
+            import pandas as pd
+            df = pd.read_csv(LOG_FILE)
+            st.dataframe(df[["時間", "問題"]], use_container_width=True)
+            st.download_button("下載完整記錄", df.to_csv(index=False).encode("utf-8"), "log.csv")
+        else:
+            st.info("還沒有對話記錄")
