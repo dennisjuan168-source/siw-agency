@@ -1,2 +1,5 @@
 anthropic
 streamlit
+gspread
+google-auth
+pandas

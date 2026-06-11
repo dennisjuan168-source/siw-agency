@@ -1,8 +1,10 @@
 import streamlit as st
 import anthropic
 import os
-import csv
+import json
 from datetime import datetime
+import gspread
+from google.oauth2.service_account import Credentials
 
 # ── 頁面設定 ──────────────────────────────────────────────
 st.set_page_config(page_title="SIW 半導體顧問 AI", page_icon="🔬", layout="centered")
@@ -27,16 +29,29 @@ with st.sidebar.expander("📡 產業快訊更新（管理員）"):
             st.session_state["industry_news"] = news_input
             st.success("快訊已更新！AI 下次回答將參考此資訊")
 
-# ── Log 功能 ──────────────────────────────────────────────
-LOG_FILE = "siw_chat_log.csv"
+# ── Google Sheets Log ─────────────────────────────────────
+SHEET_ID = "1HpPRlc3WB6d3iSQ8S025vA-YVeppFGL4mUMkiUAEn24"
+
+@st.cache_resource
+def get_sheet():
+    try:
+        creds_dict = json.loads(st.secrets["GOOGLE_CREDENTIALS"])
+        creds = Credentials.from_service_account_info(
+            creds_dict,
+            scopes=["https://www.googleapis.com/auth/spreadsheets"]
+        )
+        client = gspread.authorize(creds)
+        sheet = client.open_by_key(SHEET_ID).sheet1
+        if sheet.row_count == 0 or sheet.cell(1, 1).value != "時間":
+            sheet.append_row(["時間", "問題", "回答"])
+        return sheet
+    except Exception:
+        return None
 
 def save_log(question, answer):
-    file_exists = os.path.isfile(LOG_FILE)
-    with open(LOG_FILE, "a", newline="", encoding="utf-8") as f:
-        writer = csv.writer(f)
-        if not file_exists:
-            writer.writerow(["時間", "問題", "回答"])
-        writer.writerow([datetime.now().strftime("%Y-%m-%d %H:%M:%S"), question, answer])
+    sheet = get_sheet()
+    if sheet:
+        sheet.append_row([datetime.now().strftime("%Y-%m-%d %H:%M:%S"), question, answer])
 
 SYSTEM_PROMPT = """你是 SIW（石英積體電路顧問）的首席半導體產業顧問，具備 20 年台股半導體投資經驗。
 
@@ -154,10 +169,15 @@ if prompt := st.chat_input("請告訴我股票名稱＋現價，例如：南亞�
 with st.sidebar.expander("📊 查看對話記錄"):
     admin_pw = st.text_input("管理員密碼", type="password", key="admin")
     if admin_pw == os.environ.get("ADMIN_PASSWORD", "siw743137"):
-        if os.path.isfile(LOG_FILE):
+        sheet = get_sheet()
+        if sheet:
             import pandas as pd
-            df = pd.read_csv(LOG_FILE)
-            st.dataframe(df[["時間", "問題"]], use_container_width=True)
-            st.download_button("下載完整記錄", df.to_csv(index=False).encode("utf-8"), "log.csv")
+            data = sheet.get_all_records()
+            if data:
+                df = pd.DataFrame(data)
+                st.dataframe(df[["時間", "問題"]], use_container_width=True)
+                st.download_button("下載完整記錄", df.to_csv(index=False).encode("utf-8"), "log.csv")
+            else:
+                st.info("還沒有對話記錄")
         else:
-            st.info("還沒有對話記錄")
+            st.warning("Google Sheets 連線失敗")
