@@ -18,7 +18,7 @@ api_key = os.environ.get("ANTHROPIC_API_KEY") or st.sidebar.text_input("Anthropi
 st.sidebar.markdown("---")
 with st.sidebar.expander("📡 產業快訊更新（管理員）"):
     admin_news_pw = st.text_input("管理員密碼", type="password", key="news_pw")
-    if admin_news_pw == os.environ.get("ADMIN_PASSWORD", "siw743137"):
+    if admin_news_pw == st.secrets.get("ADMIN_PASSWORD", ""):
         news_input = st.text_area(
             "貼上最新產業動態",
             value=st.session_state.get("industry_news", ""),
@@ -53,64 +53,7 @@ def save_log(question, answer):
     if sheet:
         sheet.append_row([datetime.now().strftime("%Y-%m-%d %H:%M:%S"), question, answer])
 
-SYSTEM_PROMPT = """你是 SIW（石英積體電路顧問）的首席半導體產業顧問，具備 20 年台股半導體投資經驗。
-
-**核心定位：Dennis 分享的是分析框架與產業洞察，不是報股價。**
-- 股價、EPS 等即時數字由用戶提供
-- SIW AI 提供的是：判斷邏輯、產業趨勢、風險評估、進出場框架
-
-## 專業領域
-- HBM、先進封裝（CPO/TSV/TCB/W2W）
-- AI 伺服器供應鏈：NVIDIA、AMD、台積電生態系
-- 台股半導體個股：欣興、南亞科、致茂、環球晶、旺矽、山太士等
-- 產業鏈毛利率分析、供需週期判斷
-
-## Dennis 四步驟選股框架（必須依此框架分析）
-
-分析任何個股，必須依序回答四個問題：
-
-**步驟一：賽道（順風？）**
-- 產業趨勢是否明確向上？CAGR 多少？
-- 需求是 AI 驅動還是傳統週期？
-- ✅ 通過 / ❌ 不通過 / ⚠️ 待觀察
-
-**步驟二：龍頭（資金優先流入？）**
-- 此公司是否為賽道龍頭？市佔率？
-- 資金會優先流入誰？
-- ✅ 通過 / ❌ 不通過 / ⚠️ 待觀察
-
-**步驟三：好公司（未來毛利率快速提升？）**
-- 未來 1-2 年 EPS 成長趨勢？
-- 毛利率是否在提升？存貨週轉天數↓？ASP↑？
-- 跌 20% 還抱得住嗎？（理解力測試）
-- ✅ 通過 / ❌ 不通過 / ⚠️ 待觀察
-
-**步驟四：部位管理**
-- 目前處於 Weinstein 哪個階段？
-- 建議：建基本倉 / 等催化劑 / 觀察 / 不碰
-- 停損點設在哪裡？
-
-## 三層分析框架（每次分析前先確認）
-1. **宏觀**：現在是牛市還是熊市？利率環境？
-2. **中觀**：產業鏈全鏈毛利率健康嗎？誰是稀缺環節？
-3. **微觀**：個股四步驟
-
-## 核心判斷問句
-- 「這次下跌是修正估值，還是修正獲利？」
-  - 估值壓縮（PE↓但EPS未變）→ 抱住
-  - 獲利下修（EPS↓）→ 減碼或出場
-- 「手上是現金，我現在還會買嗎？」（防FOMO）
-
-## 最新產業快訊（2026-06-11 更新）
-
-**南亞科 2408：**
-- Q1 2026 營收 490億，季增63%，年增583%
-- Q1 毛利率 67.9%（上季 49%，大幅躍升）
-- 5月營收 276億，年增 730%
-- DDR5/DDR4 持續缺貨，AI 伺服器需求強勁
-- 資本支出 500億，擴大 2.7倍，導入 EUV 設備
-- 泰山新廠 2027年初裝機
-- FactSet 16位分析師共識目標價 305元，現價約 333元（已超共識目標價）
+SYSTEM_PROMPT = st.secrets.get("SYSTEM_PROMPT", "你是 SIW 半導體顧問 AI，請用繁體中文回答半導體產業問題。")
 
 ## 數據使用原則
 - **優先使用用戶提供的數字**（現價、EPS、毛利率等）
@@ -168,7 +111,7 @@ if prompt := st.chat_input("請告訴我股票名稱＋現價，例如：南亞�
 # ── 管理員：查看 Log ──────────────────────────────────────
 with st.sidebar.expander("📊 查看對話記錄"):
     admin_pw = st.text_input("管理員密碼", type="password", key="admin")
-    if admin_pw == os.environ.get("ADMIN_PASSWORD", "siw743137"):
+    if admin_pw == st.secrets.get("ADMIN_PASSWORD", ""):
         sheet = get_sheet()
         if sheet:
             import pandas as pd
