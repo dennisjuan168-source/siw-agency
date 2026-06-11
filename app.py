@@ -12,6 +12,21 @@ st.caption("半導體產業分析框架與洞察 · Powered by Claude")
 # ── API Key（從環境變數讀取，本機測試可在側欄輸入）──────────
 api_key = os.environ.get("ANTHROPIC_API_KEY") or st.sidebar.text_input("Anthropic API Key", type="password", placeholder="sk-ant-...")
 
+# ── 產業快訊（管理員輸入，影響 AI 回答）─────────────────────
+st.sidebar.markdown("---")
+with st.sidebar.expander("📡 產業快訊更新（管理員）"):
+    admin_news_pw = st.text_input("管理員密碼", type="password", key="news_pw")
+    if admin_news_pw == os.environ.get("ADMIN_PASSWORD", "siw2026"):
+        news_input = st.text_area(
+            "貼上最新產業動態",
+            value=st.session_state.get("industry_news", ""),
+            height=200,
+            placeholder="例如：\n- 南亞科Q2法說：毛利率提升至45%\n- HBM3E需求超預期，SK Hynix擴產\n- 聯準會維持利率不變"
+        )
+        if st.button("更新快訊"):
+            st.session_state["industry_news"] = news_input
+            st.success("快訊已更新！AI 下次回答將參考此資訊")
+
 # ── Log 功能 ──────────────────────────────────────────────
 LOG_FILE = "siw_chat_log.csv"
 
@@ -107,10 +122,15 @@ if prompt := st.chat_input("請告訴我股票名稱＋現價，例如：南亞�
 
     with st.chat_message("assistant"):
         with st.spinner("分析中..."):
+            news = st.session_state.get("industry_news", "")
+            system = SYSTEM_PROMPT
+            if news:
+                system += f"\n\n## 最新產業快訊（Dennis 提供，優先參考）\n{news}"
+
             response = client.messages.create(
                 model="claude-sonnet-4-6",
                 max_tokens=2048,
-                system=SYSTEM_PROMPT,
+                system=system,
                 messages=st.session_state.messages,
             )
             reply = response.content[0].text
