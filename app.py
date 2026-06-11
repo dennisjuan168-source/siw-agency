@@ -54,12 +54,25 @@ def save_log(question, answer):
         sheet.append_row([datetime.now().strftime("%Y-%m-%d %H:%M:%S"), question, answer])
 
 from knowledge_base import CPO_KNOWLEDGE, TGV_KNOWLEDGE, TSV_KNOWLEDGE, ADV_PACKAGING_KNOWLEDGE
-_base_prompt = st.secrets.get("SYSTEM_PROMPT", "你是 SIW 半導體顧問 AI，請用繁體中文回答半導體產業問題。")
-SYSTEM_PROMPT = (_base_prompt
-    + "\n\n## CPO 技術知識庫\n" + CPO_KNOWLEDGE
-    + "\n\n## TGV 技術知識庫\n" + TGV_KNOWLEDGE
-    + "\n\n## TSV 技術知識庫\n" + TSV_KNOWLEDGE
-    + "\n\n## 先進封裝技術知識庫\n" + ADV_PACKAGING_KNOWLEDGE)
+
+BASE_PROMPT = st.secrets.get("SYSTEM_PROMPT", "你是 SIW 半導體顧問 AI，請用繁體中文回答半導體產業問題。")
+
+KNOWLEDGE_MAP = {
+    "CPO": (["cpo", "共封裝", "光模塊", "光模組", "npo", "lpo", "xpo", "siph", "矽光"], CPO_KNOWLEDGE),
+    "TGV": (["tgv", "玻璃穿孔", "glass via", "玻璃基板"], TGV_KNOWLEDGE),
+    "TSV": (["tsv", "矽穿孔", "through silicon", "tsv製程"], TSV_KNOWLEDGE),
+    "先進封裝": (["先進封裝", "cowos", "soic", "hbm封裝", "chiplet", "interposer", "rdl", "fowlp", "advanced package"], ADV_PACKAGING_KNOWLEDGE),
+}
+
+def get_system_prompt(user_input: str) -> str:
+    text = user_input.lower()
+    extras = []
+    for name, (keywords, knowledge) in KNOWLEDGE_MAP.items():
+        if any(k in text for k in keywords):
+            extras.append(f"## {name} 技術知識庫\n{knowledge}")
+    if extras:
+        return BASE_PROMPT + "\n\n" + "\n\n".join(extras)
+    return BASE_PROMPT
 
 # ── 對話記憶 ─────────────────────────────────────────────
 if "messages" not in st.session_state:
@@ -85,7 +98,7 @@ if prompt := st.chat_input("請告訴我股票名稱＋現價，例如：南亞�
     with st.chat_message("assistant"):
         with st.spinner("分析中..."):
             news = st.session_state.get("industry_news", "")
-            system = SYSTEM_PROMPT
+            system = get_system_prompt(prompt)
             if news:
                 system += f"\n\n## 最新產業快訊（Dennis 提供，優先參考）\n{news}"
 
