@@ -1,5 +1,5 @@
-# Auto-generated knowledge base
-CPO_KNOWLEDGE = """# CPO（共封裝光學）知識匯整報告
+CPO_KNOWLEDGE = """
+# CPO（共封裝光學）知識匯整報告
 
 > 整合來源：33 MD 檔 + 20 DOCX 檔  
 > 更新日期：2026-05-19
@@ -563,9 +563,11 @@ IN1 老化篩選至關重要：雷射器若在 IN4 封裝後才失效，單顆�
 | **CPO视频选题素材_光迅科技** | 光迅 CPO 三件套全解析，中國 NPO vs CPO 戰略，標準戰 OIF vs IPEC |
 | **Taiwan_CPO_SiPh精密切磨拋報告** | 鐳射谷/京碼/世極/中國砂輪等台灣設備商深度分析，TGV 加工技術 |
 | **LPO_NPO_CPO_XPO製程設備對照表** | Stage 1–8 各架構設備完整對照表（含 CPO 獨有設備標記）|
+
 """
 
-TGV_KNOWLEDGE = """# TGV（Through Glass Via）知識匯整報告
+TGV_KNOWLEDGE = """
+# TGV（Through Glass Via）知識匯整報告
 
 > 資料來源：12 個 MD 檔案 + TGV_Deep_Research.docx（TrendForce · Yole Group · IDTechEx · IEEE ECTC 2025）  
 > 產生日期：2026-05-19
@@ -1001,4 +1003,5 @@ CoPoS 是台積電「Foundry 2.0」策略核心，310×310mm 矩形玻璃面板�
 ---
 
 *本報告整合 12 個 MD 文件 + TGV_Deep_Research.docx，涵蓋 TGV 技術全貌。音影像檔（15 個）、PDF（29 個）、PPTX（9 個）等尚未納入，如需更完整報告可進一步分析。*
+
 """
