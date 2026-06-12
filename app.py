@@ -175,10 +175,22 @@ for msg in st.session_state.messages:
     with st.chat_message(msg["role"]):
         st.markdown(msg["content"])
 
-# 處理 sidebar 按鈕帶入的問題
-default_prompt = st.session_state.pop("prefill", "")
+# 處理 sidebar 按鈕帶入的問題（自動送出）
+if "prefill" in st.session_state:
+    auto_prompt = st.session_state.pop("prefill")
+    st.session_state["auto_send"] = auto_prompt
+    st.rerun()
 
-if prompt := st.chat_input("請輸入問題，例如：CPO 和 NPO 的差異、南亞科現在值得買嗎...", value=default_prompt if default_prompt else None):
+auto_send = st.session_state.pop("auto_send", None)
+
+if prompt := st.chat_input("請輸入問題，例如：CPO 和 NPO 的差異、南亞科現在值得買嗎..."):
+    pass
+elif auto_send:
+    prompt = auto_send
+else:
+    prompt = None
+
+if prompt:
     if not api_key:
         st.error("請在左側輸入 Anthropic API Key")
         st.stop()
