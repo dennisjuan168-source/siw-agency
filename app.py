@@ -17,14 +17,14 @@ st.markdown("""
     padding: 16px 12px 14px;
     border-bottom: 1px solid #e8f7fd;
 }
-.siw-logo-section img { width: 140px; display: block; margin: 0 auto 10px; }
+.siw-logo-section img { width: 170px; display: block; margin: 0 auto 12px; }
 .siw-tagline {
     display: inline-block;
     background: #e8f7fd;
     border: 1px solid #a8dff5;
     border-radius: 6px;
-    padding: 5px 14px;
-    font-size: 13px;
+    padding: 6px 18px;
+    font-size: 15px;
     font-weight: 500;
     color: #1C2B8F;
 }
