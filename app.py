@@ -21,7 +21,7 @@ st.markdown("""
     padding: 16px 12px 14px;
     border-bottom: 1px solid #e8f7fd;
 }
-.siw-logo-section img { width: 170px; display: block; margin: 0 auto 12px; }
+.siw-logo-section img { width: 160px; display: block; margin: 0 auto 14px; border-radius: 50%; }
 .siw-tagline {
     display: inline-block;
     background: #e8f7fd;
@@ -48,7 +48,7 @@ CIRCULAR_LOGO_B64 = "iVBORw0KGgoAAAANSUhEUgAAAUAAAAFACAYAAADNkKWqAACI30lEQVR4nO1
 # ── Sidebar Logo ──────────────────────────────────────────
 st.sidebar.markdown(f"""
 <div class="siw-logo-section">
-  <img src="data:image/png;base64,{LOGO_B64}" alt="SIW Logo">
+  <img src="data:image/png;base64,{CIRCULAR_LOGO_B64}" alt="SIW Logo">
   <div class="siw-tagline">共營 AI・一起共贏</div>
 </div>
 """, unsafe_allow_html=True)
@@ -127,7 +127,7 @@ with st.sidebar.expander("📊 查看對話記錄"):
 # ── 主頁面標題（用 Logo 取代 emoji）────────────────────────
 st.markdown(f"""
 <div style="display:flex;align-items:center;gap:14px;margin:8px 0 4px">
-  <img src="data:image/png;base64,{LOGO_B64}" style="height:72px;width:auto">
+  <img src="data:image/png;base64,{CIRCULAR_LOGO_B64}" style="height:68px;width:68px;border-radius:50%">
   <div>
     <div style="font-size:28px;font-weight:700;color:#1a1a2e;line-height:1.2">SIW 半導體顧問 AI</div>
     <div style="font-size:13px;color:#888;margin-top:3px">半導體產業分析框架與洞察 · Powered by Claude</div>
