@@ -127,7 +127,7 @@ with st.sidebar.expander("📊 查看對話記錄"):
 # ── 主頁面標題（用 Logo 取代 emoji）────────────────────────
 st.markdown(f"""
 <div style="display:flex;align-items:center;gap:14px;margin:8px 0 4px">
-  <img src="data:image/png;base64,{CIRCULAR_LOGO_B64}" style="height:72px;width:auto;border-radius:50%">
+  <img src="data:image/png;base64,{LOGO_B64}" style="height:72px;width:auto">
   <div>
     <div style="font-size:28px;font-weight:700;color:#1a1a2e;line-height:1.2">SIW 半導體顧問 AI</div>
     <div style="font-size:13px;color:#888;margin-top:3px">半導體產業分析框架與洞察 · Powered by Claude</div>
