@@ -6,7 +6,11 @@ from datetime import datetime
 import gspread
 from google.oauth2.service_account import Credentials
 
-st.set_page_config(page_title="SIW Agency AI", page_icon="🔬", layout="centered")
+import os as _os
+from PIL import Image as _PILImage
+_favicon_path = _os.path.join(_os.path.dirname(_os.path.abspath(__file__)), "siw_favicon.png")
+_favicon = _PILImage.open(_favicon_path) if _os.path.exists(_favicon_path) else "🔬"
+st.set_page_config(page_title="SIW Agency AI", page_icon=_favicon, layout="centered")
 
 st.markdown("""
 <style>
