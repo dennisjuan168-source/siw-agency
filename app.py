@@ -191,42 +191,90 @@ _TW_RE = re.compile(r'\b(\d{4})\b')
 _CN_RE = re.compile(r'\b([36]\d{5})\b')
 _US_RE = re.compile(r'\b([A-Z]{1,5})\b')
 
-def fetch_price(ticker: str) -> str:
-    """抓即時股價，回傳格式化字串"""
+def fetch_stock_data(ticker: str, currency: str) -> str:
+    """抓即時股價 + 財務資料，回傳格式化字串"""
     if not _YF_OK:
         return ""
     try:
         t = yf.Ticker(ticker)
-        info = t.fast_info
-        price = info.last_price
-        prev  = info.previous_close
+        fi = t.fast_info
+        info = t.info
+
+        lines = []
+
+        # 股價
+        price = fi.last_price
+        prev  = fi.previous_close
         if price and prev:
             chg = (price - prev) / prev * 100
             arrow = "▲" if chg >= 0 else "▼"
-            return f"{price:.2f}（{arrow}{abs(chg):.2f}%）"
+            lines.append(f"現價：{currency}{price:.2f}（{arrow}{abs(chg):.2f}%）")
         elif price:
-            return f"{price:.2f}"
+            lines.append(f"現價：{currency}{price:.2f}")
+
+        # 52週高低
+        hi = info.get("fiftyTwoWeekHigh")
+        lo = info.get("fiftyTwoWeekLow")
+        if hi and lo:
+            lines.append(f"52週區間：{currency}{lo:.2f} ~ {currency}{hi:.2f}")
+
+        # 本益比
+        pe = info.get("trailingPE")
+        if pe:
+            lines.append(f"本益比（TTM）：{pe:.1f}x")
+
+        # EPS
+        eps = info.get("trailingEps")
+        if eps:
+            lines.append(f"EPS（TTM）：{currency}{eps:.2f}")
+
+        # 毛利率
+        gm = info.get("grossMargins")
+        if gm:
+            lines.append(f"毛利率：{gm*100:.1f}%")
+
+        # 營業利益率
+        om = info.get("operatingMargins")
+        if om:
+            lines.append(f"營業利益率：{om*100:.1f}%")
+
+        # 分析師目標價
+        tp = info.get("targetMeanPrice")
+        if tp:
+            lines.append(f"分析師均目標價：{currency}{tp:.2f}")
+
+        # 市值
+        mc = info.get("marketCap")
+        if mc:
+            if mc >= 1e12:
+                lines.append(f"市值：{currency}{mc/1e12:.2f}兆")
+            elif mc >= 1e8:
+                lines.append(f"市值：{currency}{mc/1e8:.1f}億")
+
+        return "\n".join(lines) if lines else ""
     except Exception:
-        pass
-    return ""
+        return ""
 
 def detect_stocks_and_prices(text: str) -> str:
-    """偵測問題中的股票代碼，查即時價格，回傳注入字串"""
-    lines = []
+    """偵測問題中的股票代碼，查即時股價+財務資料，回傳注入字串"""
+    sections = []
+
     # 台股
     for code in set(_TW_RE.findall(text)):
-        p = fetch_price(f"{code}.TW")
-        if p:
-            lines.append(f"- 台股 {code}：現價 NT${p}")
+        data = fetch_stock_data(f"{code}.TW", "NT$")
+        if data:
+            sections.append(f"### 台股 {code}\n{data}")
+
     # 陸股
     for code in set(_CN_RE.findall(text)):
         suffix = ".SS" if code.startswith("6") else ".SZ"
-        p = fetch_price(f"{code}{suffix}")
-        if p:
-            lines.append(f"- 陸股 {code}：現價 ¥{p}")
-    if not lines:
+        data = fetch_stock_data(f"{code}{suffix}", "¥")
+        if data:
+            sections.append(f"### 陸股 {code}\n{data}")
+
+    if not sections:
         return ""
-    return "## 即時股價\n" + "\n".join(lines)
+    return "## 即時股價與財務資料\n" + "\n\n".join(sections)
 
 def get_system_prompt(user_input: str) -> str:
     text = user_input.lower()
