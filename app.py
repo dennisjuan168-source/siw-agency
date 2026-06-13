@@ -129,8 +129,8 @@ st.markdown(f"""
   <div>
     <div style="font-size:48px;font-weight:700;color:#1a1a2e;line-height:1.1">SIW Agency</div>
     <div style="font-size:18px;font-weight:500;color:#444;margin-top:4px">協創微 ｜ 共營AI · 一起共贏</div>
-    <div style="font-size:13px;color:#555;margin-top:6px;line-height:1.7;max-width:680px">
-      SIW 是半導體行業的專業諮詢服務公司，聚焦<strong>顧問諮詢、渠道協助、戰略投資</strong>三大核心業務。
+    <div style="font-size:17px;color:#555;margin-top:6px;line-height:1.7;max-width:680px">
+      協創微(SIW)是一家專業半導體產業諮詢服務公司，聚焦<strong>顧問諮詢、渠道協助、戰略投資</strong>三大核心業務。
     </div>
   </div>
 </div>
