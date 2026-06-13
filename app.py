@@ -16,7 +16,7 @@ import os as _os
 from PIL import Image as _PILImage
 _favicon_path = _os.path.join(_os.path.dirname(_os.path.abspath(__file__)), "siw_favicon.png")
 _favicon = _PILImage.open(_favicon_path) if _os.path.exists(_favicon_path) else "🔬"
-st.set_page_config(page_title="SIW Agency AI", page_icon=_favicon, layout="centered")
+st.set_page_config(page_title="SIW Agency AI", page_icon=_favicon, layout="wide")
 
 st.markdown("""
 <style>
@@ -44,6 +44,20 @@ st.markdown("""
     letter-spacing: 0.08em;
     text-transform: uppercase;
     padding: 12px 0 4px;
+}
+/* 內容區最大寬度，閱讀舒適 */
+[data-testid="stMainBlockContainer"] {
+    max-width: 900px;
+    margin: 0 auto;
+    padding-left: 2rem;
+    padding-right: 2rem;
+}
+/* 對話字體大小 */
+[data-testid="stChatMessage"] p,
+[data-testid="stChatMessage"] li,
+[data-testid="stChatMessage"] td {
+    font-size: 16px;
+    line-height: 1.8;
 }
 </style>
 """, unsafe_allow_html=True)
