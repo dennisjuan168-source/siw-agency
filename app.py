@@ -64,7 +64,7 @@ topics = [
 ]
 for label, question in topics:
     if st.sidebar.button(label, key=f"topic_{label}", use_container_width=True):
-        st.session_state["auto_send"] = question
+        st.session_state["prefill"] = question
 
 st.sidebar.markdown("---")
 
@@ -164,11 +164,9 @@ for msg in st.session_state.messages:
     with st.chat_message(msg["role"]):
         st.markdown(msg["content"])
 
-auto_send = st.session_state.pop("auto_send", None)
+prefill = st.session_state.pop("prefill", "")
 
-prompt = st.chat_input("請輸入問題，例如：CPO 和 NPO 的差異、南亞科現在值得買嗎...")
-if not prompt and auto_send:
-    prompt = auto_send
+prompt = st.chat_input("請輸入問題，例如：CPO 和 NPO 的差異、南亞科現在值得買嗎...", value=prefill if prefill else None)
 
 if prompt:
     if not api_key:
