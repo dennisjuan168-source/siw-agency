@@ -344,18 +344,13 @@ if prompt:
         system = get_system_prompt(prompt)
         if news:
             system += f"\n\n## 最新產業快訊\n{news}"
-        reply_placeholder = st.empty()
-        reply = ""
         with client.messages.stream(
             model="claude-sonnet-4-6",
             max_tokens=2048,
             system=system,
             messages=st.session_state.messages,
         ) as stream:
-            for text in stream.text_stream:
-                reply += text
-                reply_placeholder.markdown(reply + "▌")
-        reply_placeholder.markdown(reply)
+            reply = st.write_stream(stream.text_stream)
 
     st.session_state.messages.append({"role": "assistant", "content": reply})
     save_log(prompt, reply)
