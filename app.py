@@ -56,8 +56,8 @@ st.markdown("""
 [data-testid="stChatMessage"] p,
 [data-testid="stChatMessage"] li,
 [data-testid="stChatMessage"] td {
-    font-size: 18px;
-    line-height: 1.9;
+    font-size: 20px;
+    line-height: 2.0;
 }
 </style>
 """, unsafe_allow_html=True)
