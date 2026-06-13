@@ -128,7 +128,7 @@ with st.sidebar.expander("📊 查看對話記錄"):
 st.markdown(f"""
 <div style="display:flex;align-items:center;gap:14px;margin:8px 0 4px">
   <div>
-    <div style="font-size:28px;font-weight:700;color:#1a1a2e;line-height:1.2">SIW 半導體顧問 AI</div>
+    <div style="font-size:28px;font-weight:700;color:#1a1a2e;line-height:1.2">SIW Agency</div>
     <div style="font-size:13px;color:#555;margin-top:6px;line-height:1.7;max-width:680px">
       SIW 是半導體行業的專業諮詢服務公司，以「協同、創新、共贏」驅動產業升級。三十年行業精英團隊，覆蓋泛半導體全產業鏈資源整合。聚焦<strong>顧問諮詢、渠道協助、戰略投資</strong>三大核心業務，從前沿技術評估到跨國品牌輸出，助力企業實現技術突破與國際化躍升。
     </div>
@@ -139,7 +139,7 @@ st.markdown(f"""
 # ── Knowledge Base ────────────────────────────────────────
 from knowledge_base import CPO_KNOWLEDGE, TGV_KNOWLEDGE, TSV_KNOWLEDGE, ADV_PACKAGING_KNOWLEDGE
 
-BASE_PROMPT = st.secrets.get("SYSTEM_PROMPT", "你是 SIW 半導體顧問 AI，請用繁體中文回答半導體產業問題。")
+BASE_PROMPT = st.secrets.get("SYSTEM_PROMPT", "你是 SIW Agency，請用繁體中文回答半導體產業問題。")
 
 KNOWLEDGE_MAP = {
     "CPO":    (["cpo","共封裝","光模塊","光模組","npo","lpo","xpo","siph","矽光"], CPO_KNOWLEDGE),
