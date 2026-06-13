@@ -267,7 +267,7 @@ for msg in st.session_state.messages:
 active_topic = st.session_state.get("active_topic", "")
 if active_topic:
     st.info(f"📌 已選擇知識領域：**{active_topic}** — 請輸入您的問題")
-prompt = st.chat_input("請輸入問題，例如：CPO 和 NPO 的差異、南亞科現在值得買嗎...")
+prompt = st.chat_input("請輸入問題，例如：南亞科 2408 值得買嗎、羅博特科 300757 分析...")
 
 if prompt:
     if not api_key:
