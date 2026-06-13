@@ -287,7 +287,7 @@ if prompt:
         # 有偵測到股票代碼但抓不到價格
         has_code = bool(_TW_RE.search(prompt)) or bool(_CN_RE.search(prompt))
         if has_code:
-            enriched_prompt = f"{prompt}\n\n【系統提示】即時股價暫時無法取得，請直接根據公開資訊與五原則進行分析，禁止詢問用戶目前股價。"
+            enriched_prompt = f"{prompt}\n\n【系統提示】目前未查詢到股價，直接分析。"
 
     st.session_state.messages.append({"role": "user", "content": enriched_prompt})
     with st.chat_message("user"):
