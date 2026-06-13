@@ -65,7 +65,6 @@ topics = [
 for label, question in topics:
     if st.sidebar.button(label, key=f"topic_{label}", use_container_width=True):
         st.session_state["active_topic"] = label
-        st.rerun()
 
 st.sidebar.markdown("---")
 
@@ -152,8 +151,17 @@ KNOWLEDGE_MAP = {
 def get_system_prompt(user_input: str) -> str:
     text = user_input.lower()
     extras = []
+    # 優先用側邊欄選中的主題
+    active = st.session_state.get("active_topic", "")
+    TOPIC_MAP = {
+        "CPO 共封裝光學": "CPO",
+        "TSV 矽穿孔": "TSV",
+        "TGV 玻璃穿孔": "TGV",
+        "先進封裝 / HBM": "先進封裝",
+    }
+    forced = TOPIC_MAP.get(active)
     for name, (keywords, knowledge) in KNOWLEDGE_MAP.items():
-        if any(k in text for k in keywords):
+        if name == forced or any(k in text for k in keywords):
             extras.append(f"## {name} 技術知識庫\n{knowledge}")
     return BASE_PROMPT + ("\n\n" + "\n\n".join(extras) if extras else "")
 
@@ -165,6 +173,9 @@ for msg in st.session_state.messages:
     with st.chat_message(msg["role"]):
         st.markdown(msg["content"])
 
+active_topic = st.session_state.get("active_topic", "")
+if active_topic:
+    st.info(f"📌 已選擇知識領域：**{active_topic}** — 請輸入您的問題")
 prompt = st.chat_input("請輸入問題，例如：CPO 和 NPO 的差異、南亞科現在值得買嗎...")
 
 if prompt:
