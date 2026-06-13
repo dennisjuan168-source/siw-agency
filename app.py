@@ -207,6 +207,17 @@ _TW_RE = re.compile(r'\b(\d{4})\b')
 _CN_RE = re.compile(r'\b([36]\d{5})\b')
 _US_RE = re.compile(r'\b([A-Z]{1,5})\b')
 
+# 代碼→中文公司名（權威對照，優先於 yfinance；查不到才退回 yfinance）
+CODE_NAME = {
+    # 陸股
+    "300757": "羅博特科", "688702": "盛科通信", "605111": "新潔能", "605028": "世茂能源",
+    # 台股（Dennis 持股/觀察）
+    "3595": "山太士", "2360": "致茂", "3037": "欣興", "3026": "禾伸堂",
+    "4772": "台特化", "7822": "倍利科", "7810": "捷創科技", "6223": "旺矽",
+    "2408": "南亞科", "3189": "景碩", "2327": "國巨", "6488": "環球晶",
+    "3653": "健策", "2308": "台達電", "7734": "印能科技", "7769": "鴻勁",
+}
+
 def fetch_stock_data(ticker: str, currency: str) -> str:
     """抓即時股價 + 財務資料，回傳格式化字串"""
     if not _YF_OK:
@@ -215,6 +226,17 @@ def fetch_stock_data(ticker: str, currency: str) -> str:
         t = yf.Ticker(ticker)
         fi = t.fast_info
         lines = []
+
+        # 公司名稱（避免 AI 猜錯代碼對應的公司）：權威表優先，否則退回 yfinance
+        _code = ticker.split(".")[0]
+        _nm = CODE_NAME.get(_code)
+        if not _nm:
+            try:
+                _nm = t.info.get("longName") or t.info.get("shortName")
+            except Exception:
+                _nm = None
+        if _nm:
+            lines.append(f"公司名稱：{_nm}（以此為準，禁止自行猜測公司名）")
 
         # 股價（fast_info 最穩定）
         price = fi.last_price
