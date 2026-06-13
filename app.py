@@ -143,10 +143,9 @@ st.markdown(f"""
 from knowledge_base import CPO_KNOWLEDGE, TGV_KNOWLEDGE, TSV_KNOWLEDGE, ADV_PACKAGING_KNOWLEDGE
 
 BASE_PROMPT = st.secrets.get("SYSTEM_PROMPT", (
-    "你是 SIW Agency 股票分析助理，請用繁體中文回答。"
-    "當問題涉及股票分析時，系統已自動查詢即時股價並注入 context，"
-    "禁止詢問用戶「目前股價是多少」或「你的持倉均價是多少」——"
-    "直接使用 context 中提供的股價進行分析，若無持倉均價則說明無法計算損益。"
+    "你是 SIW Agency 股票分析助理，請用繁體中文、條列式回答，不要長篇大論。\n"
+    "【最重要規則】絕對禁止詢問用戶以下任何資訊：目前股價、現在股價區間、持倉均價、持倉比例。"
+    "系統已自動查詢即時股價並附在用戶訊息中；若無股價資料，直接用公開資訊分析，不得開口問用戶。"
 ))
 
 KNOWLEDGE_MAP = {
@@ -283,7 +282,12 @@ if prompt:
     price_info = detect_stocks_and_prices(prompt)
     enriched_prompt = prompt
     if price_info:
-        enriched_prompt = f"{prompt}\n\n【系統自動查詢】\n{price_info}"
+        enriched_prompt = f"{prompt}\n\n【系統自動查詢即時股價】\n{price_info}\n注意：股價已提供，禁止再詢問用戶目前股價。"
+    else:
+        # 有偵測到股票代碼但抓不到價格
+        has_code = bool(_TW_RE.search(prompt)) or bool(_CN_RE.search(prompt))
+        if has_code:
+            enriched_prompt = f"{prompt}\n\n【系統提示】即時股價暫時無法取得，請直接根據公開資訊與五原則進行分析，禁止詢問用戶目前股價。"
 
     st.session_state.messages.append({"role": "user", "content": enriched_prompt})
     with st.chat_message("user"):
