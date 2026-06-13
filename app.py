@@ -129,7 +129,9 @@ st.markdown(f"""
 <div style="display:flex;align-items:center;gap:14px;margin:8px 0 4px">
   <div>
     <div style="font-size:28px;font-weight:700;color:#1a1a2e;line-height:1.2">SIW 半導體顧問 AI</div>
-    <div style="font-size:13px;color:#888;margin-top:3px">半導體產業分析框架與洞察 · Powered by Claude</div>
+    <div style="font-size:13px;color:#555;margin-top:6px;line-height:1.7;max-width:680px">
+      SIW 是半導體行業的專業諮詢服務公司，以「協同、創新、共贏」驅動產業升級。三十年行業精英團隊，覆蓋泛半導體全產業鏈資源整合。聚焦<strong>顧問諮詢、渠道協助、戰略投資</strong>三大核心業務，從前沿技術評估到跨國品牌輸出，助力企業實現技術突破與國際化躍升。
+    </div>
   </div>
 </div>
 """, unsafe_allow_html=True)
