@@ -198,11 +198,9 @@ def fetch_stock_data(ticker: str, currency: str) -> str:
     try:
         t = yf.Ticker(ticker)
         fi = t.fast_info
-        info = t.info
-
         lines = []
 
-        # 股價
+        # 股價（fast_info 最穩定）
         price = fi.last_price
         prev  = fi.previous_close
         if price and prev:
@@ -212,44 +210,43 @@ def fetch_stock_data(ticker: str, currency: str) -> str:
         elif price:
             lines.append(f"現價：{currency}{price:.2f}")
 
-        # 52週高低
-        hi = info.get("fiftyTwoWeekHigh")
-        lo = info.get("fiftyTwoWeekLow")
+        # 52週高低（fast_info 有）
+        hi = getattr(fi, "year_high", None)
+        lo = getattr(fi, "year_low", None)
         if hi and lo:
             lines.append(f"52週區間：{currency}{lo:.2f} ~ {currency}{hi:.2f}")
 
-        # 本益比
-        pe = info.get("trailingPE")
-        if pe:
-            lines.append(f"本益比（TTM）：{pe:.1f}x")
+        # 財務資料（t.info 可能較慢，設 timeout 保護）
+        try:
+            info = t.info
+            pe = info.get("trailingPE")
+            if pe:
+                lines.append(f"本益比（TTM）：{pe:.1f}x")
 
-        # EPS
-        eps = info.get("trailingEps")
-        if eps:
-            lines.append(f"EPS（TTM）：{currency}{eps:.2f}")
+            eps = info.get("trailingEps")
+            if eps:
+                lines.append(f"EPS（TTM）：{currency}{eps:.2f}")
 
-        # 毛利率
-        gm = info.get("grossMargins")
-        if gm:
-            lines.append(f"毛利率：{gm*100:.1f}%")
+            gm = info.get("grossMargins")
+            if gm:
+                lines.append(f"毛利率：{gm*100:.1f}%")
 
-        # 營業利益率
-        om = info.get("operatingMargins")
-        if om:
-            lines.append(f"營業利益率：{om*100:.1f}%")
+            om = info.get("operatingMargins")
+            if om:
+                lines.append(f"營業利益率：{om*100:.1f}%")
 
-        # 分析師目標價
-        tp = info.get("targetMeanPrice")
-        if tp:
-            lines.append(f"分析師均目標價：{currency}{tp:.2f}")
+            tp = info.get("targetMeanPrice")
+            if tp:
+                lines.append(f"分析師均目標價：{currency}{tp:.2f}")
 
-        # 市值
-        mc = info.get("marketCap")
-        if mc:
-            if mc >= 1e12:
-                lines.append(f"市值：{currency}{mc/1e12:.2f}兆")
-            elif mc >= 1e8:
-                lines.append(f"市值：{currency}{mc/1e8:.1f}億")
+            mc = info.get("marketCap")
+            if mc:
+                if mc >= 1e12:
+                    lines.append(f"市值：{currency}{mc/1e12:.2f}兆")
+                elif mc >= 1e8:
+                    lines.append(f"市值：{currency}{mc/1e8:.1f}億")
+        except Exception:
+            pass  # 財務資料抓失敗不影響股價顯示
 
         return "\n".join(lines) if lines else ""
     except Exception:
@@ -343,19 +340,22 @@ if prompt:
 
     client = anthropic.Anthropic(api_key=api_key)
     with st.chat_message("assistant"):
-        with st.spinner("查詢股價並分析中..."):
-            news = st.session_state.get("industry_news", "")
-            system = get_system_prompt(prompt)
-            if news:
-                system += f"\n\n## 最新產業快訊\n{news}"
-            response = client.messages.create(
-                model="claude-sonnet-4-6",
-                max_tokens=2048,
-                system=system,
-                messages=st.session_state.messages,
-            )
-            reply = response.content[0].text
-            st.markdown(reply)
+        news = st.session_state.get("industry_news", "")
+        system = get_system_prompt(prompt)
+        if news:
+            system += f"\n\n## 最新產業快訊\n{news}"
+        reply_placeholder = st.empty()
+        reply = ""
+        with client.messages.stream(
+            model="claude-sonnet-4-6",
+            max_tokens=2048,
+            system=system,
+            messages=st.session_state.messages,
+        ) as stream:
+            for text in stream.text_stream:
+                reply += text
+                reply_placeholder.markdown(reply + "▌")
+        reply_placeholder.markdown(reply)
 
     st.session_state.messages.append({"role": "assistant", "content": reply})
     save_log(prompt, reply)
