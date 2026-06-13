@@ -21,7 +21,7 @@ st.markdown("""
     padding: 16px 12px 14px;
     border-bottom: 1px solid #e8f7fd;
 }
-.siw-logo-section img { width: 160px; display: block; margin: 0 auto 14px; }
+.siw-logo-section img { width: 210px; display: block; margin: 0 auto 8px; }
 .siw-tagline {
     display: inline-block;
     background: #e8f7fd;
@@ -49,7 +49,6 @@ CIRCULAR_LOGO_B64 = "iVBORw0KGgoAAAANSUhEUgAADBAAAAS9CAYAAABEJEuFAAEAAElEQVR4nOz
 st.sidebar.markdown(f"""
 <div class="siw-logo-section">
   <img src="data:image/png;base64,{LOGO_B64}" alt="SIW Logo">
-  <div class="siw-tagline">共營 AI・一起共贏</div>
 </div>
 """, unsafe_allow_html=True)
 
