@@ -125,7 +125,7 @@ with st.sidebar.expander("📊 查看對話記錄"):
 
 # ── 主頁面標題（用 Logo 取代 emoji）────────────────────────
 st.markdown(f"""
-<div style="display:flex;align-items:center;gap:14px;margin:8px 0 4px">
+<div style="display:flex;align-items:center;gap:14px;margin:-40px 0 4px">
   <div>
     <div style="font-size:48px;font-weight:700;color:#1a1a2e;line-height:1.1">SIW Agency</div>
     <div style="font-size:18px;font-weight:500;color:#444;margin-top:4px">協創微 ｜ 共營AI · 一起共贏</div>
