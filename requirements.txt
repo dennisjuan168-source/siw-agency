@@ -3,3 +3,4 @@ streamlit
 gspread
 google-auth
 pandas
+yfinance

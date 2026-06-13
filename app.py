@@ -5,6 +5,12 @@ import json
 from datetime import datetime
 import gspread
 from google.oauth2.service_account import Credentials
+import re
+try:
+    import yfinance as yf
+    _YF_OK = True
+except ImportError:
+    _YF_OK = False
 
 import os as _os
 from PIL import Image as _PILImage
@@ -145,10 +151,84 @@ KNOWLEDGE_MAP = {
     "先進封裝": (["先進封裝","cowos","soic","hbm封裝","chiplet","interposer","rdl","fowlp","advanced package"], ADV_PACKAGING_KNOWLEDGE),
 }
 
+DENNIS_FRAMEWORK = """
+## Dennis 投資分析框架（五大原則）
+
+分析個股時，請依照以下順序輸出：
+
+### 第一原則：產業鏈（中觀）
+- 全鏈毛利率走向：同步↑（超級週期）/ 龍頭↑追隨者↓（壟斷加深）/ 全鏈↓（供過於求）
+- 稀缺環節在哪？ASP 是否上升？存貨週轉天數是否下降？
+
+### 第二原則：賽道（順風）
+- 產業趨勢是否明確向上？未來 3-5 年需求成長動力？
+
+### 第三原則：龍頭（資金優先流入）
+- 是否為賽道第一名？市佔率、護城河？
+
+### 第四原則：好公司（未來毛利快速提升）
+- 未來毛利率走向（不看現在，看未來）
+- 三選二驗證：①存貨週轉天數↓ ②ASP↑ ③訂單 Backlog 拉長
+
+### 第五原則：部位管理（右側加碼）
+- 建議買點 / 停損價（均價 ×0.9）/ 加碼觸發條件
+
+### 四個必問驗證句
+1. 「手上是現金，現在還會買嗎？」
+2. 「跌 20% 還能抱住嗎？」
+3. 「進場理由消失，出場條件是什麼？」
+4. 「這次下跌是修正估值還是修正獲利？」
+
+請用繁體中文，條列式輸出，不要長篇大論。
+"""
+
+# 台股/陸股代碼偵測（4-6位數字）
+_TW_RE = re.compile(r'\b(\d{4})\b')
+_CN_RE = re.compile(r'\b([36]\d{5})\b')
+_US_RE = re.compile(r'\b([A-Z]{1,5})\b')
+
+def fetch_price(ticker: str) -> str:
+    """抓即時股價，回傳格式化字串"""
+    if not _YF_OK:
+        return ""
+    try:
+        t = yf.Ticker(ticker)
+        info = t.fast_info
+        price = info.last_price
+        prev  = info.previous_close
+        if price and prev:
+            chg = (price - prev) / prev * 100
+            arrow = "▲" if chg >= 0 else "▼"
+            return f"{price:.2f}（{arrow}{abs(chg):.2f}%）"
+        elif price:
+            return f"{price:.2f}"
+    except Exception:
+        pass
+    return ""
+
+def detect_stocks_and_prices(text: str) -> str:
+    """偵測問題中的股票代碼，查即時價格，回傳注入字串"""
+    lines = []
+    # 台股
+    for code in set(_TW_RE.findall(text)):
+        p = fetch_price(f"{code}.TW")
+        if p:
+            lines.append(f"- 台股 {code}：現價 NT${p}")
+    # 陸股
+    for code in set(_CN_RE.findall(text)):
+        suffix = ".SS" if code.startswith("6") else ".SZ"
+        p = fetch_price(f"{code}{suffix}")
+        if p:
+            lines.append(f"- 陸股 {code}：現價 ¥{p}")
+    if not lines:
+        return ""
+    return "## 即時股價\n" + "\n".join(lines)
+
 def get_system_prompt(user_input: str) -> str:
     text = user_input.lower()
     extras = []
-    # 優先用側邊欄選中的主題
+
+    # 側邊欄主題
     active = st.session_state.get("active_topic", "")
     TOPIC_MAP = {
         "CPO 共封裝光學": "CPO",
@@ -160,6 +240,20 @@ def get_system_prompt(user_input: str) -> str:
     for name, (keywords, knowledge) in KNOWLEDGE_MAP.items():
         if name == forced or any(k in text for k in keywords):
             extras.append(f"## {name} 技術知識庫\n{knowledge}")
+
+    # 台股/陸股分析：注入五原則框架 + 即時股價
+    is_stock = (
+        active in ("台股投資分析", "陸股投資分析")
+        or any(k in text for k in ["台股","陸股","股票","分析","買嗎","值得","停損","目標價","均價","持股","觀察"])
+        or bool(_TW_RE.search(user_input))
+        or bool(_CN_RE.search(user_input))
+    )
+    if is_stock:
+        extras.append(DENNIS_FRAMEWORK)
+        price_info = detect_stocks_and_prices(user_input)
+        if price_info:
+            extras.append(price_info)
+
     return BASE_PROMPT + ("\n\n" + "\n\n".join(extras) if extras else "")
 
 # ── 對話 ──────────────────────────────────────────────────
