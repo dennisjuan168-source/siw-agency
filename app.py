@@ -56,11 +56,8 @@ st.sidebar.markdown(f"""
 st.sidebar.markdown('<div class="siw-section-label">知識領域</div>', unsafe_allow_html=True)
 
 topics = [
-    ("CPO 共封裝光學",  "CPO 共封裝光學技術的核心優勢與市場趨勢？"),
-    ("TSV 矽穿孔",      "TSV 矽穿孔在 HBM4 的主要挑戰？"),
-    ("TGV 玻璃穿孔",    "TGV 玻璃穿孔的技術突破點？"),
-    ("先進封裝 / HBM",  "CoWoS 先進封裝的供需現況？"),
     ("台股投資分析",    "分析台股持股與觀察股"),
+    ("陸股投資分析",    "分析陸股持股與觀察股"),
 ]
 for label, question in topics:
     if st.sidebar.button(label, key=f"topic_{label}", use_container_width=True):
