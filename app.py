@@ -142,7 +142,12 @@ st.markdown(f"""
 # ── Knowledge Base ────────────────────────────────────────
 from knowledge_base import CPO_KNOWLEDGE, TGV_KNOWLEDGE, TSV_KNOWLEDGE, ADV_PACKAGING_KNOWLEDGE
 
-BASE_PROMPT = st.secrets.get("SYSTEM_PROMPT", "你是 SIW Agency，請用繁體中文回答半導體產業問題。")
+BASE_PROMPT = st.secrets.get("SYSTEM_PROMPT", (
+    "你是 SIW Agency 股票分析助理，請用繁體中文回答。"
+    "當問題涉及股票分析時，系統已自動查詢即時股價並注入 context，"
+    "禁止詢問用戶「目前股價是多少」或「你的持倉均價是多少」——"
+    "直接使用 context 中提供的股價進行分析，若無持倉均價則說明無法計算損益。"
+))
 
 KNOWLEDGE_MAP = {
     "CPO":    (["cpo","共封裝","光模塊","光模組","npo","lpo","xpo","siph","矽光"], CPO_KNOWLEDGE),
@@ -274,13 +279,19 @@ if prompt:
         st.error("請在左側輸入 Anthropic API Key")
         st.stop()
 
-    st.session_state.messages.append({"role": "user", "content": prompt})
+    # 自動查即時股價，注入到訊息中
+    price_info = detect_stocks_and_prices(prompt)
+    enriched_prompt = prompt
+    if price_info:
+        enriched_prompt = f"{prompt}\n\n【系統自動查詢】\n{price_info}"
+
+    st.session_state.messages.append({"role": "user", "content": enriched_prompt})
     with st.chat_message("user"):
-        st.markdown(prompt)
+        st.markdown(prompt)  # 顯示給用戶看的仍是原始問題
 
     client = anthropic.Anthropic(api_key=api_key)
     with st.chat_message("assistant"):
-        with st.spinner("分析中..."):
+        with st.spinner("查詢股價並分析中..."):
             news = st.session_state.get("industry_news", "")
             system = get_system_prompt(prompt)
             if news:
