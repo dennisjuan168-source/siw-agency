@@ -226,6 +226,29 @@ CODE_NAME = {
     "3711": "日月光投控", "2330": "台積電", "2454": "聯發科",
 }
 
+# 公司名→代碼（權威表反向）
+NAME_CODE = {v: k for k, v in CODE_NAME.items()}
+
+@st.cache_data(ttl=21600, show_spinner=False)
+def _tw_name_to_code():
+    """證交所/櫃買 公司簡稱 → 代碼（反向官方名稱清單）"""
+    return {nm: code for code, nm in _tw_name_map().items() if nm}
+
+def extract_codes(text: str):
+    """從文字抽出台股/陸股代碼：數字代碼 + 公司名（權威表+官方簡稱）。回 (tw_set, cn_set)"""
+    tw = set(_TW_RE.findall(text))
+    cn = set(_CN_RE.findall(text))
+    name_map = {}
+    try:
+        name_map.update(_tw_name_to_code())  # 官方簡稱
+    except Exception:
+        pass
+    name_map.update(NAME_CODE)               # 權威表覆蓋（含陸股）
+    for nm, code in name_map.items():
+        if len(nm) >= 2 and nm in text:
+            (cn if len(code) == 6 else tw).add(code)
+    return tw, cn
+
 @st.cache_data(ttl=21600, show_spinner=False)
 def _tw_name_map():
     """台股代碼→中文簡稱：證交所(上市)+櫃買(上櫃) OpenAPI，快取6小時"""
@@ -426,9 +449,10 @@ def detect_stocks_and_prices(text: str) -> str:
     """偵測問題中的股票代碼，查即時股價+財務資料，回傳注入字串。
     公司名稱獨立解析，即使股價抓失敗也一定注入，避免 AI 猜錯公司名。"""
     sections = []
+    tw_codes, cn_codes = extract_codes(text)
 
     # 台股（上市 .TW；上櫃/興櫃需 .TWO，故抓不到時 fallback）
-    for code in set(_TW_RE.findall(text)):
+    for code in tw_codes:
         nm = resolve_name(code, "TW")
         head = f"公司名稱：{nm}（以此為準，禁止自行猜測公司名）\n" if nm else ""
         data = fetch_stock_data(f"{code}.TW", "NT$") or fetch_stock_data(f"{code}.TWO", "NT$")
@@ -437,7 +461,7 @@ def detect_stocks_and_prices(text: str) -> str:
             sections.append(f"### 台股 {code}\n{head}{body}")
 
     # 陸股
-    for code in set(_CN_RE.findall(text)):
+    for code in cn_codes:
         suffix = ".SS" if code.startswith("6") else ".SZ"
         nm = resolve_name(code, "CN")
         head = f"公司名稱：{nm}（以此為準，禁止自行猜測公司名）\n" if nm else ""
@@ -498,7 +522,7 @@ for msg in st.session_state.messages:
 active_topic = st.session_state.get("active_topic", "")
 if active_topic:
     st.info(f"📌 已選擇知識領域：**{active_topic}** — 請輸入您的問題")
-st.caption("build 2026-06-14i · 輸入框中性灰框去紅邊")
+st.caption("build 2026-06-14j · 公司名查價+禁捏造股價")
 prompt = st.chat_input("例如：台股 2408 值得繼續持有或進場購買嗎？陸股 300757 值得繼續持有或進場購買嗎？")
 
 if prompt:
@@ -506,8 +530,9 @@ if prompt:
         st.error("請在左側輸入 Anthropic API Key")
         st.stop()
 
-    # 自動查即時股價，注入到訊息中
-    has_code = bool(_TW_RE.search(prompt)) or bool(_CN_RE.search(prompt))
+    # 自動查即時股價，注入到訊息中（含公司名→代碼偵測）
+    _tw_c, _cn_c = extract_codes(prompt)
+    has_code = bool(_tw_c or _cn_c)
     price_info = detect_stocks_and_prices(prompt)
     got_price = bool(price_info) and ("現價：" in price_info)
 
@@ -543,6 +568,7 @@ if prompt:
         system += ("\n\n## 鐵則（最高優先）\n"
                    "系統已在你上方直接顯示即時股價區塊（含現價），你只需專注做投資分析。"
                    "絕對禁止輸出『系統查詢中』『正在查詢』『系統未自動帶入』『系統未回傳』『請確認股價』『讓我依公開資訊』『以下依公開資訊分析』等任何過場、等待、要用戶確認股價或免責的字句與標題。"
+                   "更絕對禁止『自行捏造或編寫』任何「即時股價/系統自動查詢/股價資訊」區塊或股價數字——所有股價只能來自系統，系統沒提供就不可自己寫一個價格。"
                    "直接從『結論先說』或四步驟開始分析，引用訊息中的現價數字即可。")
         with client.messages.stream(
             model="claude-sonnet-4-6",
