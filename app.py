@@ -159,7 +159,7 @@ st.markdown(f"""
 """, unsafe_allow_html=True)
 
 # ── Knowledge Base ────────────────────────────────────────
-from knowledge_base import CPO_KNOWLEDGE, TGV_KNOWLEDGE, TSV_KNOWLEDGE, ADV_PACKAGING_KNOWLEDGE
+from knowledge_base import CPO_KNOWLEDGE, TGV_KNOWLEDGE, TSV_KNOWLEDGE, ADV_PACKAGING_KNOWLEDGE, DENNIS_FRAMEWORK_KNOWLEDGE
 
 BASE_PROMPT = st.secrets.get("SYSTEM_PROMPT", (
     "你是 SIW Agency 股票分析助理，請用繁體中文、條列式回答，不要長篇大論。\n"
@@ -176,36 +176,8 @@ KNOWLEDGE_MAP = {
     "先進封裝": (["先進封裝","cowos","soic","hbm封裝","chiplet","interposer","rdl","fowlp","advanced package"], ADV_PACKAGING_KNOWLEDGE),
 }
 
-DENNIS_FRAMEWORK = """
-## Dennis 投資分析框架（五大原則）
-
-分析個股時，請依照以下順序輸出：
-
-### 第一原則：產業鏈（中觀）
-- 全鏈毛利率走向：同步↑（超級週期）/ 龍頭↑追隨者↓（壟斷加深）/ 全鏈↓（供過於求）
-- 稀缺環節在哪？ASP 是否上升？存貨週轉天數是否下降？
-
-### 第二原則：賽道（順風）
-- 產業趨勢是否明確向上？未來 3-5 年需求成長動力？
-
-### 第三原則：龍頭（資金優先流入）
-- 是否為賽道第一名？市佔率、護城河？
-
-### 第四原則：好公司（未來毛利快速提升）
-- 未來毛利率走向（不看現在，看未來）
-- 三選二驗證：①存貨週轉天數↓ ②ASP↑ ③訂單 Backlog 拉長
-
-### 第五原則：部位管理（右側加碼）
-- 建議買點 / 停損價（均價 ×0.9）/ 加碼觸發條件
-
-### 四個必問驗證句
-1. 「手上是現金，現在還會買嗎？」
-2. 「跌 20% 還能抱住嗎？」
-3. 「進場理由消失，出場條件是什麼？」
-4. 「這次下跌是修正估值還是修正獲利？」
-
-請用繁體中文，條列式輸出，不要長篇大論。
-"""
+# 完整方法論框架（純方法論、零個資）改由 knowledge_base.py 維護
+DENNIS_FRAMEWORK = DENNIS_FRAMEWORK_KNOWLEDGE + "\n\n請用繁體中文，條列式輸出，不要長篇大論。"
 
 # 台股/陸股代碼偵測（4-6位數字）
 _TW_RE = re.compile(r'\b(\d{4})\b')
