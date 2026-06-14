@@ -633,11 +633,12 @@ if prompt:
                 system=system,
                 messages=st.session_state.messages,
             ) as stream:
-                # 放慢串流速度（打字機效果，每段加小延遲）
-                def _slow_stream(gen, delay=0.045):
+                # 逐字平滑輸出（避免一次跳一整句，改成像滾動的打字機效果）
+                def _slow_stream(gen, delay=0.012):
                     for chunk in gen:
-                        yield chunk
-                        time.sleep(delay)
+                        for ch in chunk:
+                            yield ch
+                            time.sleep(delay)
                 reply = st.write_stream(_slow_stream(stream.text_stream))
 
     st.session_state.messages.append({"role": "assistant", "content": reply})
