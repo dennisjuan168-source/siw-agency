@@ -657,7 +657,7 @@ if prompt:
               const main = doc.querySelector(
                 'section[data-testid="stAppScrollToBottomContainer"], section.stMain'
               );
-              if (main) {{ main.scrollTo({{ top: main.scrollHeight, behavior: 'smooth' }}); }}
+              if (main) {{ main.scrollTop = main.scrollHeight; }}
             }} catch(e) {{}}
             try {{
               if (window.frameElement) {{
