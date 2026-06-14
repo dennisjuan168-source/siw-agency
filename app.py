@@ -562,6 +562,28 @@ def get_system_prompt(user_input: str) -> str:
 
     return BASE_PROMPT + ("\n\n" + "\n\n".join(extras) if extras else "")
 
+import streamlit.components.v1 as _components
+def _scroll_bottom(tag):
+    """強制把對話容器捲到最底部（tag 需每次不同以強制重新執行）。"""
+    _components.html(
+        f"""
+        <script>
+          // tag={tag}
+          function toBottom() {{
+            try {{
+              const doc = window.parent.document;
+              const main = doc.querySelector(
+                'section[data-testid="stAppScrollToBottomContainer"], section.stMain'
+              );
+              if (main) {{ main.scrollTop = main.scrollHeight; }}
+            }} catch(e) {{}}
+          }}
+          [0, 60, 150, 300, 600, 1000, 1600, 2400].forEach(t => setTimeout(toBottom, t));
+        </script>
+        """,
+        height=0,
+    )
+
 # ── 對話 ──────────────────────────────────────────────────
 if "messages" not in st.session_state:
     st.session_state.messages = []
@@ -604,6 +626,7 @@ if prompt:
     st.session_state.messages.append({"role": "user", "content": enriched_prompt})
     with st.chat_message("user"):
         st.markdown(prompt)  # 顯示給用戶看的仍是原始問題
+    _scroll_bottom(f"start-{len(st.session_state.messages)}")  # 送出即跳到底部
 
     client = anthropic.Anthropic(api_key=api_key)
     with st.chat_message("assistant"):
@@ -643,30 +666,4 @@ if prompt:
 
     st.session_state.messages.append({"role": "assistant", "content": reply})
     save_log(prompt, reply)
-
-    # 回答完成後自動捲到最底部（避免停在先前往上看的位置）
-    import streamlit.components.v1 as _components
-    _scroll_token = len(st.session_state.messages)  # 變動值強制每次重新執行 script
-    _components.html(
-        f"""
-        <script>
-          // token={_scroll_token}
-          function toBottom() {{
-            try {{
-              const doc = window.parent.document;
-              const main = doc.querySelector(
-                'section[data-testid="stAppScrollToBottomContainer"], section.stMain'
-              );
-              if (main) {{ main.scrollTop = main.scrollHeight; }}
-            }} catch(e) {{}}
-            try {{
-              if (window.frameElement) {{
-                window.frameElement.scrollIntoView({{ behavior: 'smooth', block: 'end' }});
-              }}
-            }} catch(e) {{}}
-          }}
-          [60, 200, 500, 1000, 1800].forEach(t => setTimeout(toBottom, t));
-        </script>
-        """,
-        height=0,
-    )
+    _scroll_bottom(f"end-{len(st.session_state.messages)}")  # 回答完成後再次確保到底部
