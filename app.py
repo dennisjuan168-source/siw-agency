@@ -143,21 +143,23 @@ def save_log(question, answer):
     if sheet:
         sheet.append_row([datetime.now().strftime("%Y-%m-%d %H:%M:%S"), question, answer])
 
-with st.sidebar.expander("📊 查看對話記錄"):
-    admin_pw = st.text_input("管理員密碼", type="password", key="admin")
-    if admin_pw == st.secrets.get("ADMIN_PASSWORD", ""):
-        sheet = get_sheet()
-        if sheet:
-            import pandas as pd
-            data = sheet.get_all_records()
-            if data:
-                df = pd.DataFrame(data)
-                st.dataframe(df[["時間", "問題"]], use_container_width=True)
-                st.download_button("下載完整記錄", df.to_csv(index=False).encode("utf-8"), "log.csv")
+# 對話記錄檢視：預設隱藏，僅在網址帶 ?admin=1 時對擁有者顯示（訪客看不到此功能）
+if st.query_params.get("admin") == "1":
+    with st.sidebar.expander("📊 查看對話記錄"):
+        admin_pw = st.text_input("管理員密碼", type="password", key="admin")
+        if admin_pw == st.secrets.get("ADMIN_PASSWORD", ""):
+            sheet = get_sheet()
+            if sheet:
+                import pandas as pd
+                data = sheet.get_all_records()
+                if data:
+                    df = pd.DataFrame(data)
+                    st.dataframe(df[["時間", "問題"]], use_container_width=True)
+                    st.download_button("下載完整記錄", df.to_csv(index=False).encode("utf-8"), "log.csv")
+                else:
+                    st.info("還沒有對話記錄")
             else:
-                st.info("還沒有對話記錄")
-        else:
-            st.warning("Google Sheets 連線失敗")
+                st.warning("Google Sheets 連線失敗")
 
 # ── 主頁面標題（用 Logo 取代 emoji）────────────────────────
 st.markdown(f"""
