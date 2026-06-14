@@ -172,13 +172,17 @@ with st.sidebar.expander("📊 查看對話記錄"):
 
 # ── 主頁面標題（用 Logo 取代 emoji）────────────────────────
 st.markdown(f"""
-<div style="display:flex;align-items:center;gap:14px;margin:-40px 0 4px">
-  <div>
-    <div style="font-size:48px;font-weight:700;color:#1a1a2e;line-height:1.1">SIW Agency</div>
-    <div style="font-size:18px;font-weight:500;color:#444;margin-top:4px">協創微 ｜ 共營AI · 一起共贏</div>
-    <div style="font-size:17px;color:#555;margin-top:6px;line-height:1.7;max-width:680px">
-      協創微(SIW)聚焦「顧問諮詢、渠道協助、戰略投資」等三大核心業務。<br>PS:目前僅提供台股與陸股(次級市場)分析，Updated 6/14/2026@15:00pm
-    </div>
+<div style="margin:-40px 0 8px;padding-bottom:18px;border-bottom:1px solid #e8eef4">
+  <div style="display:flex;align-items:baseline;gap:14px;flex-wrap:wrap">
+    <span style="font-size:48px;font-weight:800;color:#1C2B8F;line-height:1.1;letter-spacing:-0.5px">SIW Agency</span>
+    <span style="font-size:15px;font-weight:600;color:#1C2B8F;background:#e8f7fd;border:1px solid #a8dff5;border-radius:20px;padding:4px 14px">協創微 ｜ 共營AI · 一起共贏</span>
+  </div>
+  <div style="font-size:17px;color:#4a5568;margin-top:12px;line-height:1.7;max-width:760px">
+    協創微(SIW)聚焦「<b style="color:#1C2B8F">顧問諮詢</b>、<b style="color:#1C2B8F">渠道協助</b>、<b style="color:#1C2B8F">戰略投資</b>」等三大核心業務
+  </div>
+  <div style="font-size:13px;color:#94a3b8;margin-top:10px;display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+    <span style="background:#f1f5f9;border-radius:6px;padding:3px 10px">📊 目前僅提供台股與陸股（次級市場）分析</span>
+    <span style="background:#f1f5f9;border-radius:6px;padding:3px 10px">🕒 Updated 2026/06/14 15:00</span>
   </div>
 </div>
 """, unsafe_allow_html=True)
