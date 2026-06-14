@@ -57,6 +57,20 @@ st.markdown("""
     padding-left: 2rem;
     padding-right: 2rem;
 }
+/* 底部輸入框：比照主內容區，靠左對齊標題 */
+[data-testid="stBottomBlockContainer"] {
+    max-width: 1400px;
+    margin: 0;
+    padding-left: 2rem;
+    padding-right: 2rem;
+}
+/* 輸入框字體比照內文 */
+[data-testid="stChatInput"] textarea {
+    font-size: 17px;
+}
+[data-testid="stChatInput"] textarea::placeholder {
+    font-size: 17px;
+}
 /* 對話字體大小 */
 [data-testid="stChatMessage"] p,
 [data-testid="stChatMessage"] li,
@@ -473,7 +487,7 @@ for msg in st.session_state.messages:
 active_topic = st.session_state.get("active_topic", "")
 if active_topic:
     st.info(f"📌 已選擇知識領域：**{active_topic}** — 請輸入您的問題")
-st.caption("build 2026-06-14g · 公司名後備用MIS報價名稱")
+st.caption("build 2026-06-14h · 輸入框左對齊+字體比照內文")
 prompt = st.chat_input("例如：台股 2408 值得繼續持有或進場購買嗎？陸股 300757 值得繼續持有或進場購買嗎？")
 
 if prompt:
