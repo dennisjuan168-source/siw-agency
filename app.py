@@ -573,7 +573,7 @@ active_topic = st.session_state.get("active_topic", "")
 if active_topic:
     st.info(f"📌 已選擇知識領域：**{active_topic}** — 請輸入您的問題")
 # st.caption("build 2026-06-14j")  # 部署除錯用版本標記，需要時取消註解
-prompt = st.chat_input("輸入股票代碼或公司名（可參考左側使用說明）")
+prompt = st.chat_input("輸入股票代碼或公司名（可參考使用說明）")
 
 if prompt:
     if not api_key:
