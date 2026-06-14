@@ -67,10 +67,10 @@ st.markdown("""
 }
 /* 輸入框字體比照內文 */
 [data-testid="stChatInput"] textarea {
-    font-size: 17px;
+    font-size: 20px;
 }
 [data-testid="stChatInput"] textarea::placeholder {
-    font-size: 17px;
+    font-size: 20px;
 }
 /* 輸入框外觀：中性灰框、無紅邊、無紅光暈、focus 用品牌淺藍 */
 [data-testid="stChatInput"] > div {
