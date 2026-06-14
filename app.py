@@ -646,13 +646,21 @@ if prompt:
 
     # 回答完成後自動捲到最底部（避免停在先前往上看的位置）
     import streamlit.components.v1 as _components
+    _scroll_token = len(st.session_state.messages)  # 變動值強制每次重新執行 script
     _components.html(
-        """
+        f"""
         <script>
+          // token={_scroll_token}
           const doc = window.parent.document;
-          const main = doc.querySelector('section.main, [data-testid="stMain"], [data-testid="stAppViewContainer"] section');
-          if (main) { main.scrollTo({ top: main.scrollHeight, behavior: 'smooth' }); }
-          window.parent.scrollTo({ top: doc.body.scrollHeight, behavior: 'smooth' });
+          function toBottom() {{
+            const cands = doc.querySelectorAll(
+              'section[data-testid="stMain"], section.main, [data-testid="stAppViewContainer"]'
+            );
+            cands.forEach(el => {{ try {{ el.scrollTop = el.scrollHeight; }} catch(e) {{}} }});
+            doc.documentElement.scrollTop = doc.documentElement.scrollHeight;
+            doc.body.scrollTop = doc.body.scrollHeight;
+          }}
+          [80, 250, 600, 1200].forEach(t => setTimeout(toBottom, t));
         </script>
         """,
         height=0,
