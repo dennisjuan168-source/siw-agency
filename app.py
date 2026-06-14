@@ -460,7 +460,7 @@ for msg in st.session_state.messages:
 active_topic = st.session_state.get("active_topic", "")
 if active_topic:
     st.info(f"📌 已選擇知識領域：**{active_topic}** — 請輸入您的問題")
-st.caption("build 2026-06-14c · 官方報價+無價中止")
+st.caption("build 2026-06-14d · 禁查詢中過場句")
 prompt = st.chat_input("例如：台股 2408 值得繼續持有或進場購買嗎？陸股 300757 值得繼續持有或進場購買嗎？")
 
 if prompt:
@@ -496,6 +496,11 @@ if prompt:
         system = get_system_prompt(prompt)
         if news:
             system += f"\n\n## 最新產業快訊\n{news}"
+        # 硬規則：系統已確認查到股價才會讓你分析，禁止再裝作查詢中
+        system += ("\n\n## 鐵則（最高優先）\n"
+                   "你收到的訊息一定已附即時股價（系統查到價格才會啟動你分析；查不到時系統會直接中止、根本不會呼叫你）。"
+                   "因此絕對禁止輸出『系統查詢中』『正在查詢』『系統未自動帶入』『系統未回傳』『讓我依公開資訊』『以下依公開資訊分析』等任何過場、等待或免責字句與標題。"
+                   "直接以訊息中提供的『現價』數字開頭分析，第一段就要寫出現價。")
         with client.messages.stream(
             model="claude-sonnet-4-6",
             max_tokens=2048,
