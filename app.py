@@ -209,7 +209,7 @@ DENNIS_FRAMEWORK = """
 
 # 台股/陸股代碼偵測（4-6位數字）
 _TW_RE = re.compile(r'\b(\d{4})\b')
-_CN_RE = re.compile(r'\b([36]\d{5})\b')
+_CN_RE = re.compile(r'\b([036]\d{5})\b')
 _US_RE = re.compile(r'\b([A-Z]{1,5})\b')
 
 # 代碼→中文公司名（權威對照，優先於 yfinance；查不到才退回 yfinance）
