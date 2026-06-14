@@ -286,18 +286,6 @@ def fetch_stock_data(ticker: str, currency: str) -> str:
         fi = t.fast_info
         lines = []
 
-        # 公司名稱（避免 AI 猜錯代碼對應的公司）：權威表優先，否則退回 yfinance
-        _code = ticker.split(".")[0]
-        _market = "CN" if ticker.endswith((".SS", ".SZ")) else "TW"
-        _nm = resolve_name(_code, _market)
-        if not _nm:
-            try:
-                _nm = t.info.get("longName") or t.info.get("shortName")
-            except Exception:
-                _nm = None
-        if _nm:
-            lines.append(f"公司名稱：{_nm}（以此為準，禁止自行猜測公司名）")
-
         # 股價（fast_info 最穩定）
         price = fi.last_price
         prev  = fi.previous_close
@@ -351,21 +339,28 @@ def fetch_stock_data(ticker: str, currency: str) -> str:
         return ""
 
 def detect_stocks_and_prices(text: str) -> str:
-    """偵測問題中的股票代碼，查即時股價+財務資料，回傳注入字串"""
+    """偵測問題中的股票代碼，查即時股價+財務資料，回傳注入字串。
+    公司名稱獨立解析，即使股價抓失敗也一定注入，避免 AI 猜錯公司名。"""
     sections = []
 
     # 台股
     for code in set(_TW_RE.findall(text)):
+        nm = resolve_name(code, "TW")
+        head = f"公司名稱：{nm}（以此為準，禁止自行猜測公司名）\n" if nm else ""
         data = fetch_stock_data(f"{code}.TW", "NT$")
-        if data:
-            sections.append(f"### 台股 {code}\n{data}")
+        body = data if data else "（即時股價暫時查詢失敗，請依公開資訊分析）"
+        if nm or data:
+            sections.append(f"### 台股 {code}\n{head}{body}")
 
     # 陸股
     for code in set(_CN_RE.findall(text)):
         suffix = ".SS" if code.startswith("6") else ".SZ"
+        nm = resolve_name(code, "CN")
+        head = f"公司名稱：{nm}（以此為準，禁止自行猜測公司名）\n" if nm else ""
         data = fetch_stock_data(f"{code}{suffix}", "¥")
-        if data:
-            sections.append(f"### 陸股 {code}\n{data}")
+        body = data if data else "（即時股價暫時查詢失敗，請依公開資訊分析）"
+        if nm or data:
+            sections.append(f"### 陸股 {code}\n{head}{body}")
 
     if not sections:
         return ""
