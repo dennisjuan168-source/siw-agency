@@ -306,6 +306,21 @@ def fetch_stock_data(ticker: str, currency: str) -> str:
         except Exception:
             pass  # 財務資料抓失敗不影響股價顯示
 
+        # 歷年毛利率（財報實際值，取代 AI 估計）
+        try:
+            fin = t.income_stmt
+            if fin is not None and "Gross Profit" in fin.index and "Total Revenue" in fin.index:
+                gm_hist = []
+                for col in fin.columns:
+                    rev = fin.loc["Total Revenue", col]
+                    gp = fin.loc["Gross Profit", col]
+                    if rev and gp and rev == rev and gp == gp and rev != 0:  # 排除 NaN
+                        gm_hist.append(f"{str(col)[:4]}年 {gp/rev*100:.1f}%")
+                if gm_hist:
+                    lines.append("歷年毛利率（財報實際）：" + "、".join(gm_hist))
+        except Exception:
+            pass
+
         return "\n".join(lines) if lines else ""
     except Exception:
         return ""
@@ -336,7 +351,10 @@ def detect_stocks_and_prices(text: str) -> str:
 
     if not sections:
         return ""
-    return "## 即時股價與財務資料\n" + "\n\n".join(sections)
+    note = ("\n\n【數據規則】以上為系統即時查詢的真實數據（含歷年毛利率財報實際值）。"
+            "分析時一律以上方數字為準；上方未提供的歷史財務數字，不得自行估計或編造，"
+            "若需要請明確說明「此為估計值，建議至 Goodinfo/財報狗核實」。")
+    return "## 即時股價與財務資料\n" + "\n\n".join(sections) + note
 
 def get_system_prompt(user_input: str) -> str:
     text = user_input.lower()
