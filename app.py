@@ -2,6 +2,7 @@ import streamlit as st
 import anthropic
 import os
 import json
+import time
 from datetime import datetime, timedelta
 import gspread
 from google.oauth2.service_account import Credentials
@@ -632,7 +633,12 @@ if prompt:
                 system=system,
                 messages=st.session_state.messages,
             ) as stream:
-                reply = st.write_stream(stream.text_stream)
+                # 放慢串流速度（打字機效果，每段加小延遲）
+                def _slow_stream(gen, delay=0.045):
+                    for chunk in gen:
+                        yield chunk
+                        time.sleep(delay)
+                reply = st.write_stream(_slow_stream(stream.text_stream))
 
     st.session_state.messages.append({"role": "assistant", "content": reply})
     save_log(prompt, reply)
