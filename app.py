@@ -634,7 +634,7 @@ if prompt:
                 messages=st.session_state.messages,
             ) as stream:
                 # 逐字平滑輸出（避免一次跳一整句，改成像滾動的打字機效果）
-                def _slow_stream(gen, delay=0.012):
+                def _slow_stream(gen, delay=0.02):
                     for chunk in gen:
                         for ch in chunk:
                             yield ch
