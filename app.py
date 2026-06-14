@@ -177,7 +177,7 @@ st.markdown(f"""
     <div style="font-size:48px;font-weight:700;color:#1a1a2e;line-height:1.1">SIW Agency</div>
     <div style="font-size:18px;font-weight:500;color:#444;margin-top:4px">協創微 ｜ 共營AI · 一起共贏</div>
     <div style="font-size:17px;color:#555;margin-top:6px;line-height:1.7;max-width:680px">
-      協創微(SIW)是一家專業半導體產業諮詢服務公司，聚焦「顧問諮詢、渠道協助、戰略投資」三大核心業務。（目前先上線台股與陸股分析，Updated 6/13/2026）
+      協創微(SIW)聚焦「顧問諮詢、渠道協助、戰略投資」等三大核心業務。PS:目前僅提供台股與陸股(次級市場)分析，Updated 6/14/2026@15:00pm
     </div>
   </div>
 </div>
