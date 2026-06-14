@@ -651,16 +651,22 @@ if prompt:
         f"""
         <script>
           // token={_scroll_token}
-          const doc = window.parent.document;
           function toBottom() {{
-            const cands = doc.querySelectorAll(
-              'section[data-testid="stMain"], section.main, [data-testid="stAppViewContainer"]'
-            );
-            cands.forEach(el => {{ try {{ el.scrollTop = el.scrollHeight; }} catch(e) {{}} }});
-            doc.documentElement.scrollTop = doc.documentElement.scrollHeight;
-            doc.body.scrollTop = doc.body.scrollHeight;
+            try {{
+              // 本元件位於頁面最底部：把自己的 iframe 捲進視野＝捲到底（不受 sandbox 影響最穩）
+              if (window.frameElement) {{
+                window.frameElement.scrollIntoView({{ behavior: 'smooth', block: 'end' }});
+              }}
+            }} catch(e) {{}}
+            try {{
+              const doc = window.parent.document;
+              const cands = doc.querySelectorAll(
+                'section[data-testid="stMain"], section.main, [data-testid="stAppViewContainer"]'
+              );
+              cands.forEach(el => {{ try {{ el.scrollTop = el.scrollHeight; }} catch(e) {{}} }});
+            }} catch(e) {{}}
           }}
-          [80, 250, 600, 1200].forEach(t => setTimeout(toBottom, t));
+          [60, 200, 500, 1000, 1800].forEach(t => setTimeout(toBottom, t));
         </script>
         """,
         height=0,
