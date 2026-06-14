@@ -256,20 +256,29 @@ def _f(x):
         return None
 
 def _tw_quote(code: str):
-    """台股即時報價：TWSE MIS（上市 tse_ / 上櫃 otc_），雲端友善。回 dict 或 None"""
+    """台股即時報價：TWSE MIS（上市 tse_ / 上櫃 otc_）。用 Session 先取 cookie + 重試，雲端可靠。"""
     if not _REQ_OK:
         return None
     h = {"User-Agent": "Mozilla/5.0", "Referer": "https://mis.twse.com.tw/stock/"}
     ex = f"tse_{code}.tw|otc_{code}.tw"
-    try:
-        url = f"https://mis.twse.com.tw/stock/api/getStockInfo.jsp?ex_ch={ex}&json=1&delay=0"
-        for s in _requests.get(url, headers=h, timeout=8).json().get("msgArray", []):
-            price = _f(s.get("z")) or _f(s.get("o")) or _f(s.get("y"))  # 成交→開盤→昨收
-            if price:
-                return {"name": s.get("n"), "price": price, "prev": _f(s.get("y")),
-                        "high": _f(s.get("h")), "low": _f(s.get("l"))}
-    except Exception:
-        pass
+    url = f"https://mis.twse.com.tw/stock/api/getStockInfo.jsp?ex_ch={ex}&json=1&delay=0"
+    for attempt in range(2):
+        try:
+            sess = _requests.Session()
+            sess.headers.update(h)
+            if attempt == 0:
+                # 先取得 session cookie（MIS 雲端常需此步）
+                try:
+                    sess.get("https://mis.twse.com.tw/stock/index.jsp", timeout=6)
+                except Exception:
+                    pass
+            for s in sess.get(url, timeout=8).json().get("msgArray", []):
+                price = _f(s.get("z")) or _f(s.get("o")) or _f(s.get("y"))  # 成交→開盤→昨收
+                if price:
+                    return {"name": s.get("n"), "price": price, "prev": _f(s.get("y")),
+                            "high": _f(s.get("h")), "low": _f(s.get("l"))}
+        except Exception:
+            continue
     return None
 
 def _cn_quote(code: str):
@@ -460,15 +469,22 @@ if prompt:
         st.stop()
 
     # 自動查即時股價，注入到訊息中
+    has_code = bool(_TW_RE.search(prompt)) or bool(_CN_RE.search(prompt))
     price_info = detect_stocks_and_prices(prompt)
+    got_price = bool(price_info) and ("現價：" in price_info)
+
+    # 規則：有股票代碼但「未拿到即時股價」→ 停在查詢中，不往下分析
+    if has_code and not got_price:
+        with st.chat_message("user"):
+            st.markdown(prompt)
+        with st.chat_message("assistant"):
+            st.warning("🔍 即時股價查詢中，暫時無法取得官方報價。\n\n"
+                       "為避免用過時資料誤判，**暫不進行分析**。請稍候 10–20 秒重送，或確認代碼是否正確。")
+        st.stop()
+
     enriched_prompt = prompt
     if price_info:
         enriched_prompt = f"{prompt}\n\n【系統自動查詢即時股價】\n{price_info}\n注意：股價已提供，禁止再詢問用戶目前股價。"
-    else:
-        # 有偵測到股票代碼但抓不到價格
-        has_code = bool(_TW_RE.search(prompt)) or bool(_CN_RE.search(prompt))
-        if has_code:
-            enriched_prompt = f"{prompt}\n\n【系統提示】目前未查詢到股價，直接分析。"
 
     st.session_state.messages.append({"role": "user", "content": enriched_prompt})
     with st.chat_message("user"):
