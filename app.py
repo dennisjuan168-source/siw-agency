@@ -2,7 +2,7 @@ import streamlit as st
 import anthropic
 import os
 import json
-from datetime import datetime
+from datetime import datetime, timedelta
 import gspread
 from google.oauth2.service_account import Credentials
 import re
@@ -569,6 +569,10 @@ if prompt:
             st.info(price_block)
         news = st.session_state.get("industry_news", "")
         system = get_system_prompt(prompt)
+        _today = (datetime.utcnow() + timedelta(hours=8)).strftime("%Y-%m-%d")  # 台灣時間
+        system += (f"\n\n## 時間基準\n今天日期是 {_today}。一律以此為「現在」："
+                   "已過去的季度（如 2025H1/H2）視為已公布的歷史數據，不可講成『未來要追蹤』；"
+                   "要追蹤的是當前年度（2026）之後的財報。談時間時用此基準，勿用訓練截止日。")
         if news:
             system += f"\n\n## 最新產業快訊\n{news}"
         # 硬規則：股價已由系統顯示於上方，模型只做分析、禁止過場句
