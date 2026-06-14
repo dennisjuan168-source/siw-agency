@@ -117,8 +117,8 @@ st.sidebar.markdown("""
 <div style="background:#f8fbff;border:1px solid #e3eef7;border-radius:12px;padding:14px 16px;margin-bottom:14px">
   <div style="font-size:15px;font-weight:700;color:#1C2B8F;margin-bottom:8px">📈 支援範圍</div>
   <div style="font-size:13.5px;color:#4a5568;line-height:1.85">
-    🇹🇼 台股（上市／上櫃／興櫃）<br>
-    🇨🇳 陸股（滬深 A 股）<br>
+    ・台股（上市／上櫃／興櫃）<br>
+    ・陸股（滬深 A 股）<br>
     <span style="color:#94a3b8">即時報價＋歷年財報數據</span>
   </div>
 </div>
