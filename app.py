@@ -242,8 +242,13 @@ def extract_codes(text: str):
     """從文字抽出台股/陸股代碼：數字代碼 + 公司名（權威表+官方簡稱）。回 (tw_set, cn_set)"""
     tw = set(_TW_RE.findall(text))
     cn = set(_CN_RE.findall(text))
-    # 排除誤判：四位數後接 年/月/日/% 視為年份或數值，非股票代碼
-    tw = {c for c in tw if not any(f"{c}{u}" in text for u in ("年", "月", "日", "%"))}
+    # 排除年份/季度誤判：數字在年份範圍(1990-2040)且後接 年/月/日/季/Q/H，或接%，如 2026年、2026 Q1、2025H2
+    # （2330 Q1 因 2330 不在年份範圍，仍會正確當台積電代碼）
+    def _is_yearlike(c):
+        if re.search(rf'{c}\s*%', text):
+            return True
+        return 1990 <= int(c) <= 2040 and bool(re.search(rf'{c}\s*[年月日季QHqh]', text))
+    tw = {c for c in tw if not _is_yearlike(c)}
     name_map = {}
     try:
         name_map.update(_tw_name_to_code())  # 官方簡稱
@@ -254,6 +259,16 @@ def extract_codes(text: str):
         if len(nm) >= 2 and nm in text:
             (cn if len(code) == 6 else tw).add(code)
     return tw, cn
+
+def resolve_codes(text: str):
+    """抽代碼；若本次沒有，沿用上一檔（前一個對話的股票），並記住本次代碼供下次延用。"""
+    tw, cn = extract_codes(text)
+    if tw or cn:
+        st.session_state["last_tw"] = list(tw)
+        st.session_state["last_cn"] = list(cn)
+        return tw, cn
+    # 本次無代碼 → 沿用上一檔
+    return set(st.session_state.get("last_tw", [])), set(st.session_state.get("last_cn", []))
 
 @st.cache_data(ttl=21600, show_spinner=False)
 def _tw_name_map():
@@ -451,11 +466,12 @@ def fetch_stock_data(ticker: str, currency: str) -> str:
     except Exception:
         return ""
 
-def detect_stocks_and_prices(text: str) -> str:
+def detect_stocks_and_prices(text: str, codes=None) -> str:
     """偵測問題中的股票代碼，查即時股價+財務資料，回傳注入字串。
+    codes 可傳入 (tw_set, cn_set)（如含上一檔後備）；未傳則自行抽取。
     公司名稱獨立解析，即使股價抓失敗也一定注入，避免 AI 猜錯公司名。"""
     sections = []
-    tw_codes, cn_codes = extract_codes(text)
+    tw_codes, cn_codes = codes if codes is not None else extract_codes(text)
 
     # 台股（上市 .TW；上櫃/興櫃需 .TWO，故抓不到時 fallback）
     for code in tw_codes:
@@ -502,16 +518,16 @@ def get_system_prompt(user_input: str) -> str:
         if name == forced or any(k in text for k in keywords):
             extras.append(f"## {name} 技術知識庫\n{knowledge}")
 
-    # 台股/陸股分析：注入五原則框架 + 即時股價
+    # 台股/陸股分析：注入五原則框架 + 即時股價（含上一檔後備）
+    _codes = resolve_codes(user_input)
     is_stock = (
         active in ("台股投資分析", "陸股投資分析")
         or any(k in text for k in ["台股","陸股","股票","分析","買嗎","值得","停損","目標價","均價","持股","觀察"])
-        or bool(_TW_RE.search(user_input))
-        or bool(_CN_RE.search(user_input))
+        or bool(_codes[0] or _codes[1])
     )
     if is_stock:
         extras.append(DENNIS_FRAMEWORK)
-        price_info = detect_stocks_and_prices(user_input)
+        price_info = detect_stocks_and_prices(user_input, codes=_codes)
         if price_info:
             extras.append(price_info)
 
@@ -536,11 +552,11 @@ if prompt:
         st.error("請在左側輸入 Anthropic API Key")
         st.stop()
 
-    # 自動查即時股價，注入到訊息中（含公司名→代碼偵測）
-    _tw_c, _cn_c = extract_codes(prompt)
-    has_code = bool(_tw_c or _cn_c)
+    # 自動查即時股價，注入到訊息中（含公司名→代碼偵測；無代碼時沿用上一檔）
+    _codes = resolve_codes(prompt)
+    has_code = bool(_codes[0] or _codes[1])
     with st.spinner("🔍 查詢即時股價中…"):
-        price_info = detect_stocks_and_prices(prompt)
+        price_info = detect_stocks_and_prices(prompt, codes=_codes)
     got_price = bool(price_info) and ("現價：" in price_info)
 
     # 規則：有股票代碼但「未拿到即時股價」→ 停在查詢中，不往下分析
