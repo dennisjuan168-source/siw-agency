@@ -238,14 +238,24 @@ def _cn_name(code: str):
         return None
 
 def resolve_name(code: str, market: str):
-    """權威表優先 → 官方來源 → None（再退回 yfinance）"""
+    """權威表優先 → 官方名稱清單 → 即時報價附帶名稱 → None（再退回 yfinance）"""
     if code in CODE_NAME:
         return CODE_NAME[code]
     try:
         if market == "TW":
-            return _tw_name_map().get(code)
+            nm = _tw_name_map().get(code)
+            if nm:
+                return nm
+            q = _tw_quote(code)  # MIS 報價本身就附公司中文名，當後備
+            if q and q.get("name"):
+                return q["name"]
         if market == "CN":
-            return _cn_name(code)
+            nm = _cn_name(code)
+            if nm:
+                return nm
+            q = _cn_quote(code)
+            if q and q.get("name"):
+                return q["name"]
     except Exception:
         pass
     return None
@@ -256,6 +266,7 @@ def _f(x):
     except (TypeError, ValueError):
         return None
 
+@st.cache_data(ttl=60, show_spinner=False)
 def _tw_quote(code: str):
     """台股即時報價：TWSE MIS（上市 tse_ / 上櫃 otc_）。用 Session 先取 cookie + 重試，雲端可靠。"""
     if not _REQ_OK:
@@ -281,6 +292,7 @@ def _tw_quote(code: str):
             continue
     return None
 
+@st.cache_data(ttl=60, show_spinner=False)
 def _cn_quote(code: str):
     """陸股即時報價：騰訊行情。回 dict 或 None"""
     if not _REQ_OK:
@@ -461,7 +473,7 @@ for msg in st.session_state.messages:
 active_topic = st.session_state.get("active_topic", "")
 if active_topic:
     st.info(f"📌 已選擇知識領域：**{active_topic}** — 請輸入您的問題")
-st.caption("build 2026-06-14f · 修正代碼黏中文偵測失敗")
+st.caption("build 2026-06-14g · 公司名後備用MIS報價名稱")
 prompt = st.chat_input("例如：台股 2408 值得繼續持有或進場購買嗎？陸股 300757 值得繼續持有或進場購買嗎？")
 
 if prompt:
