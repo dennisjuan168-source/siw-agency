@@ -249,30 +249,81 @@ def resolve_name(code: str, market: str):
         pass
     return None
 
+def _f(x):
+    try:
+        return float(x)
+    except (TypeError, ValueError):
+        return None
+
+def _tw_quote(code: str):
+    """台股即時報價：TWSE MIS（上市 tse_ / 上櫃 otc_），雲端友善。回 dict 或 None"""
+    if not _REQ_OK:
+        return None
+    h = {"User-Agent": "Mozilla/5.0", "Referer": "https://mis.twse.com.tw/stock/"}
+    ex = f"tse_{code}.tw|otc_{code}.tw"
+    try:
+        url = f"https://mis.twse.com.tw/stock/api/getStockInfo.jsp?ex_ch={ex}&json=1&delay=0"
+        for s in _requests.get(url, headers=h, timeout=8).json().get("msgArray", []):
+            price = _f(s.get("z")) or _f(s.get("o")) or _f(s.get("y"))  # 成交→開盤→昨收
+            if price:
+                return {"name": s.get("n"), "price": price, "prev": _f(s.get("y")),
+                        "high": _f(s.get("h")), "low": _f(s.get("l"))}
+    except Exception:
+        pass
+    return None
+
+def _cn_quote(code: str):
+    """陸股即時報價：騰訊行情。回 dict 或 None"""
+    if not _REQ_OK:
+        return None
+    pfx = "sh" if code.startswith("6") else "sz"
+    try:
+        r = _requests.get(f"https://qt.gtimg.cn/q={pfx}{code}", timeout=6)
+        p = r.content.decode("gbk", "ignore").split('"')[1].split("~")
+        price = _f(p[3]) if len(p) > 3 else None
+        if price:
+            return {"name": p[1], "price": price, "prev": _f(p[4]) if len(p) > 4 else None,
+                    "high": _f(p[33]) if len(p) > 33 else None,
+                    "low": _f(p[34]) if len(p) > 34 else None}
+    except Exception:
+        pass
+    return None
+
 def fetch_stock_data(ticker: str, currency: str) -> str:
-    """抓即時股價 + 財務資料，回傳格式化字串"""
+    """抓即時股價（官方來源優先）+ 財務資料（yfinance），回傳格式化字串"""
+    code = ticker.split(".")[0]
+    market = "CN" if ticker.endswith((".SS", ".SZ")) else "TW"
+    lines = []
+
+    # 即時股價：官方來源優先（雲端不被 Yahoo 擋）
+    q = _cn_quote(code) if market == "CN" else _tw_quote(code)
+    if q and q.get("price"):
+        if q.get("prev"):
+            chg = (q["price"] - q["prev"]) / q["prev"] * 100
+            arrow = "▲" if chg >= 0 else "▼"
+            lines.append(f"現價：{currency}{q['price']:.2f}（{arrow}{abs(chg):.2f}%）")
+        else:
+            lines.append(f"現價：{currency}{q['price']:.2f}")
+        if q.get("high") and q.get("low"):
+            lines.append(f"當日高低：{currency}{q['low']:.2f} ~ {currency}{q['high']:.2f}")
+
     if not _YF_OK:
-        return ""
+        return "\n".join(lines) if lines else ""
     try:
         t = yf.Ticker(ticker)
-        fi = t.fast_info
-        lines = []
-
-        # 股價（fast_info 最穩定）
-        price = fi.last_price
-        prev  = fi.previous_close
-        if price and prev:
-            chg = (price - prev) / prev * 100
-            arrow = "▲" if chg >= 0 else "▼"
-            lines.append(f"現價：{currency}{price:.2f}（{arrow}{abs(chg):.2f}%）")
-        elif price:
-            lines.append(f"現價：{currency}{price:.2f}")
-
-        # 52週高低（fast_info 有）
-        hi = getattr(fi, "year_high", None)
-        lo = getattr(fi, "year_low", None)
-        if hi and lo:
-            lines.append(f"52週區間：{currency}{lo:.2f} ~ {currency}{hi:.2f}")
+        # yfinance 備援股價（官方來源沒抓到時）
+        if not lines:
+            try:
+                fi = t.fast_info
+                price, prev = fi.last_price, fi.previous_close
+                if price and prev:
+                    chg = (price - prev) / prev * 100
+                    arrow = "▲" if chg >= 0 else "▼"
+                    lines.append(f"現價：{currency}{price:.2f}（{arrow}{abs(chg):.2f}%）")
+                elif price:
+                    lines.append(f"現價：{currency}{price:.2f}")
+            except Exception:
+                pass
 
         # 財務資料（t.info 可能較慢，設 timeout 保護）
         try:
