@@ -330,11 +330,11 @@ def detect_stocks_and_prices(text: str) -> str:
     公司名稱獨立解析，即使股價抓失敗也一定注入，避免 AI 猜錯公司名。"""
     sections = []
 
-    # 台股
+    # 台股（上市 .TW；上櫃/興櫃需 .TWO，故抓不到時 fallback）
     for code in set(_TW_RE.findall(text)):
         nm = resolve_name(code, "TW")
         head = f"公司名稱：{nm}（以此為準，禁止自行猜測公司名）\n" if nm else ""
-        data = fetch_stock_data(f"{code}.TW", "NT$")
+        data = fetch_stock_data(f"{code}.TW", "NT$") or fetch_stock_data(f"{code}.TWO", "NT$")
         body = data if data else "（即時股價暫時查詢失敗，請依公開資訊分析）"
         if nm or data:
             sections.append(f"### 台股 {code}\n{head}{body}")
@@ -353,7 +353,9 @@ def detect_stocks_and_prices(text: str) -> str:
         return ""
     note = ("\n\n【數據規則】以上為系統即時查詢的真實數據（含歷年毛利率財報實際值）。"
             "分析時一律以上方數字為準；上方未提供的歷史財務數字，不得自行估計或編造，"
-            "若需要請明確說明「此為估計值，建議至 Goodinfo/財報狗核實」。")
+            "若需要請明確說明「此為估計值，建議至 Goodinfo/財報狗核實」。"
+            "【輸出規則】禁止輸出「系統查詢中」「正在查詢」「讓我依現有公開資訊」等過場或等待字句，"
+            "直接以上方數據開始分析。")
     return "## 即時股價與財務資料\n" + "\n\n".join(sections) + note
 
 def get_system_prompt(user_input: str) -> str:
