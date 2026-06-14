@@ -102,18 +102,7 @@ st.sidebar.markdown(f"""
 </div>
 """, unsafe_allow_html=True)
 
-# ── Sidebar 知識領域 ──────────────────────────────────────
-st.sidebar.markdown('<div class="siw-section-label">知識領域</div>', unsafe_allow_html=True)
-
-topics = [
-    ("台股投資分析",    "分析台股持股與觀察股"),
-    ("陸股投資分析",    "分析陸股持股與觀察股"),
-]
-for label, question in topics:
-    if st.sidebar.button(label, key=f"topic_{label}", use_container_width=True):
-        st.session_state["active_topic"] = label
-
-st.sidebar.markdown("---")
+# ── Sidebar ───────────────────────────────────────────────
 
 with st.sidebar.expander("📡 產業快訊更新（管理員）"):
     admin_news_pw = st.text_input("管理員密碼", type="password", key="news_pw")
