@@ -339,6 +339,17 @@ def resolve_name(code: str, market: str):
             q = _cn_quote(code)
             if q and q.get("name"):
                 return q["name"]
+        # 最終後備：yfinance 名稱（興櫃/冷門股可能僅英文，但勝過模型杜撰）
+        if _YF_OK:
+            suf = (".SS", ".SZ") if market == "CN" else (".TWO", ".TW")
+            for s in suf:
+                try:
+                    info = yf.Ticker(code + s).info
+                    nm = info.get("longName") or info.get("shortName")
+                    if nm:
+                        return nm
+                except Exception:
+                    continue
     except Exception:
         pass
     return None
@@ -490,7 +501,8 @@ def detect_stocks_and_prices(text: str, codes=None) -> str:
     # 台股（上市 .TW；上櫃/興櫃需 .TWO，故抓不到時 fallback）
     for code in tw_codes:
         nm = resolve_name(code, "TW")
-        head = f"公司名稱：{nm}（以此為準，禁止自行猜測公司名）\n" if nm else ""
+        head = (f"公司名稱：{nm}（以此為準，禁止自行猜測公司名）\n" if nm
+                else f"公司名稱：系統查無代碼 {code} 之公司名（可能為興櫃/冷門股），嚴禁自行杜撰公司名，僅以代碼進行分析\n")
         data = fetch_stock_data(f"{code}.TW", "NT$") or fetch_stock_data(f"{code}.TWO", "NT$")
         body = data if data else "（即時股價暫時查詢失敗，請依公開資訊分析）"
         if nm or data:
@@ -500,7 +512,8 @@ def detect_stocks_and_prices(text: str, codes=None) -> str:
     for code in cn_codes:
         suffix = ".SS" if code.startswith("6") else ".SZ"
         nm = resolve_name(code, "CN")
-        head = f"公司名稱：{nm}（以此為準，禁止自行猜測公司名）\n" if nm else ""
+        head = (f"公司名稱：{nm}（以此為準，禁止自行猜測公司名）\n" if nm
+                else f"公司名稱：系統查無代碼 {code} 之公司名，嚴禁自行杜撰公司名，僅以代碼進行分析\n")
         data = fetch_stock_data(f"{code}{suffix}", "¥")
         body = data if data else "（即時股價暫時查詢失敗，請依公開資訊分析）"
         if nm or data:
