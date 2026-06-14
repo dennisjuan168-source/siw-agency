@@ -643,3 +643,17 @@ if prompt:
 
     st.session_state.messages.append({"role": "assistant", "content": reply})
     save_log(prompt, reply)
+
+    # 回答完成後自動捲到最底部（避免停在先前往上看的位置）
+    import streamlit.components.v1 as _components
+    _components.html(
+        """
+        <script>
+          const doc = window.parent.document;
+          const main = doc.querySelector('section.main, [data-testid="stMain"], [data-testid="stAppViewContainer"] section');
+          if (main) { main.scrollTo({ top: main.scrollHeight, behavior: 'smooth' }); }
+          window.parent.scrollTo({ top: doc.body.scrollHeight, behavior: 'smooth' });
+        </script>
+        """,
+        height=0,
+    )
