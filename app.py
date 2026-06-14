@@ -47,8 +47,8 @@ st.markdown("""
 }
 /* 內容區最大寬度，閱讀舒適 */
 [data-testid="stMainBlockContainer"] {
-    max-width: 900px;
-    margin: 0 auto;
+    max-width: 1400px;
+    margin: 0;
     padding-left: 2rem;
     padding-right: 2rem;
 }
