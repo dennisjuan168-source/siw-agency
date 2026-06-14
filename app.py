@@ -71,6 +71,17 @@ st.markdown("""
 [data-testid="stChatInput"] textarea::placeholder {
     font-size: 17px;
 }
+/* 輸入框外觀：中性灰框、無紅邊、無紅光暈、focus 用品牌淺藍 */
+[data-testid="stChatInput"] > div {
+    border: 1px solid #d5dde5 !important;
+    border-radius: 10px !important;
+    box-shadow: none !important;
+    background: #ffffff !important;
+}
+[data-testid="stChatInput"] > div:focus-within {
+    border-color: #5aa9d6 !important;
+    box-shadow: none !important;
+}
 /* 對話字體大小 */
 [data-testid="stChatMessage"] p,
 [data-testid="stChatMessage"] li,
@@ -487,7 +498,7 @@ for msg in st.session_state.messages:
 active_topic = st.session_state.get("active_topic", "")
 if active_topic:
     st.info(f"📌 已選擇知識領域：**{active_topic}** — 請輸入您的問題")
-st.caption("build 2026-06-14h · 輸入框左對齊+字體比照內文")
+st.caption("build 2026-06-14i · 輸入框中性灰框去紅邊")
 prompt = st.chat_input("例如：台股 2408 值得繼續持有或進場購買嗎？陸股 300757 值得繼續持有或進場購買嗎？")
 
 if prompt:
