@@ -175,7 +175,7 @@ st.markdown(f"""
 <div style="margin:-40px 0 8px;padding-bottom:18px;border-bottom:1px solid #e8eef4">
   <div style="display:flex;align-items:baseline;gap:14px;flex-wrap:wrap">
     <span style="font-size:48px;font-weight:800;color:#1C2B8F;line-height:1.1;letter-spacing:-0.5px">SIW Agency</span>
-    <span style="font-size:15px;font-weight:600;color:#1C2B8F;background:#e8f7fd;border:1px solid #a8dff5;border-radius:20px;padding:4px 14px">協創微 ｜ 共營AI · 一起共贏</span>
+    <span style="font-size:19px;font-weight:700;color:#1C2B8F;background:#e8f7fd;border:1px solid #a8dff5;border-radius:22px;padding:6px 18px">共營AI · 一起共贏</span>
   </div>
   <div style="font-size:17px;color:#4a5568;margin-top:12px;line-height:1.7;max-width:760px">
     協創微(SIW)聚焦「<b style="color:#1C2B8F">顧問諮詢</b>、<b style="color:#1C2B8F">渠道協助</b>、<b style="color:#1C2B8F">戰略投資</b>」等三大核心業務
