@@ -180,8 +180,9 @@ KNOWLEDGE_MAP = {
 DENNIS_FRAMEWORK = DENNIS_FRAMEWORK_KNOWLEDGE + "\n\n請用繁體中文，條列式輸出，不要長篇大論。"
 
 # 台股/陸股代碼偵測（4-6位數字）
-_TW_RE = re.compile(r'\b(\d{4})\b')
-_CN_RE = re.compile(r'\b([036]\d{5})\b')
+# 用 lookaround 而非 \b：中文字旁的數字在 Unicode 下無 word boundary，\b 會抓不到（如「6462股價」）
+_TW_RE = re.compile(r'(?<!\d)(\d{4})(?!\d)')
+_CN_RE = re.compile(r'(?<!\d)([036]\d{5})(?!\d)')
 _US_RE = re.compile(r'\b([A-Z]{1,5})\b')
 
 # 代碼→中文公司名（權威對照，優先於 yfinance；查不到才退回 yfinance）
@@ -460,7 +461,7 @@ for msg in st.session_state.messages:
 active_topic = st.session_state.get("active_topic", "")
 if active_topic:
     st.info(f"📌 已選擇知識領域：**{active_topic}** — 請輸入您的問題")
-st.caption("build 2026-06-14e · app直接渲染權威股價")
+st.caption("build 2026-06-14f · 修正代碼黏中文偵測失敗")
 prompt = st.chat_input("例如：台股 2408 值得繼續持有或進場購買嗎？陸股 300757 值得繼續持有或進場購買嗎？")
 
 if prompt:
