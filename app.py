@@ -197,7 +197,7 @@ st.markdown(f"""
   </div>
   <div style="font-size:13px;color:#94a3b8;margin-top:10px;display:flex;align-items:center;gap:10px;flex-wrap:wrap">
     <span style="background:#f1f5f9;border-radius:6px;padding:3px 10px">📊 目前僅提供台股與陸股（次級市場）分析</span>
-    <span style="background:#f1f5f9;border-radius:6px;padding:3px 10px">🕒 Updated 2026/06/14 15:00</span>
+    <span style="background:#f1f5f9;border-radius:6px;padding:3px 10px">🕒 Updated 2026/06/15 06:00am</span>
   </div>
 </div>
 """, unsafe_allow_html=True)
