@@ -262,17 +262,16 @@ def _tw_quote(code: str):
     h = {"User-Agent": "Mozilla/5.0", "Referer": "https://mis.twse.com.tw/stock/"}
     ex = f"tse_{code}.tw|otc_{code}.tw"
     url = f"https://mis.twse.com.tw/stock/api/getStockInfo.jsp?ex_ch={ex}&json=1&delay=0"
-    for attempt in range(2):
+    for attempt in range(3):
         try:
             sess = _requests.Session()
             sess.headers.update(h)
-            if attempt == 0:
-                # 先取得 session cookie（MIS 雲端常需此步）
-                try:
-                    sess.get("https://mis.twse.com.tw/stock/index.jsp", timeout=6)
-                except Exception:
-                    pass
-            for s in sess.get(url, timeout=8).json().get("msgArray", []):
+            # 先取得 session cookie（MIS 雲端常需此步）
+            try:
+                sess.get("https://mis.twse.com.tw/stock/index.jsp", timeout=8)
+            except Exception:
+                pass
+            for s in sess.get(url, timeout=10).json().get("msgArray", []):
                 price = _f(s.get("z")) or _f(s.get("o")) or _f(s.get("y"))  # 成交→開盤→昨收
                 if price:
                     return {"name": s.get("n"), "price": price, "prev": _f(s.get("y")),
@@ -461,6 +460,7 @@ for msg in st.session_state.messages:
 active_topic = st.session_state.get("active_topic", "")
 if active_topic:
     st.info(f"📌 已選擇知識領域：**{active_topic}** — 請輸入您的問題")
+st.caption("build 2026-06-14c · 官方報價+無價中止")
 prompt = st.chat_input("例如：台股 2408 值得繼續持有或進場購買嗎？陸股 300757 值得繼續持有或進場購買嗎？")
 
 if prompt:
