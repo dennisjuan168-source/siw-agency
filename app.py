@@ -242,6 +242,8 @@ def extract_codes(text: str):
     """從文字抽出台股/陸股代碼：數字代碼 + 公司名（權威表+官方簡稱）。回 (tw_set, cn_set)"""
     tw = set(_TW_RE.findall(text))
     cn = set(_CN_RE.findall(text))
+    # 排除誤判：四位數後接 年/月/日/% 視為年份或數值，非股票代碼
+    tw = {c for c in tw if not any(f"{c}{u}" in text for u in ("年", "月", "日", "%"))}
     name_map = {}
     try:
         name_map.update(_tw_name_to_code())  # 官方簡稱
@@ -537,7 +539,8 @@ if prompt:
     # 自動查即時股價，注入到訊息中（含公司名→代碼偵測）
     _tw_c, _cn_c = extract_codes(prompt)
     has_code = bool(_tw_c or _cn_c)
-    price_info = detect_stocks_and_prices(prompt)
+    with st.spinner("🔍 查詢即時股價中…"):
+        price_info = detect_stocks_and_prices(prompt)
     got_price = bool(price_info) and ("現價：" in price_info)
 
     # 規則：有股票代碼但「未拿到即時股價」→ 停在查詢中，不往下分析
@@ -574,13 +577,14 @@ if prompt:
                    "絕對禁止輸出『系統查詢中』『正在查詢』『系統未自動帶入』『系統未回傳』『請確認股價』『讓我依公開資訊』『以下依公開資訊分析』等任何過場、等待、要用戶確認股價或免責的字句與標題。"
                    "更絕對禁止『自行捏造或編寫』任何「即時股價/系統自動查詢/股價資訊」區塊或股價數字——所有股價只能來自系統，系統沒提供就不可自己寫一個價格。"
                    "直接從『結論先說』或四步驟開始分析，引用訊息中的現價數字即可。")
-        with client.messages.stream(
-            model="claude-sonnet-4-6",
-            max_tokens=2048,
-            system=system,
-            messages=st.session_state.messages,
-        ) as stream:
-            reply = st.write_stream(stream.text_stream)
+        with st.spinner("✍️ 分析撰寫中…"):
+            with client.messages.stream(
+                model="claude-sonnet-4-6",
+                max_tokens=2048,
+                system=system,
+                messages=st.session_state.messages,
+            ) as stream:
+                reply = st.write_stream(stream.text_stream)
 
     st.session_state.messages.append({"role": "assistant", "content": reply})
     save_log(prompt, reply)
