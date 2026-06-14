@@ -103,6 +103,29 @@ st.sidebar.markdown(f"""
 """, unsafe_allow_html=True)
 
 # ── Sidebar ───────────────────────────────────────────────
+st.sidebar.markdown("""
+<div style="background:#f8fbff;border:1px solid #e3eef7;border-radius:12px;padding:14px 16px;margin-bottom:14px">
+  <div style="font-size:15px;font-weight:700;color:#1C2B8F;margin-bottom:8px">💬 怎麼使用</div>
+  <div style="font-size:13.5px;color:#4a5568;line-height:1.85">
+    直接輸入<b>代碼</b>或<b>公司名</b>：<br>
+    ・<span style="color:#1C2B8F">2330</span>、<span style="color:#1C2B8F">分析台積電</span><br>
+    ・<span style="color:#1C2B8F">欣興 值得進場嗎</span><br>
+    ・<span style="color:#1C2B8F">300757 股價</span>（陸股）<br>
+    系統自動帶出<b>即時股價</b>＋依五大原則分析。
+  </div>
+</div>
+<div style="background:#f8fbff;border:1px solid #e3eef7;border-radius:12px;padding:14px 16px;margin-bottom:14px">
+  <div style="font-size:15px;font-weight:700;color:#1C2B8F;margin-bottom:8px">📈 支援範圍</div>
+  <div style="font-size:13.5px;color:#4a5568;line-height:1.85">
+    🇹🇼 台股（上市／上櫃／興櫃）<br>
+    🇨🇳 陸股（滬深 A 股）<br>
+    <span style="color:#94a3b8">即時報價＋歷年財報數據</span>
+  </div>
+</div>
+<div style="font-size:11.5px;color:#a0aec0;line-height:1.7;padding:0 4px 8px">
+  ⚠️ 本服務僅供研究參考，非投資建議。<br>投資決策請自行評估、風險自負。
+</div>
+""", unsafe_allow_html=True)
 
 with st.sidebar.expander("📡 產業快訊更新（管理員）"):
     admin_news_pw = st.text_input("管理員密碼", type="password", key="news_pw")
