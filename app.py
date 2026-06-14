@@ -7,6 +7,11 @@ import gspread
 from google.oauth2.service_account import Credentials
 import re
 try:
+    import requests as _requests
+    _REQ_OK = True
+except ImportError:
+    _REQ_OK = False
+try:
     import yfinance as yf
     _YF_OK = True
 except ImportError:
@@ -223,6 +228,55 @@ CODE_NAME = {
     "3711": "日月光投控", "2330": "台積電", "2454": "聯發科",
 }
 
+@st.cache_data(ttl=21600, show_spinner=False)
+def _tw_name_map():
+    """台股代碼→中文簡稱：證交所(上市)+櫃買(上櫃) OpenAPI，快取6小時"""
+    m = {}
+    if not _REQ_OK:
+        return m
+    sources = [
+        "https://openapi.twse.com.tw/v1/opendata/t187ap03_L",      # 上市
+        "https://www.tpex.org.tw/openapi/v1/mopsfin_t187ap03_O",   # 上櫃
+    ]
+    for url in sources:
+        try:
+            data = _requests.get(url, timeout=6).json()
+            for row in data:
+                code = row.get("公司代號") or row.get("SecuritiesCompanyCode")
+                name = row.get("公司簡稱") or row.get("CompanyAbbreviation")
+                if code and name:
+                    m[str(code).strip()] = str(name).strip()
+        except Exception:
+            continue
+    return m
+
+@st.cache_data(ttl=86400, show_spinner=False)
+def _cn_name(code: str):
+    """陸股代碼→中文名：騰訊行情，快取1天"""
+    if not _REQ_OK:
+        return None
+    prefix = "sh" if code.startswith("6") else "sz"
+    try:
+        r = _requests.get(f"https://qt.gtimg.cn/q={prefix}{code}", timeout=6)
+        txt = r.content.decode("gbk", "ignore")
+        parts = txt.split('"')[1].split("~") if '"' in txt else []
+        return parts[1].strip() if len(parts) > 1 and parts[1].strip() else None
+    except Exception:
+        return None
+
+def resolve_name(code: str, market: str):
+    """權威表優先 → 官方來源 → None（再退回 yfinance）"""
+    if code in CODE_NAME:
+        return CODE_NAME[code]
+    try:
+        if market == "TW":
+            return _tw_name_map().get(code)
+        if market == "CN":
+            return _cn_name(code)
+    except Exception:
+        pass
+    return None
+
 def fetch_stock_data(ticker: str, currency: str) -> str:
     """抓即時股價 + 財務資料，回傳格式化字串"""
     if not _YF_OK:
@@ -234,7 +288,8 @@ def fetch_stock_data(ticker: str, currency: str) -> str:
 
         # 公司名稱（避免 AI 猜錯代碼對應的公司）：權威表優先，否則退回 yfinance
         _code = ticker.split(".")[0]
-        _nm = CODE_NAME.get(_code)
+        _market = "CN" if ticker.endswith((".SS", ".SZ")) else "TW"
+        _nm = resolve_name(_code, _market)
         if not _nm:
             try:
                 _nm = t.info.get("longName") or t.info.get("shortName")
