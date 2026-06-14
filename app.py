@@ -575,10 +575,10 @@ def _scroll_bottom(tag):
               const main = doc.querySelector(
                 'section[data-testid="stAppScrollToBottomContainer"], section.stMain'
               );
-              if (main) {{ main.scrollTop = main.scrollHeight; }}
+              if (main) {{ main.scrollTo({{ top: main.scrollHeight, behavior: 'smooth' }}); }}
             }} catch(e) {{}}
           }}
-          [0, 60, 150, 300, 600, 1000, 1600, 2400].forEach(t => setTimeout(toBottom, t));
+          [0, 120, 350, 700, 1200, 1900].forEach(t => setTimeout(toBottom, t));
         </script>
         """,
         height=0,
