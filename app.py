@@ -286,13 +286,14 @@ def resolve_codes(text: str):
 
 @st.cache_data(ttl=21600, show_spinner=False)
 def _tw_name_map():
-    """台股代碼→中文簡稱：證交所(上市)+櫃買(上櫃) OpenAPI，快取6小時"""
+    """台股代碼→中文簡稱：證交所(上市)+櫃買(上櫃)+興櫃 OpenAPI，快取6小時"""
     m = {}
     if not _REQ_OK:
         return m
     sources = [
         "https://openapi.twse.com.tw/v1/opendata/t187ap03_L",      # 上市
         "https://www.tpex.org.tw/openapi/v1/mopsfin_t187ap03_O",   # 上櫃
+        "https://www.tpex.org.tw/openapi/v1/mopsfin_t187ap03_R",   # 興櫃（如 6812 梭特）
     ]
     for url in sources:
         try:
