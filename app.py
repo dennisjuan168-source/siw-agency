@@ -128,6 +128,47 @@ st.sidebar.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
+# ── 產業快訊持久化（存 Google Sheets 的 news 分頁，全站共用、重啟不掉）──
+_NEWS_SHEET_ID = "1HpPRlc3WB6d3iSQ8S025vA-YVeppFGL4mUMkiUAEn24"
+
+@st.cache_resource
+def _news_ws():
+    try:
+        creds = Credentials.from_service_account_info(
+            json.loads(st.secrets["GOOGLE_CREDENTIALS"]),
+            scopes=["https://www.googleapis.com/auth/spreadsheets"],
+        )
+        ss = gspread.authorize(creds).open_by_key(_NEWS_SHEET_ID)
+        try:
+            return ss.worksheet("news")
+        except Exception:
+            return ss.add_worksheet("news", rows=2, cols=1)
+    except Exception:
+        return None
+
+def load_news():
+    ws = _news_ws()
+    if not ws:
+        return ""
+    try:
+        return ws.acell("A1").value or ""
+    except Exception:
+        return ""
+
+def save_news(text):
+    ws = _news_ws()
+    if not ws:
+        return False
+    try:
+        ws.update_acell("A1", text)
+        return True
+    except Exception:
+        return False
+
+# 開站自動載入持久化快訊（每個 session 第一次執行時）
+if "industry_news" not in st.session_state:
+    st.session_state["industry_news"] = load_news()
+
 with st.sidebar.expander("📡 產業快訊更新（管理員）"):
     admin_news_pw = st.text_input("管理員密碼", type="password", key="news_pw")
     if admin_news_pw == st.secrets.get("ADMIN_PASSWORD", ""):
@@ -137,8 +178,13 @@ with st.sidebar.expander("📡 產業快訊更新（管理員）"):
             height=160,
         )
         if st.button("更新快訊"):
+            ok = save_news(news_input)               # 寫入 Google Sheets（永久）
             st.session_state["industry_news"] = news_input
-            st.success("快訊已更新！")
+            st.success("快訊已更新並永久儲存！" if ok else "已更新（本次有效；雲端儲存失敗，請檢查 Sheets 連線）")
+        if st.button("清空快訊"):
+            save_news("")
+            st.session_state["industry_news"] = ""
+            st.success("快訊已清空。")
 
 api_key = os.environ.get("ANTHROPIC_API_KEY") or st.sidebar.text_input(
     "Anthropic API Key", type="password", placeholder="sk-ant-..."
