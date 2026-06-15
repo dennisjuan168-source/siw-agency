@@ -541,6 +541,31 @@ def fetch_stock_data(ticker: str, currency: str) -> str:
     except Exception:
         return ""
 
+@st.cache_data(ttl=1800, show_spinner=False)
+def _stock_news(name: str, n: int = 6):
+    """抓該公司近期新聞（Google News RSS，含日期），回傳 ['日期 標題', ...]，快取30分。"""
+    if not _REQ_OK or not name:
+        return []
+    import xml.etree.ElementTree as ET
+    import urllib.parse
+    q = urllib.parse.quote(f"{name} 股")
+    url = f"https://news.google.com/rss/search?q={q}&hl=zh-TW&gl=TW&ceid=TW:zh-Hant"
+    try:
+        r = _requests.get(url, timeout=8, headers={"User-Agent": "Mozilla/5.0"})
+        root = ET.fromstring(r.content)
+        out = []
+        for it in root.findall(".//item")[:n]:
+            title = (it.findtext("title") or "").strip()
+            pub = (it.findtext("pubDate") or "").strip()
+            # pubDate 例: "Mon, 15 Jun 2026 08:00:00 GMT" → 取 "15 Jun 2026"
+            parts = pub.split(" ")
+            date = " ".join(parts[1:4]) if len(parts) >= 4 else pub[:16]
+            if title:
+                out.append(f"{date}｜{title}")
+        return out
+    except Exception:
+        return []
+
 def detect_stocks_and_prices(text: str, codes=None) -> str:
     """偵測問題中的股票代碼，查即時股價+財務資料，回傳注入字串。
     codes 可傳入 (tw_set, cn_set)（如含上一檔後備）；未傳則自行抽取。
@@ -555,6 +580,9 @@ def detect_stocks_and_prices(text: str, codes=None) -> str:
                 else f"公司名稱：系統查無代碼 {code} 之公司名（可能為興櫃/冷門股），嚴禁自行杜撰公司名，僅以代碼進行分析\n")
         data = fetch_stock_data(f"{code}.TW", "NT$") or fetch_stock_data(f"{code}.TWO", "NT$")
         body = data if data else "（即時股價暫時查詢失敗，請依公開資訊分析）"
+        news = _stock_news(nm) if nm else []
+        if news:
+            body += "\n近期新聞（即時）：\n" + "\n".join(f"- {x}" for x in news)
         if nm or data:
             sections.append(f"### 台股 {code}\n{head}{body}")
 
@@ -566,14 +594,19 @@ def detect_stocks_and_prices(text: str, codes=None) -> str:
                 else f"公司名稱：系統查無代碼 {code} 之公司名，嚴禁自行杜撰公司名，僅以代碼進行分析\n")
         data = fetch_stock_data(f"{code}{suffix}", "¥")
         body = data if data else "（即時股價暫時查詢失敗，請依公開資訊分析）"
+        news = _stock_news(nm) if nm else []
+        if news:
+            body += "\n近期新聞（即時）：\n" + "\n".join(f"- {x}" for x in news)
         if nm or data:
             sections.append(f"### 陸股 {code}\n{head}{body}")
 
     if not sections:
         return ""
-    note = ("\n\n【數據規則】以上為系統即時查詢的真實數據（含歷年毛利率財報實際值）。"
+    note = ("\n\n【數據規則】以上為系統即時查詢的真實數據（含歷年毛利率財報實際值與近期新聞）。"
             "分析時一律以上方數字為準；上方未提供的歷史財務數字，不得自行估計或編造，"
             "若需要請明確說明「此為估計值，建議至 Goodinfo/財報狗核實」。"
+            "【新聞規則】上方『近期新聞（即時）』是當前最新事件，分析催化劑/利多利空/近況時，"
+            "務必優先引用這些新聞（標明日期），不要只用你訓練知識裡的舊資訊；訓練知識僅供補充框架。"
             "【輸出規則】禁止輸出「系統查詢中」「正在查詢」「讓我依現有公開資訊」等過場或等待字句，"
             "直接以上方數據開始分析。")
     return "## 即時股價與財務資料\n" + "\n\n".join(sections) + note
