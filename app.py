@@ -204,6 +204,7 @@ st.markdown(f"""
 
 # ── Knowledge Base ────────────────────────────────────────
 from knowledge_base import CPO_KNOWLEDGE, TGV_KNOWLEDGE, TSV_KNOWLEDGE, ADV_PACKAGING_KNOWLEDGE, DENNIS_FRAMEWORK_KNOWLEDGE
+from kb_silicon_wafer import SILICON_WAFER_KNOWLEDGE
 
 BASE_PROMPT = st.secrets.get("SYSTEM_PROMPT", (
     "你是 SIW Agency 股票分析助理，請用繁體中文、條列式回答，不要長篇大論。\n"
@@ -218,6 +219,7 @@ KNOWLEDGE_MAP = {
     "TGV":    (["tgv","玻璃穿孔","glass via","玻璃基板"], TGV_KNOWLEDGE),
     "TSV":    (["tsv","矽穿孔","through silicon","tsv製程"], TSV_KNOWLEDGE),
     "先進封裝": (["先進封裝","cowos","soic","hbm封裝","chiplet","interposer","rdl","fowlp","advanced package"], ADV_PACKAGING_KNOWLEDGE),
+    "矽晶圓": (["矽晶圓","silicon wafer","環球晶","台勝科","6488","3532","12吋","長晶","磊晶","信越","sumco","siltronic","soi"], SILICON_WAFER_KNOWLEDGE),
 }
 
 # 完整方法論框架（純方法論、零個資）改由 knowledge_base.py 維護
