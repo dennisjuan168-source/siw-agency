@@ -173,6 +173,27 @@ def save_news(text):
     except Exception:
         return False
 
+# ── 長線/短線框架：存 Google Sheets 分頁，可直接在試算表編輯（跨裝置、免程式碼）──
+@st.cache_data(ttl=300, show_spinner=False)
+def load_framework(sheet_name, default):
+    """讀試算表分頁 A1 的框架內容；分頁不存在則自動建立並預填 default。快取5分鐘。"""
+    try:
+        creds = Credentials.from_service_account_info(
+            json.loads(st.secrets["GOOGLE_CREDENTIALS"]),
+            scopes=["https://www.googleapis.com/auth/spreadsheets"],
+        )
+        ss = gspread.authorize(creds).open_by_key(_NEWS_SHEET_ID)
+        try:
+            ws = ss.worksheet(sheet_name)
+        except Exception:
+            ws = ss.add_worksheet(sheet_name, rows=3, cols=1)
+            ws.update_acell("A1", default)   # 首次用現有內容預填，之後你直接改試算表
+            return default
+        v = ws.acell("A1").value
+        return v if (v and v.strip()) else default
+    except Exception:
+        return default   # 試算表異常時退回程式內建框架，分析不中斷
+
 # 開站自動載入持久化快訊（每個 session 第一次執行時）
 if "industry_news" not in st.session_state:
     st.session_state["industry_news"] = load_news()
@@ -650,12 +671,13 @@ def get_system_prompt(user_input: str) -> str:
     )
     if is_stock:
         # 依側欄模式注入不同框架：長線=Dennis五原則；短線=波段操作
+        # 框架內容優先讀 Google Sheets 分頁（可在試算表直接編輯），讀不到才用程式內建
         if st.session_state.get("analysis_mode", "").startswith("短線"):
             extras.append("【本次為短線（波段）模式】請用以下波段操作框架分析，"
                           "聚焦技術面進出與停損停利，基本面僅作背景；不要用長期持有/右側加碼那一套。")
-            extras.append(SWING_TRADING_KNOWLEDGE)
+            extras.append(load_framework("短線框架", SWING_TRADING_KNOWLEDGE))
         else:
-            extras.append(DENNIS_FRAMEWORK)
+            extras.append(load_framework("長線框架", DENNIS_FRAMEWORK))
         price_info = detect_stocks_and_prices(user_input, codes=_codes)
         if price_info:
             extras.append(price_info)
