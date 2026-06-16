@@ -103,6 +103,14 @@ st.sidebar.markdown(f"""
 </div>
 """, unsafe_allow_html=True)
 
+# ── Sidebar 分析模式切換 ──────────────────────────────────
+st.sidebar.markdown('<div style="font-size:14px;font-weight:700;color:#1C2B8F;margin-bottom:2px">📐 分析模式</div>', unsafe_allow_html=True)
+analysis_mode = st.sidebar.radio(
+    "分析模式", ["長線（Dennis 五原則）", "短線（波段操作）"],
+    label_visibility="collapsed", key="analysis_mode",
+)
+st.sidebar.markdown("<div style='margin-bottom:10px'></div>", unsafe_allow_html=True)
+
 # ── Sidebar ───────────────────────────────────────────────
 st.sidebar.markdown("""
 <div style="background:#f8fbff;border:1px solid #e3eef7;border-radius:12px;padding:14px 16px;margin-bottom:14px">
@@ -253,6 +261,7 @@ from knowledge_base import CPO_KNOWLEDGE, TGV_KNOWLEDGE, TSV_KNOWLEDGE, ADV_PACK
 from kb_silicon_wafer import SILICON_WAFER_KNOWLEDGE
 from kb_abf_substrate import ABF_SUBSTRATE_KNOWLEDGE
 from kb_passive_components import PASSIVE_COMPONENTS_KNOWLEDGE
+from kb_swing_trading import SWING_TRADING_KNOWLEDGE
 
 BASE_PROMPT = st.secrets.get("SYSTEM_PROMPT", (
     "你是 SIW Agency 股票分析助理，請用繁體中文、條列式回答，不要長篇大論。\n"
@@ -640,7 +649,13 @@ def get_system_prompt(user_input: str) -> str:
         or bool(_codes[0] or _codes[1])
     )
     if is_stock:
-        extras.append(DENNIS_FRAMEWORK)
+        # 依側欄模式注入不同框架：長線=Dennis五原則；短線=波段操作
+        if st.session_state.get("analysis_mode", "").startswith("短線"):
+            extras.append("【本次為短線（波段）模式】請用以下波段操作框架分析，"
+                          "聚焦技術面進出與停損停利，基本面僅作背景；不要用長期持有/右側加碼那一套。")
+            extras.append(SWING_TRADING_KNOWLEDGE)
+        else:
+            extras.append(DENNIS_FRAMEWORK)
         price_info = detect_stocks_and_prices(user_input, codes=_codes)
         if price_info:
             extras.append(price_info)
