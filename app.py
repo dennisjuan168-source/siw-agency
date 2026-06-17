@@ -282,14 +282,14 @@ if st.query_params.get("admin") == "1":
 # ── 主頁面標題（用 Logo 取代 emoji）────────────────────────
 st.markdown(f"""
 <div style="margin:-40px 0 14px">
-  <div style="display:flex;align-items:center;justify-content:space-between;padding:6px 2px 12px;border-bottom:1px solid #e8eef4;flex-wrap:wrap;gap:12px">
+  <div style="display:flex;align-items:flex-end;justify-content:flex-start;gap:28px;padding:6px 2px 12px;border-bottom:1px solid #e8eef4;flex-wrap:wrap">
     <div>
       <div style="font-size:30px;font-weight:800;letter-spacing:1px;line-height:1">
         <span style="color:#00AEEF">SCIEN</span><span style="color:#9E9E9E">SEE</span>
       </div>
       <div style="font-size:12px;letter-spacing:6px;color:#222;margin-top:3px">谦视智能科技</div>
     </div>
-    <div style="font-family:serif;font-style:italic;font-size:20px;color:#00AEEF">用科技洞见未来</div>
+    <div style="font-family:serif;font-style:italic;font-size:20px;color:#00AEEF;padding-bottom:2px">用科技洞见未来</div>
   </div>
   <div style="margin-top:14px">
     <div style="font-size:22px;font-weight:600;color:#1a2a3a;line-height:1.3">专业的半导体产业投资分析</div>
