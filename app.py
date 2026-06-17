@@ -309,11 +309,11 @@ if st.query_params.get("admin") == "1":
 st.markdown(f"""
 <div style="margin:-40px 0 16px;max-width:1080px">
   <div style="height:3px;background:#00AEEF;width:100%"></div>
-  <div style="display:flex;align-items:flex-end;justify-content:flex-start;gap:30px;padding:14px 2px 12px;border-bottom:1px solid #d7e0e6;flex-wrap:wrap;background:linear-gradient(180deg,#fbfdfe,#f3f6f8)">
+  <div style="display:flex;align-items:center;justify-content:flex-start;gap:22px;padding:14px 2px 12px;border-bottom:1px solid #d7e0e6;flex-wrap:wrap;background:linear-gradient(180deg,#fbfdfe,#f3f6f8)">
     <div style="padding-left:6px">
       <div style="font-size:40px;font-weight:800;letter-spacing:0.5px;line-height:1.1;color:#2b3138">Sciensee Agency<span style="font-size:22px;font-weight:600;color:#5a6b78;letter-spacing:2px">（谦视智能体）</span></div>
     </div>
-    <div style="font-family:serif;font-style:italic;font-size:28px;font-weight:700;color:#1a1a1a;padding-bottom:2px">用科技洞见未来</div>
+    <div style="font-size:22px;font-weight:700;color:#0077a8;background:#e8f7fd;border:1px solid #a8dff5;border-radius:26px;padding:8px 24px">用科技洞见未来</div>
   </div>
   <div style="display:flex;gap:0;margin-top:16px;flex-wrap:wrap;border:1px solid #d7e0e6;border-left:none">
     <div style="flex:1;min-width:160px;background:#fff;border-left:3px solid #00AEEF;padding:13px 18px;display:flex;align-items:center;gap:12px">
