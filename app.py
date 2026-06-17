@@ -292,8 +292,7 @@ st.markdown(f"""
     <div style="font-family:serif;font-style:italic;font-size:28px;font-weight:700;color:#1a1a1a;padding-bottom:2px">用科技洞见未来</div>
   </div>
   <div style="margin-top:14px">
-    <div style="font-size:22px;font-weight:600;color:#1a2a3a;line-height:1.3">专业的半导体产业投资分析</div>
-    <div style="display:flex;gap:12px;margin-top:14px;flex-wrap:wrap">
+    <div style="display:flex;gap:12px;flex-wrap:wrap">
       <div style="flex:1;min-width:150px;background:#f4f9fc;border:1px solid #e1eef6;border-radius:8px;padding:10px 14px;display:flex;align-items:center;gap:10px">
         <span style="font-size:20px;line-height:1">💡</span>
         <span style="font-size:14px;color:#1a2a3a;line-height:1.4">自主开发 · 拓展灵活</span>
