@@ -311,7 +311,7 @@ st.markdown(f"""
   <div style="height:3px;background:#00AEEF;width:100%"></div>
   <div style="display:flex;align-items:flex-end;justify-content:flex-start;gap:30px;padding:14px 2px 12px;border-bottom:1px solid #d7e0e6;flex-wrap:wrap;background:linear-gradient(180deg,#fbfdfe,#f3f6f8)">
     <div style="padding-left:6px">
-      <div style="font-size:30px;font-weight:800;letter-spacing:0.5px;line-height:1;color:#2b3138">Sciensee Agency<span style="font-size:16px;font-weight:600;color:#5a6b78;letter-spacing:2px">（谦视智能体）</span></div>
+      <div style="font-size:40px;font-weight:800;letter-spacing:0.5px;line-height:1.1;color:#2b3138">Sciensee Agency<span style="font-size:22px;font-weight:600;color:#5a6b78;letter-spacing:2px">（谦视智能体）</span></div>
     </div>
     <div style="font-family:serif;font-style:italic;font-size:28px;font-weight:700;color:#1a1a1a;padding-bottom:2px">用科技洞见未来</div>
   </div>
