@@ -22,7 +22,7 @@ import os as _os
 from PIL import Image as _PILImage
 _favicon_path = _os.path.join(_os.path.dirname(_os.path.abspath(__file__)), "siw_favicon.png")
 _favicon = _PILImage.open(_favicon_path) if _os.path.exists(_favicon_path) else "🔬"
-st.set_page_config(page_title="David Agency AI", page_icon=_favicon, layout="wide")
+st.set_page_config(page_title="SIW Agency AI", page_icon=_favicon, layout="wide")
 
 st.markdown("""
 <style>
@@ -51,28 +51,28 @@ st.markdown("""
     text-transform: uppercase;
     padding: 12px 0 4px;
 }
-/* 内容区最大宽度，阅读舒适 */
+/* 內容區最大寬度，閱讀舒適 */
 [data-testid="stMainBlockContainer"] {
     max-width: 1400px;
     margin: 0;
     padding-left: 2rem;
     padding-right: 2rem;
 }
-/* 底部输入框：比照主内容区，靠左对齐标题 */
+/* 底部輸入框：比照主內容區，靠左對齊標題 */
 [data-testid="stBottomBlockContainer"] {
     max-width: 1400px;
     margin: 0;
     padding-left: 2rem;
     padding-right: 2rem;
 }
-/* 输入框字体比照内文 */
+/* 輸入框字體比照內文 */
 [data-testid="stChatInput"] textarea {
     font-size: 20px;
 }
 [data-testid="stChatInput"] textarea::placeholder {
     font-size: 20px;
 }
-/* 输入框外观：中性灰框、无红边、无红光晕、focus 用品牌浅蓝 */
+/* 輸入框外觀：中性灰框、無紅邊、無紅光暈、focus 用品牌淺藍 */
 [data-testid="stChatInput"] > div {
     border: 1px solid #d5dde5 !important;
     border-radius: 10px !important;
@@ -83,7 +83,7 @@ st.markdown("""
     border-color: #5aa9d6 !important;
     box-shadow: none !important;
 }
-/* 对话字体大小 */
+/* 對話字體大小 */
 [data-testid="stChatMessage"] p,
 [data-testid="stChatMessage"] li,
 [data-testid="stChatMessage"] td {
@@ -103,10 +103,10 @@ st.sidebar.markdown(f"""
 </div>
 """, unsafe_allow_html=True)
 
-# ── Sidebar 分析模式切换 ──────────────────────────────────
+# ── Sidebar 分析模式切換 ──────────────────────────────────
 st.sidebar.markdown('<div style="font-size:14px;font-weight:700;color:#1C2B8F;margin-bottom:2px">📐 分析模式</div>', unsafe_allow_html=True)
 analysis_mode = st.sidebar.radio(
-    "分析模式", ["长线（Dennis 五原则）", "短线（波段操作）"],
+    "分析模式", ["長線（Dennis 五原則）", "短線（波段操作）"],
     label_visibility="collapsed", key="analysis_mode",
 )
 st.sidebar.markdown("<div style='margin-bottom:10px'></div>", unsafe_allow_html=True)
@@ -114,29 +114,29 @@ st.sidebar.markdown("<div style='margin-bottom:10px'></div>", unsafe_allow_html=
 # ── Sidebar ───────────────────────────────────────────────
 st.sidebar.markdown("""
 <div style="background:#f8fbff;border:1px solid #e3eef7;border-radius:12px;padding:14px 16px;margin-bottom:14px">
-  <div style="font-size:15px;font-weight:700;color:#1C2B8F;margin-bottom:8px">💬 怎么使用</div>
+  <div style="font-size:15px;font-weight:700;color:#1C2B8F;margin-bottom:8px">💬 怎麼使用</div>
   <div style="font-size:13.5px;color:#4a5568;line-height:1.85">
-    直接输入<b>代码</b>或<b>公司名</b>：<br>
-    ・<span style="color:#1C2B8F">2330</span>、<span style="color:#1C2B8F">分析台积电</span><br>
-    ・<span style="color:#1C2B8F">欣兴 值得进场吗</span><br>
-    ・<span style="color:#1C2B8F">300757 股价</span>（陆股）<br>
-    系统自动带出<b>即时股价</b>＋依五大原则分析。
+    直接輸入<b>代碼</b>或<b>公司名</b>：<br>
+    ・<span style="color:#1C2B8F">2330</span>、<span style="color:#1C2B8F">分析台積電</span><br>
+    ・<span style="color:#1C2B8F">欣興 值得進場嗎</span><br>
+    ・<span style="color:#1C2B8F">300757 股價</span>（陸股）<br>
+    系統自動帶出<b>即時股價</b>＋依五大原則分析。
   </div>
 </div>
 <div style="background:#f8fbff;border:1px solid #e3eef7;border-radius:12px;padding:14px 16px;margin-bottom:14px">
-  <div style="font-size:15px;font-weight:700;color:#1C2B8F;margin-bottom:8px">📈 支援范围</div>
+  <div style="font-size:15px;font-weight:700;color:#1C2B8F;margin-bottom:8px">📈 支援範圍</div>
   <div style="font-size:13.5px;color:#4a5568;line-height:1.85">
-    ・台股（上市／上柜／兴柜）<br>
-    ・陆股（沪深 A 股）<br>
-    <span style="color:#94a3b8">即时报价＋历年财报数据</span>
+    ・台股（上市／上櫃／興櫃）<br>
+    ・陸股（滬深 A 股）<br>
+    <span style="color:#94a3b8">即時報價＋歷年財報數據</span>
   </div>
 </div>
 <div style="font-size:11.5px;color:#a0aec0;line-height:1.7;padding:0 4px 8px">
-  ⚠️ 本服务仅供研究参考，非投资建议。<br>投资决策请自行评估、风险自负。
+  ⚠️ 本服務僅供研究參考，非投資建議。<br>投資決策請自行評估、風險自負。
 </div>
 """, unsafe_allow_html=True)
 
-# ── 产业快讯持久化（存 Google Sheets 的 news 分页，全站共用、重启不掉）──
+# ── 產業快訊持久化（存 Google Sheets 的 news 分頁，全站共用、重啟不掉）──
 _NEWS_SHEET_ID = "1HpPRlc3WB6d3iSQ8S025vA-YVeppFGL4mUMkiUAEn24"
 
 @st.cache_resource
@@ -173,10 +173,10 @@ def save_news(text):
     except Exception:
         return False
 
-# ── 长线/短线框架：存 Google Sheets 分页，可直接在试算表编辑（跨装置、免程式码）──
+# ── 長線/短線框架：存 Google Sheets 分頁，可直接在試算表編輯（跨裝置、免程式碼）──
 @st.cache_data(ttl=300, show_spinner=False)
 def load_framework(sheet_name, default):
-    """读试算表分页 A1 的框架内容；分页不存在则自动建立并预填 default。快取5分钟。"""
+    """讀試算表分頁 A1 的框架內容；分頁不存在則自動建立並預填 default。快取5分鐘。"""
     try:
         creds = Credentials.from_service_account_info(
             json.loads(st.secrets["GOOGLE_CREDENTIALS"]),
@@ -187,33 +187,33 @@ def load_framework(sheet_name, default):
             ws = ss.worksheet(sheet_name)
         except Exception:
             ws = ss.add_worksheet(sheet_name, rows=3, cols=1)
-            ws.update_acell("A1", default)   # 首次用现有内容预填，之后你直接改试算表
+            ws.update_acell("A1", default)   # 首次用現有內容預填，之後你直接改試算表
             return default
         v = ws.acell("A1").value
         return v if (v and v.strip()) else default
     except Exception:
-        return default   # 试算表异常时退回程式内建框架，分析不中断
+        return default   # 試算表異常時退回程式內建框架，分析不中斷
 
-# 开站自动载入持久化快讯（每个 session 第一次执行时）
+# 開站自動載入持久化快訊（每個 session 第一次執行時）
 if "industry_news" not in st.session_state:
     st.session_state["industry_news"] = load_news()
 
-with st.sidebar.expander("📡 产业快讯更新（管理员）"):
-    admin_news_pw = st.text_input("管理员密码", type="password", key="news_pw")
+with st.sidebar.expander("📡 產業快訊更新（管理員）"):
+    admin_news_pw = st.text_input("管理員密碼", type="password", key="news_pw")
     if admin_news_pw == st.secrets.get("ADMIN_PASSWORD", ""):
         news_input = st.text_area(
-            "贴上最新产业动态",
+            "貼上最新產業動態",
             value=st.session_state.get("industry_news", ""),
             height=160,
         )
-        if st.button("更新快讯"):
-            ok = save_news(news_input)               # 写入 Google Sheets（永久）
+        if st.button("更新快訊"):
+            ok = save_news(news_input)               # 寫入 Google Sheets（永久）
             st.session_state["industry_news"] = news_input
-            st.success("快讯已更新并永久储存！" if ok else "已更新（本次有效；云端储存失败，请检查 Sheets 连线）")
-        if st.button("清空快讯"):
+            st.success("快訊已更新並永久儲存！" if ok else "已更新（本次有效；雲端儲存失敗，請檢查 Sheets 連線）")
+        if st.button("清空快訊"):
             save_news("")
             st.session_state["industry_news"] = ""
-            st.success("快讯已清空。")
+            st.success("快訊已清空。")
 
 api_key = os.environ.get("ANTHROPIC_API_KEY") or st.sidebar.text_input(
     "Anthropic API Key", type="password", placeholder="sk-ant-..."
@@ -231,8 +231,8 @@ def get_sheet():
         )
         client = gspread.authorize(creds)
         sheet = client.open_by_key(SHEET_ID).sheet1
-        if sheet.row_count == 0 or sheet.cell(1, 1).value != "时间":
-            sheet.append_row(["时间", "问题", "回答"])
+        if sheet.row_count == 0 or sheet.cell(1, 1).value != "時間":
+            sheet.append_row(["時間", "問題", "回答"])
         return sheet
     except Exception:
         return None
@@ -242,10 +242,10 @@ def save_log(question, answer):
     if sheet:
         sheet.append_row([datetime.now().strftime("%Y-%m-%d %H:%M:%S"), question, answer])
 
-# 对话记录检视：预设隐藏，仅在网址带 ?admin=1 时对拥有者显示（访客看不到此功能）
+# 對話記錄檢視：預設隱藏，僅在網址帶 ?admin=1 時對擁有者顯示（訪客看不到此功能）
 if st.query_params.get("admin") == "1":
-    with st.sidebar.expander("📊 查看对话记录"):
-        admin_pw = st.text_input("管理员密码", type="password", key="admin")
+    with st.sidebar.expander("📊 查看對話記錄"):
+        admin_pw = st.text_input("管理員密碼", type="password", key="admin")
         if admin_pw == st.secrets.get("ADMIN_PASSWORD", ""):
             sheet = get_sheet()
             if sheet:
@@ -253,25 +253,25 @@ if st.query_params.get("admin") == "1":
                 data = sheet.get_all_records()
                 if data:
                     df = pd.DataFrame(data)
-                    st.dataframe(df[["时间", "问题"]], use_container_width=True)
-                    st.download_button("下载完整记录", df.to_csv(index=False).encode("utf-8"), "log.csv")
+                    st.dataframe(df[["時間", "問題"]], use_container_width=True)
+                    st.download_button("下載完整記錄", df.to_csv(index=False).encode("utf-8"), "log.csv")
                 else:
-                    st.info("还没有对话记录")
+                    st.info("還沒有對話記錄")
             else:
-                st.warning("Google Sheets 连线失败")
+                st.warning("Google Sheets 連線失敗")
 
-# ── 主页面标题（用 Logo 取代 emoji）────────────────────────
+# ── 主頁面標題（用 Logo 取代 emoji）────────────────────────
 st.markdown(f"""
 <div style="margin:-40px 0 8px;padding-bottom:18px;border-bottom:1px solid #e8eef4">
   <div style="display:flex;align-items:baseline;gap:14px;flex-wrap:wrap">
-    <span style="font-size:48px;font-weight:800;color:#1C2B8F;line-height:1.1;letter-spacing:-0.5px">David Agency</span>
-    <span style="font-size:19px;font-weight:700;color:#1C2B8F;background:#e8f7fd;border:1px solid #a8dff5;border-radius:22px;padding:6px 18px">共营AI · 一起共赢</span>
+    <span style="font-size:48px;font-weight:800;color:#1C2B8F;line-height:1.1;letter-spacing:-0.5px">SIW Agency</span>
+    <span style="font-size:19px;font-weight:700;color:#1C2B8F;background:#e8f7fd;border:1px solid #a8dff5;border-radius:22px;padding:6px 18px">共營AI · 一起共贏</span>
   </div>
   <div style="font-size:17px;color:#4a5568;margin-top:12px;line-height:1.7;max-width:760px">
-    协创微(SIW)聚焦「<b style="color:#1C2B8F">顾问咨询</b>、<b style="color:#1C2B8F">渠道协助</b>、<b style="color:#1C2B8F">战略投资</b>」等三大核心业务
+    協創微(SIW)聚焦「<b style="color:#1C2B8F">顧問諮詢</b>、<b style="color:#1C2B8F">渠道協助</b>、<b style="color:#1C2B8F">戰略投資</b>」等三大核心業務
   </div>
   <div style="font-size:13px;color:#94a3b8;margin-top:10px;display:flex;align-items:center;gap:10px;flex-wrap:wrap">
-    <span style="background:#f1f5f9;border-radius:6px;padding:3px 10px">📊 目前仅提供台股与陆股（次级市场）分析</span>
+    <span style="background:#f1f5f9;border-radius:6px;padding:3px 10px">📊 目前僅提供台股與陸股（次級市場）分析</span>
     <span style="background:#f1f5f9;border-radius:6px;padding:3px 10px">🕒 Updated 2026/06/15 06:00am</span>
   </div>
 </div>
@@ -285,62 +285,62 @@ from kb_passive_components import PASSIVE_COMPONENTS_KNOWLEDGE
 from kb_swing_trading import SWING_TRADING_KNOWLEDGE
 
 BASE_PROMPT = st.secrets.get("SYSTEM_PROMPT", (
-    "你是 SIW Agency 股票分析助理，请用简体中文、条列式回答，不要长篇大论。\n"
-    "【查价能力】本系统具备即时股价查询能力：当用户讯息含台股/陆股代码时，系统会自动查询即时股价、52周区间、本益比、EPS、毛利率、目标价等并附在讯息中。"
-    "因此绝对禁止回答『我无法查询股价』『我不能即时查股价』之类否定句。若用户只问『你可以查股价吗』而未给代码，请回答：『可以，请提供股票代码（例：台股 2408、陆股 300757）或股名，我会即时查询并分析。』\n"
-    "【最重要规则】绝对禁止询问用户以下任何资讯：目前股价、现在股价区间、持仓均价、持仓比例。"
-    "系统已自动查询即时股价并附在用户讯息中；若无股价资料，直接用公开资讯分析，不得开口问用户。"
+    "你是 SIW Agency 股票分析助理，請用繁體中文、條列式回答，不要長篇大論。\n"
+    "【查價能力】本系統具備即時股價查詢能力：當用戶訊息含台股/陸股代碼時，系統會自動查詢即時股價、52週區間、本益比、EPS、毛利率、目標價等並附在訊息中。"
+    "因此絕對禁止回答『我無法查詢股價』『我不能即時查股價』之類否定句。若用戶只問『你可以查股價嗎』而未給代碼，請回答：『可以，請提供股票代碼（例：台股 2408、陸股 300757）或股名，我會即時查詢並分析。』\n"
+    "【最重要規則】絕對禁止詢問用戶以下任何資訊：目前股價、現在股價區間、持倉均價、持倉比例。"
+    "系統已自動查詢即時股價並附在用戶訊息中；若無股價資料，直接用公開資訊分析，不得開口問用戶。"
 ))
 
 KNOWLEDGE_MAP = {
-    "CPO":    (["cpo","共封装","光模块","光模组","npo","lpo","xpo","siph","矽光"], CPO_KNOWLEDGE),
+    "CPO":    (["cpo","共封裝","光模塊","光模組","npo","lpo","xpo","siph","矽光"], CPO_KNOWLEDGE),
     "TGV":    (["tgv","玻璃穿孔","glass via","玻璃基板"], TGV_KNOWLEDGE),
-    "TSV":    (["tsv","矽穿孔","through silicon","tsv制程"], TSV_KNOWLEDGE),
-    "先进封装": (["先进封装","cowos","soic","hbm封装","chiplet","interposer","rdl","fowlp","advanced package"], ADV_PACKAGING_KNOWLEDGE),
-    "矽晶圆": (["矽晶圆","silicon wafer","环球晶","台胜科","6488","3532","12吋","长晶","磊晶","信越","sumco","siltronic","soi"], SILICON_WAFER_KNOWLEDGE),
-    "ABF载板": (["abf","载板","substrate","欣兴","南电","景硕","3037","8046","3189","ibiden","揖斐电","shinko","新光电气","bt载板","封装基板"], ABF_SUBSTRATE_KNOWLEDGE),
-    "被动元件": (["被动元件","mlcc","积层陶瓷","电容","电阻","电感","国巨","华新科","禾伸堂","2327","2492","3026","村田","murata","tdk","太诱","车规电容","钽质电容"], PASSIVE_COMPONENTS_KNOWLEDGE),
+    "TSV":    (["tsv","矽穿孔","through silicon","tsv製程"], TSV_KNOWLEDGE),
+    "先進封裝": (["先進封裝","cowos","soic","hbm封裝","chiplet","interposer","rdl","fowlp","advanced package"], ADV_PACKAGING_KNOWLEDGE),
+    "矽晶圓": (["矽晶圓","silicon wafer","環球晶","台勝科","6488","3532","12吋","長晶","磊晶","信越","sumco","siltronic","soi"], SILICON_WAFER_KNOWLEDGE),
+    "ABF載板": (["abf","載板","substrate","欣興","南電","景碩","3037","8046","3189","ibiden","揖斐電","shinko","新光電氣","bt載板","封裝基板"], ABF_SUBSTRATE_KNOWLEDGE),
+    "被動元件": (["被動元件","mlcc","積層陶瓷","電容","電阻","電感","國巨","華新科","禾伸堂","2327","2492","3026","村田","murata","tdk","太誘","車規電容","鉭質電容"], PASSIVE_COMPONENTS_KNOWLEDGE),
 }
 
-# 完整方法论框架（纯方法论、零个资）改由 knowledge_base.py 维护
-DENNIS_FRAMEWORK = DENNIS_FRAMEWORK_KNOWLEDGE + "\n\n请用简体中文，条列式输出，不要长篇大论。"
+# 完整方法論框架（純方法論、零個資）改由 knowledge_base.py 維護
+DENNIS_FRAMEWORK = DENNIS_FRAMEWORK_KNOWLEDGE + "\n\n請用繁體中文，條列式輸出，不要長篇大論。"
 
-# 台股/陆股代码侦测（4-6位数字）
-# 用 lookaround 而非 \b：中文字旁的数字在 Unicode 下无 word boundary，\b 会抓不到（如「6462股价」）
+# 台股/陸股代碼偵測（4-6位數字）
+# 用 lookaround 而非 \b：中文字旁的數字在 Unicode 下無 word boundary，\b 會抓不到（如「6462股價」）
 _TW_RE = re.compile(r'(?<!\d)(\d{4})(?!\d)')
 _CN_RE = re.compile(r'(?<!\d)([036]\d{5})(?!\d)')
 _US_RE = re.compile(r'\b([A-Z]{1,5})\b')
 
-# 代码→中文公司名（权威对照，优先于 yfinance；查不到才退回 yfinance）
+# 代碼→中文公司名（權威對照，優先於 yfinance；查不到才退回 yfinance）
 CODE_NAME = {
-    # 陆股
-    "300757": "罗博特科", "688702": "盛科通信", "605111": "新洁能", "605028": "世茂能源",
-    # 台股（Dennis 持股/观察）
-    "3595": "山太士", "2360": "致茂", "3037": "欣兴", "3026": "禾伸堂",
-    "4772": "台特化", "7822": "倍利科", "7810": "捷创科技", "6223": "旺矽",
-    "2408": "南亚科", "3189": "景硕", "2327": "国巨", "6488": "环球晶",
-    "3653": "健策", "2308": "台达电", "7734": "印能科技", "7769": "鸿劲",
-    "3532": "台胜科", "6770": "力积电", "6239": "力成", "3485": "叙丰",
-    "3008": "大立光", "2344": "华邦电", "6271": "同欣电", "3455": "由田",
-    # 台股（曾持有/相关）
+    # 陸股
+    "300757": "羅博特科", "688702": "盛科通信", "605111": "新潔能", "605028": "世茂能源",
+    # 台股（Dennis 持股/觀察）
+    "3595": "山太士", "2360": "致茂", "3037": "欣興", "3026": "禾伸堂",
+    "4772": "台特化", "7822": "倍利科", "7810": "捷創科技", "6223": "旺矽",
+    "2408": "南亞科", "3189": "景碩", "2327": "國巨", "6488": "環球晶",
+    "3653": "健策", "2308": "台達電", "7734": "印能科技", "7769": "鴻勁",
+    "3532": "台勝科", "6770": "力積電", "6239": "力成", "3485": "敘豐",
+    "3008": "大立光", "2344": "華邦電", "6271": "同欣電", "3455": "由田",
+    # 台股（曾持有/相關）
     "6462": "神盾", "6826": "和淞", "8215": "明基材", "3163": "波若威",
-    "3711": "日月光投控", "2330": "台积电", "2454": "联发科",
+    "3711": "日月光投控", "2330": "台積電", "2454": "聯發科",
 }
 
-# 公司名→代码（权威表反向）
+# 公司名→代碼（權威表反向）
 NAME_CODE = {v: k for k, v in CODE_NAME.items()}
 
 @st.cache_data(ttl=21600, show_spinner=False)
 def _tw_name_to_code():
-    """证交所/柜买 公司简称 → 代码（反向官方名称清单）"""
+    """證交所/櫃買 公司簡稱 → 代碼（反向官方名稱清單）"""
     return {nm: code for code, nm in _tw_name_map().items() if nm}
 
 def extract_codes(text: str):
-    """从文字抽出台股/陆股代码：数字代码 + 公司名（权威表+官方简称）。回 (tw_set, cn_set)"""
+    """從文字抽出台股/陸股代碼：數字代碼 + 公司名（權威表+官方簡稱）。回 (tw_set, cn_set)"""
     tw = set(_TW_RE.findall(text))
     cn = set(_CN_RE.findall(text))
-    # 排除年份/季度误判：数字在年份范围(1990-2040)且后接 年/月/日/季/Q/H，或接%，如 2026年、2026 Q1、2025H2
-    # （2330 Q1 因 2330 不在年份范围，仍会正确当台积电代码）
+    # 排除年份/季度誤判：數字在年份範圍(1990-2040)且後接 年/月/日/季/Q/H，或接%，如 2026年、2026 Q1、2025H2
+    # （2330 Q1 因 2330 不在年份範圍，仍會正確當台積電代碼）
     def _is_yearlike(c):
         if re.search(rf'{c}\s*%', text):
             return True
@@ -348,42 +348,42 @@ def extract_codes(text: str):
     tw = {c for c in tw if not _is_yearlike(c)}
     name_map = {}
     try:
-        name_map.update(_tw_name_to_code())  # 官方简称
+        name_map.update(_tw_name_to_code())  # 官方簡稱
     except Exception:
         pass
-    name_map.update(NAME_CODE)               # 权威表覆盖（含陆股）
+    name_map.update(NAME_CODE)               # 權威表覆蓋（含陸股）
     for nm, code in name_map.items():
         if len(nm) >= 2 and nm in text:
             (cn if len(code) == 6 else tw).add(code)
     return tw, cn
 
 def resolve_codes(text: str):
-    """抽代码；若本次没有，沿用上一档（前一个对话的股票），并记住本次代码供下次延用。"""
+    """抽代碼；若本次沒有，沿用上一檔（前一個對話的股票），並記住本次代碼供下次延用。"""
     tw, cn = extract_codes(text)
     if tw or cn:
         st.session_state["last_tw"] = list(tw)
         st.session_state["last_cn"] = list(cn)
         return tw, cn
-    # 本次无代码 → 沿用上一档
+    # 本次無代碼 → 沿用上一檔
     return set(st.session_state.get("last_tw", [])), set(st.session_state.get("last_cn", []))
 
 @st.cache_data(ttl=21600, show_spinner=False)
 def _tw_name_map():
-    """台股代码→中文简称：证交所(上市)+柜买(上柜)+兴柜 OpenAPI，快取6小时"""
+    """台股代碼→中文簡稱：證交所(上市)+櫃買(上櫃)+興櫃 OpenAPI，快取6小時"""
     m = {}
     if not _REQ_OK:
         return m
     sources = [
         "https://openapi.twse.com.tw/v1/opendata/t187ap03_L",      # 上市
-        "https://www.tpex.org.tw/openapi/v1/mopsfin_t187ap03_O",   # 上柜
-        "https://www.tpex.org.tw/openapi/v1/mopsfin_t187ap03_R",   # 兴柜（如 6812 梭特）
+        "https://www.tpex.org.tw/openapi/v1/mopsfin_t187ap03_O",   # 上櫃
+        "https://www.tpex.org.tw/openapi/v1/mopsfin_t187ap03_R",   # 興櫃（如 6812 梭特）
     ]
     for url in sources:
         try:
             data = _requests.get(url, timeout=6).json()
             for row in data:
-                code = row.get("公司代号") or row.get("SecuritiesCompanyCode")
-                name = row.get("公司简称") or row.get("CompanyAbbreviation")
+                code = row.get("公司代號") or row.get("SecuritiesCompanyCode")
+                name = row.get("公司簡稱") or row.get("CompanyAbbreviation")
                 if code and name:
                     m[str(code).strip()] = str(name).strip()
         except Exception:
@@ -392,7 +392,7 @@ def _tw_name_map():
 
 @st.cache_data(ttl=86400, show_spinner=False)
 def _cn_name(code: str):
-    """陆股代码→中文名：腾讯行情，快取1天"""
+    """陸股代碼→中文名：騰訊行情，快取1天"""
     if not _REQ_OK:
         return None
     prefix = "sh" if code.startswith("6") else "sz"
@@ -405,7 +405,7 @@ def _cn_name(code: str):
         return None
 
 def resolve_name(code: str, market: str):
-    """权威表优先 → 官方名称清单 → 即时报价附带名称 → None（再退回 yfinance）"""
+    """權威表優先 → 官方名稱清單 → 即時報價附帶名稱 → None（再退回 yfinance）"""
     if code in CODE_NAME:
         return CODE_NAME[code]
     try:
@@ -413,7 +413,7 @@ def resolve_name(code: str, market: str):
             nm = _tw_name_map().get(code)
             if nm:
                 return nm
-            q = _tw_quote(code)  # MIS 报价本身就附公司中文名，当后备
+            q = _tw_quote(code)  # MIS 報價本身就附公司中文名，當後備
             if q and q.get("name"):
                 return q["name"]
         if market == "CN":
@@ -423,7 +423,7 @@ def resolve_name(code: str, market: str):
             q = _cn_quote(code)
             if q and q.get("name"):
                 return q["name"]
-        # 最终后备：yfinance 名称（兴柜/冷门股可能仅英文，但胜过模型杜撰）
+        # 最終後備：yfinance 名稱（興櫃/冷門股可能僅英文，但勝過模型杜撰）
         if _YF_OK:
             suf = (".SS", ".SZ") if market == "CN" else (".TWO", ".TW")
             for s in suf:
@@ -446,7 +446,7 @@ def _f(x):
 
 @st.cache_data(ttl=60, show_spinner=False)
 def _tw_quote(code: str):
-    """台股即时报价：TWSE MIS（上市 tse_ / 上柜 otc_）。用 Session 先取 cookie + 重试，云端可靠。"""
+    """台股即時報價：TWSE MIS（上市 tse_ / 上櫃 otc_）。用 Session 先取 cookie + 重試，雲端可靠。"""
     if not _REQ_OK:
         return None
     h = {"User-Agent": "Mozilla/5.0", "Referer": "https://mis.twse.com.tw/stock/"}
@@ -456,13 +456,13 @@ def _tw_quote(code: str):
         try:
             sess = _requests.Session()
             sess.headers.update(h)
-            # 先取得 session cookie（MIS 云端常需此步）
+            # 先取得 session cookie（MIS 雲端常需此步）
             try:
                 sess.get("https://mis.twse.com.tw/stock/index.jsp", timeout=8)
             except Exception:
                 pass
             for s in sess.get(url, timeout=10).json().get("msgArray", []):
-                price = _f(s.get("z")) or _f(s.get("o")) or _f(s.get("y"))  # 成交→开盘→昨收
+                price = _f(s.get("z")) or _f(s.get("o")) or _f(s.get("y"))  # 成交→開盤→昨收
                 if price:
                     return {"name": s.get("n"), "price": price, "prev": _f(s.get("y")),
                             "high": _f(s.get("h")), "low": _f(s.get("l"))}
@@ -472,7 +472,7 @@ def _tw_quote(code: str):
 
 @st.cache_data(ttl=60, show_spinner=False)
 def _cn_quote(code: str):
-    """陆股即时报价：腾讯行情。回 dict 或 None"""
+    """陸股即時報價：騰訊行情。回 dict 或 None"""
     if not _REQ_OK:
         return None
     pfx = "sh" if code.startswith("6") else "sz"
@@ -489,28 +489,28 @@ def _cn_quote(code: str):
     return None
 
 def fetch_stock_data(ticker: str, currency: str) -> str:
-    """抓即时股价（官方来源优先）+ 财务资料（yfinance），回传格式化字串"""
+    """抓即時股價（官方來源優先）+ 財務資料（yfinance），回傳格式化字串"""
     code = ticker.split(".")[0]
     market = "CN" if ticker.endswith((".SS", ".SZ")) else "TW"
     lines = []
 
-    # 即时股价：官方来源优先（云端不被 Yahoo 挡）
+    # 即時股價：官方來源優先（雲端不被 Yahoo 擋）
     q = _cn_quote(code) if market == "CN" else _tw_quote(code)
     if q and q.get("price"):
         if q.get("prev"):
             chg = (q["price"] - q["prev"]) / q["prev"] * 100
             arrow = "▲" if chg >= 0 else "▼"
-            lines.append(f"现价：{currency}{q['price']:.2f}（{arrow}{abs(chg):.2f}%）")
+            lines.append(f"現價：{currency}{q['price']:.2f}（{arrow}{abs(chg):.2f}%）")
         else:
-            lines.append(f"现价：{currency}{q['price']:.2f}")
+            lines.append(f"現價：{currency}{q['price']:.2f}")
         if q.get("high") and q.get("low"):
-            lines.append(f"当日高低：{currency}{q['low']:.2f} ~ {currency}{q['high']:.2f}")
+            lines.append(f"當日高低：{currency}{q['low']:.2f} ~ {currency}{q['high']:.2f}")
 
     if not _YF_OK:
         return "\n".join(lines) if lines else ""
     try:
         t = yf.Ticker(ticker)
-        # yfinance 备援股价（官方来源没抓到时）
+        # yfinance 備援股價（官方來源沒抓到時）
         if not lines:
             try:
                 fi = t.fast_info
@@ -518,13 +518,13 @@ def fetch_stock_data(ticker: str, currency: str) -> str:
                 if price and prev:
                     chg = (price - prev) / prev * 100
                     arrow = "▲" if chg >= 0 else "▼"
-                    lines.append(f"现价：{currency}{price:.2f}（{arrow}{abs(chg):.2f}%）")
+                    lines.append(f"現價：{currency}{price:.2f}（{arrow}{abs(chg):.2f}%）")
                 elif price:
-                    lines.append(f"现价：{currency}{price:.2f}")
+                    lines.append(f"現價：{currency}{price:.2f}")
             except Exception:
                 pass
 
-        # 财务资料（t.info 可能较慢，设 timeout 保护）
+        # 財務資料（t.info 可能較慢，設 timeout 保護）
         try:
             info = t.info
             pe = info.get("trailingPE")
@@ -541,22 +541,22 @@ def fetch_stock_data(ticker: str, currency: str) -> str:
 
             om = info.get("operatingMargins")
             if om:
-                lines.append(f"营业利益率：{om*100:.1f}%")
+                lines.append(f"營業利益率：{om*100:.1f}%")
 
             tp = info.get("targetMeanPrice")
             if tp:
-                lines.append(f"分析师均目标价：{currency}{tp:.2f}")
+                lines.append(f"分析師均目標價：{currency}{tp:.2f}")
 
             mc = info.get("marketCap")
             if mc:
                 if mc >= 1e12:
                     lines.append(f"市值：{currency}{mc/1e12:.2f}兆")
                 elif mc >= 1e8:
-                    lines.append(f"市值：{currency}{mc/1e8:.1f}亿")
+                    lines.append(f"市值：{currency}{mc/1e8:.1f}億")
         except Exception:
-            pass  # 财务资料抓失败不影响股价显示
+            pass  # 財務資料抓失敗不影響股價顯示
 
-        # 历年毛利率（财报实际值，取代 AI 估计）
+        # 歷年毛利率（財報實際值，取代 AI 估計）
         try:
             fin = t.income_stmt
             if fin is not None and "Gross Profit" in fin.index and "Total Revenue" in fin.index:
@@ -567,7 +567,7 @@ def fetch_stock_data(ticker: str, currency: str) -> str:
                     if rev and gp and rev == rev and gp == gp and rev != 0:  # 排除 NaN
                         gm_hist.append(f"{str(col)[:4]}年 {gp/rev*100:.1f}%")
                 if gm_hist:
-                    lines.append("历年毛利率（财报实际）：" + "、".join(gm_hist))
+                    lines.append("歷年毛利率（財報實際）：" + "、".join(gm_hist))
         except Exception:
             pass
 
@@ -577,7 +577,7 @@ def fetch_stock_data(ticker: str, currency: str) -> str:
 
 @st.cache_data(ttl=1800, show_spinner=False)
 def _stock_news(name: str, n: int = 6):
-    """抓该公司近期新闻（Google News RSS，含日期），回传 ['日期 标题', ...]，快取30分。"""
+    """抓該公司近期新聞（Google News RSS，含日期），回傳 ['日期 標題', ...]，快取30分。"""
     if not _REQ_OK or not name:
         return []
     import xml.etree.ElementTree as ET
@@ -601,83 +601,83 @@ def _stock_news(name: str, n: int = 6):
         return []
 
 def detect_stocks_and_prices(text: str, codes=None) -> str:
-    """侦测问题中的股票代码，查即时股价+财务资料，回传注入字串。
-    codes 可传入 (tw_set, cn_set)（如含上一档后备）；未传则自行抽取。
-    公司名称独立解析，即使股价抓失败也一定注入，避免 AI 猜错公司名。"""
+    """偵測問題中的股票代碼，查即時股價+財務資料，回傳注入字串。
+    codes 可傳入 (tw_set, cn_set)（如含上一檔後備）；未傳則自行抽取。
+    公司名稱獨立解析，即使股價抓失敗也一定注入，避免 AI 猜錯公司名。"""
     sections = []
     tw_codes, cn_codes = codes if codes is not None else extract_codes(text)
 
-    # 台股（上市 .TW；上柜/兴柜需 .TWO，故抓不到时 fallback）
+    # 台股（上市 .TW；上櫃/興櫃需 .TWO，故抓不到時 fallback）
     for code in tw_codes:
         nm = resolve_name(code, "TW")
-        head = (f"公司名称：{nm}（以此为准，禁止自行猜测公司名）\n" if nm
-                else f"公司名称：系统查无代码 {code} 之公司名（可能为兴柜/冷门股），严禁自行杜撰公司名，仅以代码进行分析\n")
+        head = (f"公司名稱：{nm}（以此為準，禁止自行猜測公司名）\n" if nm
+                else f"公司名稱：系統查無代碼 {code} 之公司名（可能為興櫃/冷門股），嚴禁自行杜撰公司名，僅以代碼進行分析\n")
         data = fetch_stock_data(f"{code}.TW", "NT$") or fetch_stock_data(f"{code}.TWO", "NT$")
-        body = data if data else "（即时股价暂时查询失败，请依公开资讯分析）"
+        body = data if data else "（即時股價暫時查詢失敗，請依公開資訊分析）"
         news = _stock_news(nm) if nm else []
         if news:
-            body += "\n近期新闻（即时）：\n" + "\n".join(f"- {x}" for x in news)
+            body += "\n近期新聞（即時）：\n" + "\n".join(f"- {x}" for x in news)
         if nm or data:
             sections.append(f"### 台股 {code}\n{head}{body}")
 
-    # 陆股
+    # 陸股
     for code in cn_codes:
         suffix = ".SS" if code.startswith("6") else ".SZ"
         nm = resolve_name(code, "CN")
-        head = (f"公司名称：{nm}（以此为准，禁止自行猜测公司名）\n" if nm
-                else f"公司名称：系统查无代码 {code} 之公司名，严禁自行杜撰公司名，仅以代码进行分析\n")
+        head = (f"公司名稱：{nm}（以此為準，禁止自行猜測公司名）\n" if nm
+                else f"公司名稱：系統查無代碼 {code} 之公司名，嚴禁自行杜撰公司名，僅以代碼進行分析\n")
         data = fetch_stock_data(f"{code}{suffix}", "¥")
-        body = data if data else "（即时股价暂时查询失败，请依公开资讯分析）"
+        body = data if data else "（即時股價暫時查詢失敗，請依公開資訊分析）"
         news = _stock_news(nm) if nm else []
         if news:
-            body += "\n近期新闻（即时）：\n" + "\n".join(f"- {x}" for x in news)
+            body += "\n近期新聞（即時）：\n" + "\n".join(f"- {x}" for x in news)
         if nm or data:
-            sections.append(f"### 陆股 {code}\n{head}{body}")
+            sections.append(f"### 陸股 {code}\n{head}{body}")
 
     if not sections:
         return ""
-    note = ("\n\n【数据规则】以上为系统即时查询的真实数据（含历年毛利率财报实际值与近期新闻）。"
-            "分析时一律以上方数字为准；上方未提供的历史财务数字，不得自行估计或编造，"
-            "若需要请明确说明「此为估计值，建议至 Goodinfo/财报狗核实」。"
-            "【新闻规则】上方『近期新闻（即时）』是当前最新事件，分析催化剂/利多利空/近况时，"
-            "务必优先引用这些新闻（标明日期），不要只用你训练知识里的旧资讯；训练知识仅供补充框架。"
-            "【输出规则】禁止输出「系统查询中」「正在查询」「让我依现有公开资讯」等过场或等待字句，"
-            "直接以上方数据开始分析。")
-    return "## 即时股价与财务资料\n" + "\n\n".join(sections) + note
+    note = ("\n\n【數據規則】以上為系統即時查詢的真實數據（含歷年毛利率財報實際值與近期新聞）。"
+            "分析時一律以上方數字為準；上方未提供的歷史財務數字，不得自行估計或編造，"
+            "若需要請明確說明「此為估計值，建議至 Goodinfo/財報狗核實」。"
+            "【新聞規則】上方『近期新聞（即時）』是當前最新事件，分析催化劑/利多利空/近況時，"
+            "務必優先引用這些新聞（標明日期），不要只用你訓練知識裡的舊資訊；訓練知識僅供補充框架。"
+            "【輸出規則】禁止輸出「系統查詢中」「正在查詢」「讓我依現有公開資訊」等過場或等待字句，"
+            "直接以上方數據開始分析。")
+    return "## 即時股價與財務資料\n" + "\n\n".join(sections) + note
 
 def get_system_prompt(user_input: str) -> str:
     text = user_input.lower()
     extras = []
 
-    # 侧边栏主题
+    # 側邊欄主題
     active = st.session_state.get("active_topic", "")
     TOPIC_MAP = {
-        "CPO 共封装光学": "CPO",
+        "CPO 共封裝光學": "CPO",
         "TSV 矽穿孔": "TSV",
         "TGV 玻璃穿孔": "TGV",
-        "先进封装 / HBM": "先进封装",
+        "先進封裝 / HBM": "先進封裝",
     }
     forced = TOPIC_MAP.get(active)
     for name, (keywords, knowledge) in KNOWLEDGE_MAP.items():
         if name == forced or any(k in text for k in keywords):
-            extras.append(f"## {name} 技术知识库\n{knowledge}")
+            extras.append(f"## {name} 技術知識庫\n{knowledge}")
 
-    # 台股/陆股分析：注入五原则框架 + 即时股价（含上一档后备）
+    # 台股/陸股分析：注入五原則框架 + 即時股價（含上一檔後備）
     _codes = resolve_codes(user_input)
     is_stock = (
-        active in ("台股投资分析", "陆股投资分析")
-        or any(k in text for k in ["台股","陆股","股票","分析","买吗","值得","停损","目标价","均价","持股","观察"])
+        active in ("台股投資分析", "陸股投資分析")
+        or any(k in text for k in ["台股","陸股","股票","分析","買嗎","值得","停損","目標價","均價","持股","觀察"])
         or bool(_codes[0] or _codes[1])
     )
     if is_stock:
-        # 依侧栏模式注入不同框架：长线=Dennis五原则；短线=波段操作
-        # 框架内容优先读 Google Sheets 分页（可在试算表直接编辑），读不到才用程式内建
-        if st.session_state.get("analysis_mode", "").startswith("短线"):
-            extras.append("【本次为短线（波段）模式】请用以下波段操作框架分析，"
-                          "聚焦技术面进出与停损停利，基本面仅作背景；不要用长期持有/右侧加码那一套。")
-            extras.append(load_framework("短线框架", SWING_TRADING_KNOWLEDGE))
+        # 依側欄模式注入不同框架：長線=Dennis五原則；短線=波段操作
+        # 框架內容優先讀 Google Sheets 分頁（可在試算表直接編輯），讀不到才用程式內建
+        if st.session_state.get("analysis_mode", "").startswith("短線"):
+            extras.append("【本次為短線（波段）模式】請用以下波段操作框架分析，"
+                          "聚焦技術面進出與停損停利，基本面僅作背景；不要用長期持有/右側加碼那一套。")
+            extras.append(load_framework("短線框架", SWING_TRADING_KNOWLEDGE))
         else:
-            extras.append(load_framework("长线框架", DENNIS_FRAMEWORK))
+            extras.append(load_framework("長線框架", DENNIS_FRAMEWORK))
         price_info = detect_stocks_and_prices(user_input, codes=_codes)
         if price_info:
             extras.append(price_info)
@@ -686,7 +686,7 @@ def get_system_prompt(user_input: str) -> str:
 
 import streamlit.components.v1 as _components
 def _scroll_bottom(tag):
-    """强制把对话容器卷到最底部（tag 需每次不同以强制重新执行）。"""
+    """強制把對話容器捲到最底部（tag 需每次不同以強制重新執行）。"""
     _components.html(
         f"""
         <script>
@@ -706,7 +706,7 @@ def _scroll_bottom(tag):
         height=0,
     )
 
-# ── 对话 ──────────────────────────────────────────────────
+# ── 對話 ──────────────────────────────────────────────────
 if "messages" not in st.session_state:
     st.session_state.messages = []
 
@@ -716,69 +716,69 @@ for msg in st.session_state.messages:
 
 active_topic = st.session_state.get("active_topic", "")
 if active_topic:
-    st.info(f"📌 已选择知识领域：**{active_topic}** — 请输入您的问题")
-# st.caption("build 2026-06-14j")  # 部署除错用版本标记，需要时取消注解
-prompt = st.chat_input("输入股票代码或公司名（左侧可选长线／短线分析模式）")
+    st.info(f"📌 已選擇知識領域：**{active_topic}** — 請輸入您的問題")
+# st.caption("build 2026-06-14j")  # 部署除錯用版本標記，需要時取消註解
+prompt = st.chat_input("輸入股票代碼或公司名（左側可選長線／短線分析模式）")
 
 if prompt:
     if not api_key:
-        st.error("请在左侧输入 Anthropic API Key")
+        st.error("請在左側輸入 Anthropic API Key")
         st.stop()
 
-    # 自动查即时股价，注入到讯息中（含公司名→代码侦测；无代码时沿用上一档）
+    # 自動查即時股價，注入到訊息中（含公司名→代碼偵測；無代碼時沿用上一檔）
     _codes = resolve_codes(prompt)
     has_code = bool(_codes[0] or _codes[1])
-    with st.spinner("🔍 查询即时股价中…"):
+    with st.spinner("🔍 查詢即時股價中…"):
         price_info = detect_stocks_and_prices(prompt, codes=_codes)
-    got_price = bool(price_info) and ("现价：" in price_info)
+    got_price = bool(price_info) and ("現價：" in price_info)
 
-    # 规则：有股票代码但「未拿到即时股价」→ 停在查询中，不往下分析
+    # 規則：有股票代碼但「未拿到即時股價」→ 停在查詢中，不往下分析
     if has_code and not got_price:
         with st.chat_message("user"):
             st.markdown(prompt)
         with st.chat_message("assistant"):
-            st.warning("🔍 即时股价查询中，暂时无法取得官方报价。\n\n"
-                       "为避免用过时资料误判，**暂不进行分析**。请稍候 10–20 秒重送，或确认代码是否正确。")
+            st.warning("🔍 即時股價查詢中，暫時無法取得官方報價。\n\n"
+                       "為避免用過時資料誤判，**暫不進行分析**。請稍候 10–20 秒重送，或確認代碼是否正確。")
         st.stop()
 
     enriched_prompt = prompt
     if price_info:
-        enriched_prompt = f"{prompt}\n\n【系统自动查询即时股价】\n{price_info}\n注意：股价已提供，禁止再询问用户目前股价。"
+        enriched_prompt = f"{prompt}\n\n【系統自動查詢即時股價】\n{price_info}\n注意：股價已提供，禁止再詢問用戶目前股價。"
 
     st.session_state.messages.append({"role": "user", "content": enriched_prompt})
     with st.chat_message("user"):
-        st.markdown(prompt)  # 显示给用户看的仍是原始问题
+        st.markdown(prompt)  # 顯示給用戶看的仍是原始問題
     _scroll_bottom(f"start-{len(st.session_state.messages)}")  # 送出即跳到底部
 
     client = anthropic.Anthropic(api_key=api_key)
     with st.chat_message("assistant"):
-        # 由 app 直接渲染权威股价（确定性，不靠模型转述，避免模型乱写 placeholder）
+        # 由 app 直接渲染權威股價（確定性，不靠模型轉述，避免模型亂寫 placeholder）
         if got_price:
-            price_block = price_info.split("\n\n【")[0].replace("## 即时股价与财务资料", "").strip()
-            price_block = price_block.replace("（以此为准，禁止自行猜测公司名）", "")
+            price_block = price_info.split("\n\n【")[0].replace("## 即時股價與財務資料", "").strip()
+            price_block = price_block.replace("（以此為準，禁止自行猜測公司名）", "")
             st.info(price_block)
         news = st.session_state.get("industry_news", "")
         system = get_system_prompt(prompt)
-        _today = (datetime.utcnow() + timedelta(hours=8)).strftime("%Y-%m-%d")  # 台湾时间
-        system += (f"\n\n## 时间基准\n今天日期是 {_today}。一律以此为「现在」："
-                   "已过去的季度（如 2025H1/H2）视为已公布的历史数据，不可讲成『未来要追踪』；"
-                   "要追踪的是当前年度（2026）之后的财报。谈时间时用此基准，勿用训练截止日。")
+        _today = (datetime.utcnow() + timedelta(hours=8)).strftime("%Y-%m-%d")  # 台灣時間
+        system += (f"\n\n## 時間基準\n今天日期是 {_today}。一律以此為「現在」："
+                   "已過去的季度（如 2025H1/H2）視為已公布的歷史數據，不可講成『未來要追蹤』；"
+                   "要追蹤的是當前年度（2026）之後的財報。談時間時用此基準，勿用訓練截止日。")
         if news:
-            system += f"\n\n## 最新产业快讯\n{news}"
-        # 硬规则：股价已由系统显示于上方，模型只做分析、禁止过场句
-        system += ("\n\n## 铁则（最高优先）\n"
-                   "系统已在你上方直接显示即时股价区块（含现价），你只需专注做投资分析。"
-                   "绝对禁止输出『系统查询中』『正在查询』『系统未自动带入』『系统未回传』『请确认股价』『让我依公开资讯』『以下依公开资讯分析』等任何过场、等待、要用户确认股价或免责的字句与标题。"
-                   "更绝对禁止『自行捏造或编写』任何「即时股价/系统自动查询/股价资讯」区块或股价数字——所有股价只能来自系统，系统没提供就不可自己写一个价格。"
-                   "直接从『结论先说』或四步骤开始分析，引用讯息中的现价数字即可。")
-        with st.spinner("✍️ 分析撰写中…"):
+            system += f"\n\n## 最新產業快訊\n{news}"
+        # 硬規則：股價已由系統顯示於上方，模型只做分析、禁止過場句
+        system += ("\n\n## 鐵則（最高優先）\n"
+                   "系統已在你上方直接顯示即時股價區塊（含現價），你只需專注做投資分析。"
+                   "絕對禁止輸出『系統查詢中』『正在查詢』『系統未自動帶入』『系統未回傳』『請確認股價』『讓我依公開資訊』『以下依公開資訊分析』等任何過場、等待、要用戶確認股價或免責的字句與標題。"
+                   "更絕對禁止『自行捏造或編寫』任何「即時股價/系統自動查詢/股價資訊」區塊或股價數字——所有股價只能來自系統，系統沒提供就不可自己寫一個價格。"
+                   "直接從『結論先說』或四步驟開始分析，引用訊息中的現價數字即可。")
+        with st.spinner("✍️ 分析撰寫中…"):
             with client.messages.stream(
                 model="claude-sonnet-4-6",
                 max_tokens=2048,
                 system=system,
                 messages=st.session_state.messages,
             ) as stream:
-                # 逐字平滑输出（避免一次跳一整句，改成像滚动的打字机效果）
+                # 逐字平滑輸出（避免一次跳一整句，改成像滾動的打字機效果）
                 def _slow_stream(gen, delay=0.02):
                     for chunk in gen:
                         for ch in chunk:
@@ -788,4 +788,4 @@ if prompt:
 
     st.session_state.messages.append({"role": "assistant", "content": reply})
     save_log(prompt, reply)
-    _scroll_bottom(f"end-{len(st.session_state.messages)}")  # 回答完成后再次确保到底部
+    _scroll_bottom(f"end-{len(st.session_state.messages)}")  # 回答完成後再次確保到底部
