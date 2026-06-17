@@ -122,6 +122,41 @@ else:
                   '<div style="font-size:12px;letter-spacing:5px;color:#222;margin-top:3px">谦视智能科技</div>')
 st.sidebar.markdown(f'<div class="siw-logo-section">{_logo_html}</div>', unsafe_allow_html=True)
 
+# ── Sidebar 功能鍵 ─────────────────────────────────────────
+st.sidebar.markdown('<div style="font-size:14px;font-weight:700;color:#00AEEF;margin:6px 0 6px">⚙ 功能</div>', unsafe_allow_html=True)
+
+with st.sidebar.expander("📖 使用說明"):
+    st.markdown("""
+直接輸入**代碼**或**公司名**，系統自動帶出即時股價＋分析：
+- `2330`、`分析台積電`
+- `欣興 值得進場嗎`
+- `300757 股價`（陸股）
+
+支援台股（上市／上櫃／興櫃）與陸股（滬深 A 股），即時報價＋歷年財報數據。
+""")
+
+with st.sidebar.expander("📋 使用规范"):
+    st.markdown("""
+- 本服務僅供研究參考，**非投資建議**，決策請自行評估、風險自負。
+- 數據以即時來源為準，分析內容由 AI 生成，可能有誤差。
+- 請勿輸入機密或個人敏感資訊。
+- 谦视智能科技內部資料庫內容僅限授權使用。
+""")
+
+# 連結（網址可在 Secrets 覆寫）
+DB_URL      = _cfg("DB_URL", "https://www.sciensee.com")
+CLAUDE_URL  = _cfg("CLAUDE_URL", "https://claude.ai")
+DEEPSEEK_URL= _cfg("DEEPSEEK_URL", "https://chat.deepseek.com")
+CHATGPT_URL = _cfg("CHATGPT_URL", "https://chatgpt.com")
+DOUBAO_URL  = _cfg("DOUBAO_URL", "https://www.doubao.com")
+
+st.sidebar.markdown('<div style="font-size:14px;font-weight:700;color:#00AEEF;margin:14px 0 6px">🔗 快速連結</div>', unsafe_allow_html=True)
+st.sidebar.link_button("📚 谦视资料库", DB_URL, use_container_width=True)
+st.sidebar.link_button("🤖 Claude", CLAUDE_URL, use_container_width=True)
+st.sidebar.link_button("🌊 DeepSeek", DEEPSEEK_URL, use_container_width=True)
+st.sidebar.link_button("💬 ChatGPT", CHATGPT_URL, use_container_width=True)
+st.sidebar.link_button("🫘 豆包", DOUBAO_URL, use_container_width=True)
+
 
 # ── 產業快訊持久化（存 Google Sheets 的 news 分頁，全站共用、重啟不掉）──
 _NEWS_SHEET_ID = SHEET_ID  # 與品牌設定同一份試算表（讀 Secrets）
