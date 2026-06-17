@@ -315,20 +315,6 @@ st.markdown(f"""
     </div>
     <div style="font-size:22px;font-weight:700;color:#0077a8;background:#e8f7fd;border:1px solid #a8dff5;border-radius:26px;padding:8px 24px">用科技洞见未来</div>
   </div>
-  <div style="display:flex;gap:0;margin-top:16px;flex-wrap:wrap;border:1px solid #d7e0e6;border-left:none">
-    <div style="flex:1;min-width:160px;background:#fff;border-left:3px solid #00AEEF;padding:13px 18px;display:flex;align-items:center;gap:12px">
-      <span style="font-size:20px;line-height:1">💡</span>
-      <span style="font-size:14px;font-weight:600;color:#2b3138;letter-spacing:1px">自主开发 · 拓展灵活</span>
-    </div>
-    <div style="flex:1;min-width:160px;background:#fafcfd;border-left:3px solid #9E9E9E;padding:13px 18px;display:flex;align-items:center;gap:12px">
-      <span style="font-size:20px;line-height:1">⚙️</span>
-      <span style="font-size:14px;font-weight:600;color:#2b3138;letter-spacing:1px">自动检测 · 提升效率</span>
-    </div>
-    <div style="flex:1;min-width:160px;background:#fff;border-left:3px solid #00AEEF;padding:13px 18px;display:flex;align-items:center;gap:12px">
-      <span style="font-size:20px;line-height:1">🎯</span>
-      <span style="font-size:14px;font-weight:600;color:#2b3138;letter-spacing:1px">精密测量 · 性能稳定</span>
-    </div>
-  </div>
   <div style="font-size:12px;color:#94a3b8;margin-top:12px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;font-family:monospace">
     <span style="background:#eef2f4;border-left:2px solid #9E9E9E;padding:3px 10px">🕒 Updated 2026/6/18@5:30am</span>
   </div>
