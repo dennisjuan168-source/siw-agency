@@ -308,7 +308,7 @@ st.markdown(f"""
     </div>
   </div>
   <div style="font-size:13px;color:#94a3b8;margin-top:12px;display:flex;align-items:center;gap:10px;flex-wrap:wrap">
-    <span style="background:#f1f5f9;border-radius:6px;padding:3px 10px">🕒 Updated 2026/06/18</span>
+    <span style="background:#f1f5f9;border-radius:6px;padding:3px 10px">🕒 Updated 2026/6/18@5:30am</span>
   </div>
 </div>
 """, unsafe_allow_html=True)
