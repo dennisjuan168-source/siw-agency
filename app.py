@@ -117,9 +117,9 @@ CIRCULAR_LOGO_B64 = "iVBORw0KGgoAAAANSUhEUgAADBAAAAS9CAYAAABEJEuFAAEAAElEQVR4nOz
 if LOGO_URL:
     _logo_html = f'<img src="{LOGO_URL}" alt="{BRAND_NAME} Logo">'
 else:
-    _logo_html = ('<div style="font-size:26px;font-weight:800;letter-spacing:1px;line-height:1.1">'
-                  '<span style="color:#00AEEF">SCIEN</span><span style="color:#9E9E9E">SEE</span><span style="color:#2b3138"> AGENCY</span></div>'
-                  '<div style="font-size:12px;letter-spacing:5px;color:#222;margin-top:3px">谦视智能体</div>')
+    _logo_html = ('<div style="font-size:30px;font-weight:800;letter-spacing:1px;line-height:1">'
+                  '<span style="color:#00AEEF">SCIEN</span><span style="color:#9E9E9E">SEE</span></div>'
+                  '<div style="font-size:12px;letter-spacing:5px;color:#222;margin-top:3px">谦视智能科技</div>')
 st.sidebar.markdown(f'<div class="siw-logo-section">{_logo_html}</div>', unsafe_allow_html=True)
 
 # ── 工业风 Sidebar 樣式 ──
