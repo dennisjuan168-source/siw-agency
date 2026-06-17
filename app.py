@@ -122,6 +122,29 @@ else:
                   '<div style="font-size:12px;letter-spacing:5px;color:#222;margin-top:3px">谦视智能科技</div>')
 st.sidebar.markdown(f'<div class="siw-logo-section">{_logo_html}</div>', unsafe_allow_html=True)
 
+# ── 工业风 Sidebar 樣式 ──
+st.markdown("""
+<style>
+section[data-testid="stSidebar"] [data-testid^="stBaseLinkButton"],
+section[data-testid="stSidebar"] [data-testid^="stBaseButton"],
+section[data-testid="stSidebar"] .stLinkButton a {
+  border-radius:2px !important; border:1px solid #cfd8de !important;
+  border-left:3px solid #00AEEF !important;
+  background:linear-gradient(180deg,#ffffff,#f2f5f7) !important;
+  font-weight:600 !important; letter-spacing:0.5px !important;
+  justify-content:flex-start !important;
+}
+section[data-testid="stSidebar"] [data-testid^="stBaseLinkButton"]:hover,
+section[data-testid="stSidebar"] .stLinkButton a:hover {
+  border-left-color:#9E9E9E !important; background:#eef6fb !important;
+}
+section[data-testid="stSidebar"] details {
+  border-radius:2px !important; border:1px solid #cfd8de !important;
+  border-left:3px solid #9E9E9E !important;
+}
+</style>
+""", unsafe_allow_html=True)
+
 # ── Sidebar 功能鍵 ─────────────────────────────────────────
 st.sidebar.markdown('<div style="font-size:14px;font-weight:700;color:#00AEEF;margin:6px 0 6px">⚙ 功能</div>', unsafe_allow_html=True)
 
@@ -284,9 +307,10 @@ if st.query_params.get("admin") == "1":
 
 # ── 主頁面標題（用 Logo 取代 emoji）────────────────────────
 st.markdown(f"""
-<div style="margin:-40px 0 14px">
-  <div style="display:flex;align-items:flex-end;justify-content:flex-start;gap:28px;padding:6px 2px 12px;border-bottom:1px solid #e8eef4;flex-wrap:wrap">
-    <div>
+<div style="margin:-40px 0 16px;max-width:1080px">
+  <div style="height:3px;background:#00AEEF;width:100%"></div>
+  <div style="display:flex;align-items:flex-end;justify-content:flex-start;gap:30px;padding:14px 2px 12px;border-bottom:1px solid #d7e0e6;flex-wrap:wrap;background:linear-gradient(180deg,#fbfdfe,#f3f6f8)">
+    <div style="padding-left:6px">
       <div style="font-size:30px;font-weight:800;letter-spacing:1px;line-height:1">
         <span style="color:#00AEEF">SCIEN</span><span style="color:#9E9E9E">SEE</span>
       </div>
@@ -294,24 +318,22 @@ st.markdown(f"""
     </div>
     <div style="font-family:serif;font-style:italic;font-size:28px;font-weight:700;color:#1a1a1a;padding-bottom:2px">用科技洞见未来</div>
   </div>
-  <div style="margin-top:14px">
-    <div style="display:flex;gap:12px;flex-wrap:wrap">
-      <div style="flex:1;min-width:150px;background:#f4f9fc;border:1px solid #e1eef6;border-radius:8px;padding:10px 14px;display:flex;align-items:center;gap:10px">
-        <span style="font-size:20px;line-height:1">💡</span>
-        <span style="font-size:14px;color:#1a2a3a;line-height:1.4">自主开发 · 拓展灵活</span>
-      </div>
-      <div style="flex:1;min-width:150px;background:#f4f9fc;border:1px solid #e1eef6;border-radius:8px;padding:10px 14px;display:flex;align-items:center;gap:10px">
-        <span style="font-size:20px;line-height:1">⚙️</span>
-        <span style="font-size:14px;color:#1a2a3a;line-height:1.4">自动检测 · 提升效率</span>
-      </div>
-      <div style="flex:1;min-width:150px;background:#f4f9fc;border:1px solid #e1eef6;border-radius:8px;padding:10px 14px;display:flex;align-items:center;gap:10px">
-        <span style="font-size:20px;line-height:1">🎯</span>
-        <span style="font-size:14px;color:#1a2a3a;line-height:1.4">精密测量 · 性能稳定</span>
-      </div>
+  <div style="display:flex;gap:0;margin-top:16px;flex-wrap:wrap;border:1px solid #d7e0e6;border-left:none">
+    <div style="flex:1;min-width:160px;background:#fff;border-left:3px solid #00AEEF;padding:13px 18px;display:flex;align-items:center;gap:12px">
+      <span style="font-size:20px;line-height:1">💡</span>
+      <span style="font-size:14px;font-weight:600;color:#2b3138;letter-spacing:1px">自主开发 · 拓展灵活</span>
+    </div>
+    <div style="flex:1;min-width:160px;background:#fafcfd;border-left:3px solid #9E9E9E;padding:13px 18px;display:flex;align-items:center;gap:12px">
+      <span style="font-size:20px;line-height:1">⚙️</span>
+      <span style="font-size:14px;font-weight:600;color:#2b3138;letter-spacing:1px">自动检测 · 提升效率</span>
+    </div>
+    <div style="flex:1;min-width:160px;background:#fff;border-left:3px solid #00AEEF;padding:13px 18px;display:flex;align-items:center;gap:12px">
+      <span style="font-size:20px;line-height:1">🎯</span>
+      <span style="font-size:14px;font-weight:600;color:#2b3138;letter-spacing:1px">精密测量 · 性能稳定</span>
     </div>
   </div>
-  <div style="font-size:13px;color:#94a3b8;margin-top:12px;display:flex;align-items:center;gap:10px;flex-wrap:wrap">
-    <span style="background:#f1f5f9;border-radius:6px;padding:3px 10px">🕒 Updated 2026/6/18@5:30am</span>
+  <div style="font-size:12px;color:#94a3b8;margin-top:12px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;font-family:monospace">
+    <span style="background:#eef2f4;border-left:2px solid #9E9E9E;padding:3px 10px">🕒 Updated 2026/6/18@5:30am</span>
   </div>
 </div>
 """, unsafe_allow_html=True)
