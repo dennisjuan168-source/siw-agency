@@ -22,7 +22,7 @@ import os as _os
 from PIL import Image as _PILImage
 _favicon_path = _os.path.join(_os.path.dirname(_os.path.abspath(__file__)), "siw_favicon.png")
 _favicon = _PILImage.open(_favicon_path) if _os.path.exists(_favicon_path) else "🔬"
-st.set_page_config(page_title="Lisa Agency AI", page_icon=_favicon, layout="wide")
+st.set_page_config(page_title="David Agency AI", page_icon=_favicon, layout="wide")
 
 st.markdown("""
 <style>
@@ -264,7 +264,7 @@ if st.query_params.get("admin") == "1":
 st.markdown(f"""
 <div style="margin:-40px 0 8px;padding-bottom:18px;border-bottom:1px solid #e8eef4">
   <div style="display:flex;align-items:baseline;gap:14px;flex-wrap:wrap">
-    <span style="font-size:48px;font-weight:800;color:#1C2B8F;line-height:1.1;letter-spacing:-0.5px">Lisa Agency</span>
+    <span style="font-size:48px;font-weight:800;color:#1C2B8F;line-height:1.1;letter-spacing:-0.5px">David Agency</span>
     <span style="font-size:19px;font-weight:700;color:#1C2B8F;background:#e8f7fd;border:1px solid #a8dff5;border-radius:22px;padding:6px 18px">共營AI · 一起共贏</span>
   </div>
   <div style="font-size:17px;color:#4a5568;margin-top:12px;line-height:1.7;max-width:760px">
