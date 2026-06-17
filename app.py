@@ -122,38 +122,6 @@ else:
                   '<div style="font-size:12px;letter-spacing:5px;color:#222;margin-top:3px">谦视智能科技</div>')
 st.sidebar.markdown(f'<div class="siw-logo-section">{_logo_html}</div>', unsafe_allow_html=True)
 
-# ── Sidebar 分析模式切換 ──────────────────────────────────
-st.sidebar.markdown('<div style="font-size:14px;font-weight:700;color:#1C2B8F;margin-bottom:2px">📐 分析模式</div>', unsafe_allow_html=True)
-analysis_mode = st.sidebar.radio(
-    "分析模式", ["長線（Dennis 五原則）", "短線（波段操作）"],
-    label_visibility="collapsed", key="analysis_mode",
-)
-st.sidebar.markdown("<div style='margin-bottom:10px'></div>", unsafe_allow_html=True)
-
-# ── Sidebar ───────────────────────────────────────────────
-st.sidebar.markdown("""
-<div style="background:#f8fbff;border:1px solid #e3eef7;border-radius:12px;padding:14px 16px;margin-bottom:14px">
-  <div style="font-size:15px;font-weight:700;color:#1C2B8F;margin-bottom:8px">💬 怎麼使用</div>
-  <div style="font-size:13.5px;color:#4a5568;line-height:1.85">
-    直接輸入<b>代碼</b>或<b>公司名</b>：<br>
-    ・<span style="color:#1C2B8F">2330</span>、<span style="color:#1C2B8F">分析台積電</span><br>
-    ・<span style="color:#1C2B8F">欣興 值得進場嗎</span><br>
-    ・<span style="color:#1C2B8F">300757 股價</span>（陸股）<br>
-    系統自動帶出<b>即時股價</b>＋依五大原則分析。
-  </div>
-</div>
-<div style="background:#f8fbff;border:1px solid #e3eef7;border-radius:12px;padding:14px 16px;margin-bottom:14px">
-  <div style="font-size:15px;font-weight:700;color:#1C2B8F;margin-bottom:8px">📈 支援範圍</div>
-  <div style="font-size:13.5px;color:#4a5568;line-height:1.85">
-    ・台股（上市／上櫃／興櫃）<br>
-    ・陸股（滬深 A 股）<br>
-    <span style="color:#94a3b8">即時報價＋歷年財報數據</span>
-  </div>
-</div>
-<div style="font-size:11.5px;color:#a0aec0;line-height:1.7;padding:0 4px 8px">
-  ⚠️ 本服務僅供研究參考，非投資建議。<br>投資決策請自行評估、風險自負。
-</div>
-""", unsafe_allow_html=True)
 
 # ── 產業快訊持久化（存 Google Sheets 的 news 分頁，全站共用、重啟不掉）──
 _NEWS_SHEET_ID = SHEET_ID  # 與品牌設定同一份試算表（讀 Secrets）
