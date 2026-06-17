@@ -280,34 +280,31 @@ if st.query_params.get("admin") == "1":
                 st.warning("Google Sheets 連線失敗")
 
 # ── 主頁面標題（用 Logo 取代 emoji）────────────────────────
-BANNER_URL = _cfg("BANNER_URL", "")  # Hero 背景圖網址；沒設用深灰底
-_hero_bg = (f"linear-gradient(rgba(36,42,48,.74),rgba(36,42,48,.84)),url('{BANNER_URL}')"
-            if BANNER_URL else "linear-gradient(135deg,#2b3138,#3a434d)")
 st.markdown(f"""
 <div style="margin:-40px 0 14px">
-  <div style="display:flex;align-items:center;justify-content:space-between;padding:6px 2px 14px;border-bottom:1px solid #e8eef4;flex-wrap:wrap;gap:12px">
+  <div style="display:flex;align-items:center;justify-content:space-between;padding:6px 2px 12px;border-bottom:1px solid #e8eef4;flex-wrap:wrap;gap:12px">
     <div>
-      <div style="font-size:34px;font-weight:800;letter-spacing:1px;line-height:1">
+      <div style="font-size:30px;font-weight:800;letter-spacing:1px;line-height:1">
         <span style="color:#00AEEF">SCIEN</span><span style="color:#9E9E9E">SEE</span>
       </div>
-      <div style="font-size:13px;letter-spacing:7px;color:#222;margin-top:3px">谦视智能科技</div>
+      <div style="font-size:12px;letter-spacing:6px;color:#222;margin-top:3px">谦视智能科技</div>
     </div>
-    <div style="font-family:serif;font-style:italic;font-size:22px;color:#00AEEF">用科技洞见未来</div>
+    <div style="font-family:serif;font-style:italic;font-size:20px;color:#00AEEF">用科技洞见未来</div>
   </div>
-  <div style="background:{_hero_bg};background-size:cover;background-position:center;border-radius:12px;padding:34px 30px;margin-top:16px">
-    <div style="font-size:30px;font-weight:600;color:#fff;line-height:1.3">专业的半导体产业投资分析</div>
-    <div style="display:flex;gap:14px;margin-top:24px;flex-wrap:wrap">
-      <div style="flex:1;min-width:150px;background:rgba(255,255,255,.10);border-radius:10px;padding:16px;text-align:center">
-        <div style="font-size:28px;line-height:1">💡</div>
-        <div style="font-size:15px;color:#fff;margin-top:8px;line-height:1.5">自主开发<br>拓展灵活</div>
+  <div style="margin-top:14px">
+    <div style="font-size:22px;font-weight:600;color:#1a2a3a;line-height:1.3">专业的半导体产业投资分析</div>
+    <div style="display:flex;gap:12px;margin-top:14px;flex-wrap:wrap">
+      <div style="flex:1;min-width:150px;background:#f4f9fc;border:1px solid #e1eef6;border-radius:8px;padding:10px 14px;display:flex;align-items:center;gap:10px">
+        <span style="font-size:20px;line-height:1">💡</span>
+        <span style="font-size:14px;color:#1a2a3a;line-height:1.4">自主开发 · 拓展灵活</span>
       </div>
-      <div style="flex:1;min-width:150px;background:rgba(255,255,255,.10);border-radius:10px;padding:16px;text-align:center">
-        <div style="font-size:28px;line-height:1">⚙️</div>
-        <div style="font-size:15px;color:#fff;margin-top:8px;line-height:1.5">自动检测<br>提升效率</div>
+      <div style="flex:1;min-width:150px;background:#f4f9fc;border:1px solid #e1eef6;border-radius:8px;padding:10px 14px;display:flex;align-items:center;gap:10px">
+        <span style="font-size:20px;line-height:1">⚙️</span>
+        <span style="font-size:14px;color:#1a2a3a;line-height:1.4">自动检测 · 提升效率</span>
       </div>
-      <div style="flex:1;min-width:150px;background:rgba(255,255,255,.10);border-radius:10px;padding:16px;text-align:center">
-        <div style="font-size:28px;line-height:1">🎯</div>
-        <div style="font-size:15px;color:#fff;margin-top:8px;line-height:1.5">精密测量<br>性能稳定</div>
+      <div style="flex:1;min-width:150px;background:#f4f9fc;border:1px solid #e1eef6;border-radius:8px;padding:10px 14px;display:flex;align-items:center;gap:10px">
+        <span style="font-size:20px;line-height:1">🎯</span>
+        <span style="font-size:14px;color:#1a2a3a;line-height:1.4">精密测量 · 性能稳定</span>
       </div>
     </div>
   </div>
