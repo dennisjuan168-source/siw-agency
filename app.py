@@ -170,16 +170,12 @@ with st.sidebar.expander("📋 使用规范"):
 # 连结（网址可在 Secrets 覆写）
 DB_URL      = _cfg("DB_URL", "")
 CLAUDE_URL  = _cfg("CLAUDE_URL", "https://claude.ai")
-DEEPSEEK_URL= _cfg("DEEPSEEK_URL", "https://chat.deepseek.com")
-CHATGPT_URL = _cfg("CHATGPT_URL", "https://chatgpt.com")
 DOUBAO_URL  = _cfg("DOUBAO_URL", "https://www.doubao.com")
 
 st.sidebar.markdown('<div style="font-size:14px;font-weight:700;color:#00AEEF;margin:14px 0 6px">🔗 快速连结</div>', unsafe_allow_html=True)
 if DB_URL:
     st.sidebar.link_button("📚 资料库", DB_URL, use_container_width=True)
 st.sidebar.link_button("🤖 Claude", CLAUDE_URL, use_container_width=True)
-st.sidebar.link_button("🌊 DeepSeek", DEEPSEEK_URL, use_container_width=True)
-st.sidebar.link_button("💬 ChatGPT", CHATGPT_URL, use_container_width=True)
 st.sidebar.link_button("🫘 豆包", DOUBAO_URL, use_container_width=True)
 
 
@@ -319,7 +315,7 @@ st.markdown(f"""
     {_slogan_html}
   </div>
   <div style="font-size:12px;color:#94a3b8;margin-top:12px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;font-family:monospace">
-    <span style="background:#eef2f4;border-left:2px solid #9E9E9E;padding:3px 10px">🕒 HANSWELL Agency · build 2026-07-12a</span>
+    <span style="background:#eef2f4;border-left:2px solid #9E9E9E;padding:3px 10px">🕒 HANSWELL Agency · build 2026-07-12b</span>
   </div>
 </div>
 """, unsafe_allow_html=True)
