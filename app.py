@@ -162,7 +162,6 @@ with st.sidebar.expander("📖 使用说明"):
     st.markdown("""
 左侧「议题资料库」选一个议题，系统即载入该议题的**制程 Stage/Step、量检测节点、供应商**资料，再提问：
 - 先选 `TGV(V2)` → 问「TGV 的 LIDE 制程主要瓶颈？」
-- 先选 `TSV(V2)` → 问「TSV 关键量检测节点有哪些？」
 - 四选项：TGV／TSV／IC载板／TGV+TSV+IC载板（整合）
 - ⚠️ **切换议题会清空当前对话**（避免不同议题混淆），换议题＝重新开始一段对话。
 """)
@@ -170,7 +169,7 @@ with st.sidebar.expander("📖 使用说明"):
 with st.sidebar.expander("📋 使用规范"):
     st.markdown("""
 - 技术议题资料库内容为**华汉伟业内部研究资产**，仅限授权人员使用，请勿外流。
-- 分析内容由 AI 依资料库＋公开资讯生成，**可能有误差**，关键数字请回原始文件核对。
+- 分析内容由 AI 依资料库生成，**可能有误差**，关键数字请回原始文件核对。
 - 查无资料时系统会明示，不臆测。
 """)
 
@@ -314,7 +313,7 @@ st.markdown(f"""
     {_slogan_html}
   </div>
   <div style="font-size:12px;color:#94a3b8;margin-top:12px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;font-family:monospace">
-    <span style="background:#eef2f4;border-left:2px solid #9E9E9E;padding:3px 10px">🕒 HANSWELL Agency · build 2026-07-12m</span>
+    <span style="background:#eef2f4;border-left:2px solid #9E9E9E;padding:3px 10px">🕒 HANSWELL Agency · build 2026-07-12n</span>
   </div>
 </div>
 """, unsafe_allow_html=True)
