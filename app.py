@@ -36,7 +36,7 @@ BRAND_TAGLINE  = _cfg("BRAND_TAGLINE", "共营AI · 一起共赢")
 BRAND_SUBTITLE = _cfg("BRAND_SUBTITLE",
     '协创微(SIW)聚焦「<b style="color:{C}">顾问咨询</b>、<b style="color:{C}">渠道协助</b>、<b style="color:{C}">战略投资</b>」等三大核心业务')
 BRAND_COLOR    = _cfg("BRAND_COLOR", "#1C2B8F")
-LOGO_URL       = _cfg("LOGO_URL", "")  # 御微 logo 未定：留空＝用文字品牌名当 Logo；有图后放 repo 内 yuwei_logo.png 并设此 URL 或 Secrets
+LOGO_URL       = _cfg("LOGO_URL", "https://raw.githubusercontent.com/dennisjuan168-source/siw-agency/yuwei/yuwei_logo.png")  # 御微 logo（御微/YUWEITEK）；push 后生效，可由 Secrets 覆盖
 SHEET_ID       = _cfg("SHEET_ID", "1HpPRlc3WB6d3iSQ8S025vA-YVeppFGL4mUMkiUAEn24")
 
 _favicon_path = _os.path.join(_os.path.dirname(_os.path.abspath(__file__)), "siw_favicon.png")
