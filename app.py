@@ -259,6 +259,9 @@ with st.sidebar.expander("📡 产业快讯更新（管理员）"):
 api_key = os.environ.get("ANTHROPIC_API_KEY") or st.sidebar.text_input(
     "Anthropic API Key", type="password", placeholder="sk-ant-..."
 )
+# 去掉粘贴时常混入的前后空白/换行/零宽字元，避免 x-api-key header 编码失败
+if api_key:
+    api_key = api_key.strip().strip("​﻿\xa0")
 
 # ── Google Sheets ─────────────────────────────────────────
 # SHEET_ID 已于顶部品牌设定区定义（读 Secrets，预设 SIW 试算表）
@@ -313,7 +316,7 @@ st.markdown(f"""
     {_slogan_html}
   </div>
   <div style="font-size:12px;color:#94a3b8;margin-top:12px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;font-family:monospace">
-    <span style="background:#eef2f4;border-left:2px solid #9E9E9E;padding:3px 10px">🕒 HANSWELL Agency · build 2026-07-12i</span>
+    <span style="background:#eef2f4;border-left:2px solid #9E9E9E;padding:3px 10px">🕒 HANSWELL Agency · build 2026-07-12j</span>
   </div>
 </div>
 """, unsafe_allow_html=True)
@@ -798,6 +801,14 @@ prompt = st.chat_input(f"向 {BRAND_NAME} 提出问题")
 if prompt:
     if not api_key:
         st.error("请在左侧输入 Anthropic API Key")
+        st.stop()
+    # x-api-key header 只能是 ASCII；金钥含非 ASCII 字元（智慧引号/全形/CJK/不断行空格等）会在送出时报 UnicodeEncodeError
+    if not api_key.isascii():
+        _bad = [c for c in api_key if not c.isascii()]
+        st.error(
+            "Anthropic API Key 含非 ASCII 字元（可能是复制时混入的智慧引号、全形字元或多余空白），"
+            f"请到 Streamlit 后台 Settings → Secrets 重新贴一次纯文字金钥。异常字元：{_bad}"
+        )
         st.stop()
 
     # 自动查即时股价，注入到讯息中（含公司名→代码侦测；无代码时沿用上一档）
