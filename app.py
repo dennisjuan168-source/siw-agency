@@ -36,7 +36,7 @@ BRAND_TAGLINE  = _cfg("BRAND_TAGLINE", "共营AI · 一起共赢")
 BRAND_SUBTITLE = _cfg("BRAND_SUBTITLE",
     '协创微(SIW)聚焦「<b style="color:{C}">顾问咨询</b>、<b style="color:{C}">渠道协助</b>、<b style="color:{C}">战略投资</b>」等三大核心业务')
 BRAND_COLOR    = _cfg("BRAND_COLOR", "#1C2B8F")
-LOGO_URL       = _cfg("LOGO_URL", "")  # 设了就用此图网址当 Logo；没设用内建 SIW Logo
+LOGO_URL       = _cfg("LOGO_URL", "https://raw.githubusercontent.com/dennisjuan168-source/siw-agency/hanswell/hanswell_logo.png")  # 设了就用此图网址当 Logo；没设用内建 SIW Logo
 SHEET_ID       = _cfg("SHEET_ID", "1HpPRlc3WB6d3iSQ8S025vA-YVeppFGL4mUMkiUAEn24")
 
 _favicon_path = _os.path.join(_os.path.dirname(_os.path.abspath(__file__)), "siw_favicon.png")
@@ -315,7 +315,7 @@ st.markdown(f"""
     {_slogan_html}
   </div>
   <div style="font-size:12px;color:#94a3b8;margin-top:12px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;font-family:monospace">
-    <span style="background:#eef2f4;border-left:2px solid #9E9E9E;padding:3px 10px">🕒 HANSWELL Agency · build 2026-07-12b</span>
+    <span style="background:#eef2f4;border-left:2px solid #9E9E9E;padding:3px 10px">🕒 HANSWELL Agency · build 2026-07-12c</span>
   </div>
 </div>
 """, unsafe_allow_html=True)
