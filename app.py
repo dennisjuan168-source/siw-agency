@@ -29,14 +29,14 @@ def _cfg(key, default):
     except Exception:
         return default
 
-BRAND_NAME     = _cfg("BRAND_NAME", "HANSWELL Agency")
-BRAND_NAME_ZH  = _cfg("BRAND_NAME_ZH", "华汉伟业")   # 标题括号内中文名
+BRAND_NAME     = _cfg("BRAND_NAME", "YUWEI Agency")
+BRAND_NAME_ZH  = _cfg("BRAND_NAME_ZH", "御微")   # 标题括号内中文名（御微中文全名待确认，可由 Secrets 覆盖）
 BRAND_SLOGAN   = _cfg("BRAND_SLOGAN", "")            # 标题右侧标语药丸；留空自动隐藏
 BRAND_TAGLINE  = _cfg("BRAND_TAGLINE", "共营AI · 一起共赢")
 BRAND_SUBTITLE = _cfg("BRAND_SUBTITLE",
     '协创微(SIW)聚焦「<b style="color:{C}">顾问咨询</b>、<b style="color:{C}">渠道协助</b>、<b style="color:{C}">战略投资</b>」等三大核心业务')
 BRAND_COLOR    = _cfg("BRAND_COLOR", "#1C2B8F")
-LOGO_URL       = _cfg("LOGO_URL", "https://raw.githubusercontent.com/dennisjuan168-source/siw-agency/hanswell/hanswell_logo.png")  # 设了就用此图网址当 Logo；没设用内建 SIW Logo
+LOGO_URL       = _cfg("LOGO_URL", "")  # 御微 logo 未定：留空＝用文字品牌名当 Logo；有图后放 repo 内 yuwei_logo.png 并设此 URL 或 Secrets
 SHEET_ID       = _cfg("SHEET_ID", "1HpPRlc3WB6d3iSQ8S025vA-YVeppFGL4mUMkiUAEn24")
 
 _favicon_path = _os.path.join(_os.path.dirname(_os.path.abspath(__file__)), "siw_favicon.png")
@@ -149,7 +149,7 @@ section[data-testid="stSidebar"] details {
 # ── Sidebar 议题资料库（radio 切换，仿长线/短线；选中即把该议题资料喂给 AI）──
 st.sidebar.markdown('<div style="font-size:14px;font-weight:700;color:#00AEEF;margin:6px 0 6px">📂 议题资料库</div>', unsafe_allow_html=True)
 st.sidebar.radio(
-    "议题资料库", ["TGV", "TSV", "IC载板", "TGV+TSV+IC载板"],
+    "议题资料库", ["TCB", "D2W", "W2W", "28nm Process"],
     index=None, label_visibility="collapsed", key="db_topic",
     format_func=lambda x: f"{x}(V2)",   # 显示加(V2)后缀，内部值不变（不影响知识注入/横幅）
 )
@@ -161,14 +161,14 @@ st.sidebar.markdown('<div style="font-size:14px;font-weight:700;color:#00AEEF;ma
 with st.sidebar.expander("📖 使用说明"):
     st.markdown("""
 左侧「议题资料库」选一个议题，系统即载入该议题的**制程 Stage/Step、量检测节点、供应商**资料，再提问：
-- 先选 `TGV(V2)` → 问「TGV 的 LIDE 制程主要瓶颈？」
-- 四选项：TGV／TSV／IC载板／TGV+TSV+IC载板（整合）
+- 先选 `TCB(V2)` → 问「TCB 热压键合的主要瓶颈？」
+- 四选项：TCB／D2W／W2W／28nm Process
 - ⚠️ **切换议题会清空当前对话**（避免不同议题混淆），换议题＝重新开始一段对话。
 """)
 
 with st.sidebar.expander("📋 使用规范"):
     st.markdown("""
-- 技术议题资料库内容为**华汉伟业内部研究资产**，仅限授权人员使用，请勿外流。
+- 技术议题资料库内容为**御微内部研究资产**，仅限授权人员使用，请勿外流。
 - 分析内容由 AI 依资料库生成，**可能有误差**，关键数字请回原始文件核对。
 - 查无资料时系统会明示，不臆测。
 """)
@@ -313,7 +313,7 @@ st.markdown(f"""
     {_slogan_html}
   </div>
   <div style="font-size:12px;color:#94a3b8;margin-top:12px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;font-family:monospace">
-    <span style="background:#eef2f4;border-left:2px solid #9E9E9E;padding:3px 10px">🕒 HANSWELL Agency · build 2026-07-12n</span>
+    <span style="background:#eef2f4;border-left:2px solid #9E9E9E;padding:3px 10px">🕒 YUWEI Agency · build 2026-07-12a</span>
   </div>
 </div>
 """, unsafe_allow_html=True)
@@ -324,11 +324,11 @@ from kb_silicon_wafer import SILICON_WAFER_KNOWLEDGE
 from kb_abf_substrate import ABF_SUBSTRATE_KNOWLEDGE
 from kb_passive_components import PASSIVE_COMPONENTS_KNOWLEDGE
 from kb_swing_trading import SWING_TRADING_KNOWLEDGE
-# 华汉议题资料库 V2（制程Stage/Step详解＋量检测节点＋供应商），对应侧栏「议题资料库」radio
-from kb_tgv_process_v2 import TGV_PROCESS_V2_KNOWLEDGE
-from kb_tsv_process_v2 import TSV_PROCESS_V2_KNOWLEDGE
-from kb_ic_substrate_v2 import IC_SUBSTRATE_V2_KNOWLEDGE
-from kb_integrated_v2 import INTEGRATED_V2_KNOWLEDGE
+# 御微议题资料库 V2（制程Stage/Step详解＋量检测节点＋供应商），对应侧栏「议题资料库」radio
+from kb_tcb_v2 import TCB_PROCESS_V2_KNOWLEDGE
+from kb_d2w_v2 import D2W_PROCESS_V2_KNOWLEDGE
+from kb_w2w_v2 import W2W_PROCESS_V2_KNOWLEDGE
+from kb_28nm_v2 import PROCESS_28NM_V2_KNOWLEDGE
 
 BASE_PROMPT = st.secrets.get("SYSTEM_PROMPT", (
     f"你是 {BRAND_NAME} 股票分析助理，请用简体中文、条列式回答，不要长篇大论。\n"
@@ -348,13 +348,13 @@ KNOWLEDGE_MAP = {
     "被动元件": (["被动元件","mlcc","积层陶瓷","电容","电阻","电感","国巨","华新科","禾伸堂","2327","2492","3026","村田","murata","tdk","太诱","车规电容","钽质电容"], PASSIVE_COMPONENTS_KNOWLEDGE),
 }
 
-# 侧栏「议题资料库」radio 选项 → 华汉 V2 资料库（sheet 分页名, 内建后备）
+# 侧栏「议题资料库」radio 选项 → 御微 V2 资料库（sheet 分页名, 内建后备）
 # 选中某议题即强制把整份 V2 资料喂给 AI；sheet 分页可在试算表即时编辑，读不到才用内建
 DB_TOPIC_KNOWLEDGE = {
-    "TGV":            ("TGV议题",      TGV_PROCESS_V2_KNOWLEDGE),
-    "TSV":            ("TSV议题",      TSV_PROCESS_V2_KNOWLEDGE),
-    "IC载板":         ("IC载板议题",   IC_SUBSTRATE_V2_KNOWLEDGE),
-    "TGV+TSV+IC载板": ("整合议题",     INTEGRATED_V2_KNOWLEDGE),
+    "TCB":          ("TCB议题",   TCB_PROCESS_V2_KNOWLEDGE),
+    "D2W":          ("D2W议题",   D2W_PROCESS_V2_KNOWLEDGE),
+    "W2W":          ("W2W议题",   W2W_PROCESS_V2_KNOWLEDGE),
+    "28nm Process": ("28nm议题",  PROCESS_28NM_V2_KNOWLEDGE),
 }
 
 # 完整方法论框架（纯方法论、零个资）改由 knowledge_base.py 维护
@@ -714,7 +714,7 @@ def get_system_prompt(user_input: str) -> str:
     }
     forced = TOPIC_MAP.get(active)
 
-    # ① 议题资料库 radio（华汉）：选中议题 → 强制注入该议题完整 V2 资料（最高优先）
+    # ① 议题资料库 radio（御微）：选中议题 → 强制注入该议题完整 V2 资料（最高优先）
     db_topic = st.session_state.get("db_topic")
     skip_keys = set()   # 已由 radio 注入的 KNOWLEDGE_MAP 键，关键词侦测不重复注入
     if db_topic in DB_TOPIC_KNOWLEDGE:
@@ -724,13 +724,10 @@ def get_system_prompt(user_input: str) -> str:
             f"## 【本次聚焦议题：{db_topic}】\n"
             f"用户已在侧栏选定「{db_topic}」议题资料库。本次回答**只依据下方 {db_topic} 资料库内容**，"
             f"不要混入其他议题（如未选 TGV 就别谈 TGV）；若问题与 {db_topic} 无关，再用一般知识回答。\n\n"
-            f"### {db_topic} 议题资料库（华汉 V2）\n{kb}"
+            f"### {db_topic} 议题资料库（御微 V2）\n{kb}"
         )
-        # 对应 KNOWLEDGE_MAP 键（TGV→TGV、TSV→TSV、IC载板→ABF载板；整合＝三者皆跳过）
-        skip_keys = {
-            "TGV": {"TGV"}, "TSV": {"TSV"}, "IC载板": {"ABF载板"},
-            "TGV+TSV+IC载板": {"TGV", "TSV", "ABF载板"},
-        }.get(db_topic, set())
+        # 御微四议题（TCB/D2W/W2W/28nm）与通用 KNOWLEDGE_MAP 键无重叠，无需跳过防重复注入
+        skip_keys = set()
 
     # ② 关键词自动侦测（与 radio 独立；radio 已注入的议题不重复注入）
     for name, (keywords, knowledge) in KNOWLEDGE_MAP.items():
