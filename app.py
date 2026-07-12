@@ -316,7 +316,7 @@ st.markdown(f"""
     {_slogan_html}
   </div>
   <div style="font-size:12px;color:#94a3b8;margin-top:12px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;font-family:monospace">
-    <span style="background:#eef2f4;border-left:2px solid #9E9E9E;padding:3px 10px">🕒 HANSWELL Agency · build 2026-07-12j</span>
+    <span style="background:#eef2f4;border-left:2px solid #9E9E9E;padding:3px 10px">🕒 HANSWELL Agency · build 2026-07-12k</span>
   </div>
 </div>
 """, unsafe_allow_html=True)
@@ -723,7 +723,12 @@ def get_system_prompt(user_input: str) -> str:
     if db_topic in DB_TOPIC_KNOWLEDGE:
         sheet_name, default_kb = DB_TOPIC_KNOWLEDGE[db_topic]
         kb = load_framework(sheet_name, default_kb)   # sheet 分页可即时编辑，读不到用内建
-        extras.append(f"## {db_topic} 议题资料库（华汉 V2）\n{kb}")
+        extras.append(
+            f"## 【本次聚焦议题：{db_topic}】\n"
+            f"用户已在侧栏选定「{db_topic}」议题资料库。本次回答**只依据下方 {db_topic} 资料库内容**，"
+            f"不要混入其他议题（如未选 TGV 就别谈 TGV）；若问题与 {db_topic} 无关，再用一般知识回答。\n\n"
+            f"### {db_topic} 议题资料库（华汉 V2）\n{kb}"
+        )
         # 对应 KNOWLEDGE_MAP 键（TGV→TGV、TSV→TSV、IC载板→ABF载板；整合＝三者皆跳过）
         skip_keys = {
             "TGV": {"TGV"}, "TSV": {"TSV"}, "IC载板": {"ABF载板"},
@@ -784,6 +789,14 @@ def _scroll_bottom(tag):
 # ── 对话 ──────────────────────────────────────────────────
 if "messages" not in st.session_state:
     st.session_state.messages = []
+
+# 切换「议题资料库」时清空对话，避免上一议题的问答污染新议题（选 TSV 却答 TGV）
+_prev_db = st.session_state.get("_prev_db_topic", "__init__")
+_cur_db = st.session_state.get("db_topic")
+if _cur_db != _prev_db:
+    st.session_state["_prev_db_topic"] = _cur_db
+    if _prev_db != "__init__":          # 初次载入不清
+        st.session_state.messages = []
 
 for msg in st.session_state.messages:
     with st.chat_message(msg["role"]):
