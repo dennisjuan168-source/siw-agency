@@ -158,16 +158,6 @@ st.sidebar.link_button("TSV", TSV_DB_URL, use_container_width=True)
 st.sidebar.link_button("IC载板", IC_SUBSTRATE_DB_URL, use_container_width=True)
 st.sidebar.link_button("TGV+TSV+IC载板", INTEGRATED_DB_URL, use_container_width=True)
 
-# 连结（网址可在 Secrets 覆写）
-DB_URL      = _cfg("DB_URL", "")
-CLAUDE_URL  = _cfg("CLAUDE_URL", "https://claude.ai")
-DOUBAO_URL  = _cfg("DOUBAO_URL", "https://www.doubao.com")
-
-st.sidebar.markdown('<div style="font-size:14px;font-weight:700;color:#00AEEF;margin:14px 0 6px">🔗 快速连结</div>', unsafe_allow_html=True)
-if DB_URL:
-    st.sidebar.link_button("📚 资料库", DB_URL, use_container_width=True)
-st.sidebar.link_button("🤖 Claude", CLAUDE_URL, use_container_width=True)
-st.sidebar.link_button("🫘 豆包", DOUBAO_URL, use_container_width=True)
 
 # ── Sidebar 功能键（移到最下面）───────────────────────────
 st.sidebar.markdown('<div style="font-size:14px;font-weight:700;color:#00AEEF;margin:14px 0 6px">⚙ 功能</div>', unsafe_allow_html=True)
@@ -327,7 +317,7 @@ st.markdown(f"""
     {_slogan_html}
   </div>
   <div style="font-size:12px;color:#94a3b8;margin-top:12px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;font-family:monospace">
-    <span style="background:#eef2f4;border-left:2px solid #9E9E9E;padding:3px 10px">🕒 HANSWELL Agency · build 2026-07-12e</span>
+    <span style="background:#eef2f4;border-left:2px solid #9E9E9E;padding:3px 10px">🕒 HANSWELL Agency · build 2026-07-12f</span>
   </div>
 </div>
 """, unsafe_allow_html=True)
