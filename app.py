@@ -151,6 +151,7 @@ st.sidebar.markdown('<div style="font-size:14px;font-weight:700;color:#00AEEF;ma
 st.sidebar.radio(
     "议题资料库", ["TGV", "TSV", "IC载板", "TGV+TSV+IC载板"],
     index=None, label_visibility="collapsed", key="db_topic",
+    format_func=lambda x: f"{x}(V2)",   # 显示加(V2)后缀，内部值不变（不影响知识注入/横幅）
 )
 
 
@@ -312,7 +313,7 @@ st.markdown(f"""
     {_slogan_html}
   </div>
   <div style="font-size:12px;color:#94a3b8;margin-top:12px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;font-family:monospace">
-    <span style="background:#eef2f4;border-left:2px solid #9E9E9E;padding:3px 10px">🕒 HANSWELL Agency · build 2026-07-12h</span>
+    <span style="background:#eef2f4;border-left:2px solid #9E9E9E;padding:3px 10px">🕒 HANSWELL Agency · build 2026-07-12i</span>
   </div>
 </div>
 """, unsafe_allow_html=True)
