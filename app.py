@@ -157,7 +157,7 @@ st.sidebar.markdown('<div style="font-size:14px;font-weight:700;color:#00AEEF;ma
 st.sidebar.radio(
     "议题资料库", ["TCB", "D2W", "W2W", "28nm Process"],
     index=None, label_visibility="collapsed", key="db_topic",
-    format_func=lambda x: f"{x}(V2)",   # 显示加(V2)后缀，内部值不变（不影响知识注入/横幅）
+    format_func=lambda x: f"{x}(V3)" if x == "28nm Process" else x,   # 仅 28nm 显示(V3)后缀，其余不加；内部值不变（不影响知识注入/横幅）
 )
 
 
@@ -167,7 +167,7 @@ st.sidebar.markdown('<div style="font-size:14px;font-weight:700;color:#00AEEF;ma
 with st.sidebar.expander("📖 使用说明"):
     st.markdown("""
 左侧「议题资料库」选一个议题，系统即载入该议题的**制程 Stage/Step、量检测节点、供应商**资料，再提问：
-- 先选 `TCB(V2)` → 问「TCB 热压键合的主要瓶颈？」
+- 先选 `TCB` → 问「TCB 热压键合的主要瓶颈？」
 - 四选项：TCB／D2W／W2W／28nm Process
 - ⚠️ **切换议题会清空当前对话**（避免不同议题混淆），换议题＝重新开始一段对话。
 """)
@@ -319,7 +319,7 @@ st.markdown(f"""
     {_slogan_html}
   </div>
   <div style="font-size:12px;color:#94a3b8;margin-top:12px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;font-family:monospace">
-    <span style="background:#eef2f4;border-left:2px solid #9E9E9E;padding:3px 10px">🕒 YUWEI Agency · build 2026-07-12a</span>
+    <span style="background:#eef2f4;border-left:2px solid #9E9E9E;padding:3px 10px">🕒 YUWEI Agency · build 2026-07-12b</span>
   </div>
 </div>
 """, unsafe_allow_html=True)
@@ -330,7 +330,7 @@ from kb_silicon_wafer import SILICON_WAFER_KNOWLEDGE
 from kb_abf_substrate import ABF_SUBSTRATE_KNOWLEDGE
 from kb_passive_components import PASSIVE_COMPONENTS_KNOWLEDGE
 from kb_swing_trading import SWING_TRADING_KNOWLEDGE
-# 御微议题资料库 V2（制程Stage/Step详解＋量检测节点＋供应商），对应侧栏「议题资料库」radio
+# 御微议题资料库（制程Stage/Step详解＋量检测节点＋供应商），对应侧栏「议题资料库」radio
 from kb_tcb_v2 import TCB_PROCESS_V2_KNOWLEDGE
 from kb_d2w_v2 import D2W_PROCESS_V2_KNOWLEDGE
 from kb_w2w_v2 import W2W_PROCESS_V2_KNOWLEDGE
@@ -354,7 +354,7 @@ KNOWLEDGE_MAP = {
     "被动元件": (["被动元件","mlcc","积层陶瓷","电容","电阻","电感","国巨","华新科","禾伸堂","2327","2492","3026","村田","murata","tdk","太诱","车规电容","钽质电容"], PASSIVE_COMPONENTS_KNOWLEDGE),
 }
 
-# 侧栏「议题资料库」radio 选项 → 御微 V2 资料库（sheet 分页名, 内建后备）
+# 侧栏「议题资料库」radio 选项 → 御微资料库（sheet 分页名, 内建后备）
 # 选中某议题即强制把整份 V2 资料喂给 AI；sheet 分页可在试算表即时编辑，读不到才用内建
 DB_TOPIC_KNOWLEDGE = {
     "TCB":          ("TCB议题",   TCB_PROCESS_V2_KNOWLEDGE),
@@ -730,7 +730,7 @@ def get_system_prompt(user_input: str) -> str:
             f"## 【本次聚焦议题：{db_topic}】\n"
             f"用户已在侧栏选定「{db_topic}」议题资料库。本次回答**只依据下方 {db_topic} 资料库内容**，"
             f"不要混入其他议题（如未选 TGV 就别谈 TGV）；若问题与 {db_topic} 无关，再用一般知识回答。\n\n"
-            f"### {db_topic} 议题资料库（御微 V2）\n{kb}"
+            f"### {db_topic} 议题资料库（御微内部资料）\n{kb}"
         )
         # 御微四议题（TCB/D2W/W2W/28nm）与通用 KNOWLEDGE_MAP 键无重叠，无需跳过防重复注入
         skip_keys = set()
