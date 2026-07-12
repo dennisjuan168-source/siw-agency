@@ -146,17 +146,12 @@ section[data-testid="stSidebar"] details {
 </style>
 """, unsafe_allow_html=True)
 
-# ── Sidebar 议题资料库（网址待补，先用 # 占位；有 Secrets 设定就覆写）──
-TGV_DB_URL          = _cfg("TGV_DB_URL", "#")
-TSV_DB_URL          = _cfg("TSV_DB_URL", "#")
-IC_SUBSTRATE_DB_URL = _cfg("IC_SUBSTRATE_DB_URL", "#")
-INTEGRATED_DB_URL   = _cfg("INTEGRATED_DB_URL", "#")
-
+# ── Sidebar 议题资料库（radio 切换，仿长线/短线；选中即把该议题资料喂给 AI）──
 st.sidebar.markdown('<div style="font-size:14px;font-weight:700;color:#00AEEF;margin:6px 0 6px">📂 议题资料库</div>', unsafe_allow_html=True)
-st.sidebar.link_button("TGV", TGV_DB_URL, use_container_width=True)
-st.sidebar.link_button("TSV", TSV_DB_URL, use_container_width=True)
-st.sidebar.link_button("IC载板", IC_SUBSTRATE_DB_URL, use_container_width=True)
-st.sidebar.link_button("TGV+TSV+IC载板", INTEGRATED_DB_URL, use_container_width=True)
+st.sidebar.radio(
+    "议题资料库", ["TGV", "TSV", "IC载板", "TGV+TSV+IC载板"],
+    index=None, label_visibility="collapsed", key="db_topic",
+)
 
 
 # ── Sidebar 功能键（移到最下面）───────────────────────────
@@ -317,7 +312,7 @@ st.markdown(f"""
     {_slogan_html}
   </div>
   <div style="font-size:12px;color:#94a3b8;margin-top:12px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;font-family:monospace">
-    <span style="background:#eef2f4;border-left:2px solid #9E9E9E;padding:3px 10px">🕒 HANSWELL Agency · build 2026-07-12f</span>
+    <span style="background:#eef2f4;border-left:2px solid #9E9E9E;padding:3px 10px">🕒 HANSWELL Agency · build 2026-07-12h</span>
   </div>
 </div>
 """, unsafe_allow_html=True)
@@ -328,6 +323,11 @@ from kb_silicon_wafer import SILICON_WAFER_KNOWLEDGE
 from kb_abf_substrate import ABF_SUBSTRATE_KNOWLEDGE
 from kb_passive_components import PASSIVE_COMPONENTS_KNOWLEDGE
 from kb_swing_trading import SWING_TRADING_KNOWLEDGE
+# 华汉议题资料库 V2（制程Stage/Step详解＋量检测节点＋供应商），对应侧栏「议题资料库」radio
+from kb_tgv_process_v2 import TGV_PROCESS_V2_KNOWLEDGE
+from kb_tsv_process_v2 import TSV_PROCESS_V2_KNOWLEDGE
+from kb_ic_substrate_v2 import IC_SUBSTRATE_V2_KNOWLEDGE
+from kb_integrated_v2 import INTEGRATED_V2_KNOWLEDGE
 
 BASE_PROMPT = st.secrets.get("SYSTEM_PROMPT", (
     f"你是 {BRAND_NAME} 股票分析助理，请用简体中文、条列式回答，不要长篇大论。\n"
@@ -345,6 +345,15 @@ KNOWLEDGE_MAP = {
     "矽晶圆": (["矽晶圆","silicon wafer","环球晶","台胜科","6488","3532","12吋","长晶","磊晶","信越","sumco","siltronic","soi"], SILICON_WAFER_KNOWLEDGE),
     "ABF载板": (["abf","载板","substrate","欣兴","南电","景硕","3037","8046","3189","ibiden","揖斐电","shinko","新光电气","bt载板","封装基板"], ABF_SUBSTRATE_KNOWLEDGE),
     "被动元件": (["被动元件","mlcc","积层陶瓷","电容","电阻","电感","国巨","华新科","禾伸堂","2327","2492","3026","村田","murata","tdk","太诱","车规电容","钽质电容"], PASSIVE_COMPONENTS_KNOWLEDGE),
+}
+
+# 侧栏「议题资料库」radio 选项 → 华汉 V2 资料库（sheet 分页名, 内建后备）
+# 选中某议题即强制把整份 V2 资料喂给 AI；sheet 分页可在试算表即时编辑，读不到才用内建
+DB_TOPIC_KNOWLEDGE = {
+    "TGV":            ("TGV议题",      TGV_PROCESS_V2_KNOWLEDGE),
+    "TSV":            ("TSV议题",      TSV_PROCESS_V2_KNOWLEDGE),
+    "IC载板":         ("IC载板议题",   IC_SUBSTRATE_V2_KNOWLEDGE),
+    "TGV+TSV+IC载板": ("整合议题",     INTEGRATED_V2_KNOWLEDGE),
 }
 
 # 完整方法论框架（纯方法论、零个资）改由 knowledge_base.py 维护
@@ -703,7 +712,24 @@ def get_system_prompt(user_input: str) -> str:
         "先进封装 / HBM": "先进封装",
     }
     forced = TOPIC_MAP.get(active)
+
+    # ① 议题资料库 radio（华汉）：选中议题 → 强制注入该议题完整 V2 资料（最高优先）
+    db_topic = st.session_state.get("db_topic")
+    skip_keys = set()   # 已由 radio 注入的 KNOWLEDGE_MAP 键，关键词侦测不重复注入
+    if db_topic in DB_TOPIC_KNOWLEDGE:
+        sheet_name, default_kb = DB_TOPIC_KNOWLEDGE[db_topic]
+        kb = load_framework(sheet_name, default_kb)   # sheet 分页可即时编辑，读不到用内建
+        extras.append(f"## {db_topic} 议题资料库（华汉 V2）\n{kb}")
+        # 对应 KNOWLEDGE_MAP 键（TGV→TGV、TSV→TSV、IC载板→ABF载板；整合＝三者皆跳过）
+        skip_keys = {
+            "TGV": {"TGV"}, "TSV": {"TSV"}, "IC载板": {"ABF载板"},
+            "TGV+TSV+IC载板": {"TGV", "TSV", "ABF载板"},
+        }.get(db_topic, set())
+
+    # ② 关键词自动侦测（与 radio 独立；radio 已注入的议题不重复注入）
     for name, (keywords, knowledge) in KNOWLEDGE_MAP.items():
+        if name in skip_keys:
+            continue
         if name == forced or any(k in text for k in keywords):
             extras.append(f"## {name} 技术知识库\n{knowledge}")
 
@@ -762,6 +788,9 @@ for msg in st.session_state.messages:
 active_topic = st.session_state.get("active_topic", "")
 if active_topic:
     st.info(f"📌 已选择知识领域：**{active_topic}** — 请输入您的问题")
+_db_topic = st.session_state.get("db_topic")
+if _db_topic:
+    st.info(f"📂 议题资料库：**{_db_topic}** — 已载入该议题制程/量检测/供应商资料，请输入您的问题")
 # st.caption("build 2026-06-14j")  # 部署除错用版本标记，需要时取消注解
 prompt = st.chat_input(f"向 {BRAND_NAME} 提出问题")
 
