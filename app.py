@@ -52,7 +52,7 @@ st.markdown("""
     padding: 16px 12px 14px;
     border-bottom: 1px solid #e8f7fd;
 }
-.siw-logo-section img { width: 210px; display: block; margin: 0 auto 8px; }
+.siw-logo-section img { width: 240px; display: block; margin: 0 auto 8px; }
 .siw-tagline {
     display: inline-block;
     background: #e8f7fd;
@@ -315,7 +315,7 @@ st.markdown(f"""
     {_slogan_html}
   </div>
   <div style="font-size:12px;color:#94a3b8;margin-top:12px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;font-family:monospace">
-    <span style="background:#eef2f4;border-left:2px solid #9E9E9E;padding:3px 10px">🕒 HANSWELL Agency · build 2026-07-12c</span>
+    <span style="background:#eef2f4;border-left:2px solid #9E9E9E;padding:3px 10px">🕒 HANSWELL Agency · build 2026-07-12d</span>
   </div>
 </div>
 """, unsafe_allow_html=True)
