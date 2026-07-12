@@ -160,28 +160,18 @@ st.sidebar.markdown('<div style="font-size:14px;font-weight:700;color:#00AEEF;ma
 
 with st.sidebar.expander("📖 使用说明"):
     st.markdown("""
-本助手有两大功能：
-
-**① 议题资料库（技术咨询）**
 左侧「议题资料库」选一个议题，系统即载入该议题的**制程 Stage/Step、量检测节点、供应商**资料，再提问：
 - 先选 `TGV(V2)` → 问「TGV 的 LIDE 制程主要瓶颈？」
 - 先选 `TSV(V2)` → 问「TSV 关键量检测节点有哪些？」
 - 四选项：TGV／TSV／IC载板／TGV+TSV+IC载板（整合）
 - ⚠️ **切换议题会清空当前对话**（避免不同议题混淆），换议题＝重新开始一段对话。
-
-**② 即时股价分析**
-不选议题，直接输入**代码**或**公司名**，自动带出即时股价＋分析：
-- `2330`、`分析台积电`、`欣兴 值得进场吗`、`300757`（陆股）
-- 支援台股（上市／上柜／兴柜）与陆股（沪深 A 股），即时报价＋历年财报。
 """)
 
 with st.sidebar.expander("📋 使用规范"):
     st.markdown("""
 - 技术议题资料库内容为**华汉伟业内部研究资产**，仅限授权人员使用，请勿外流。
 - 分析内容由 AI 依资料库＋公开资讯生成，**可能有误差**，关键数字请回原始文件核对。
-- 投资相关分析仅供研究参考，**非投资建议**，决策请自行评估、风险自负。
-- 股价／财报以即时来源为准；查无资料时系统会明示，不臆测。
-- 请勿输入机密客户名、个人敏感资讯或未公开料号。
+- 查无资料时系统会明示，不臆测。
 """)
 
 
@@ -324,7 +314,7 @@ st.markdown(f"""
     {_slogan_html}
   </div>
   <div style="font-size:12px;color:#94a3b8;margin-top:12px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;font-family:monospace">
-    <span style="background:#eef2f4;border-left:2px solid #9E9E9E;padding:3px 10px">🕒 HANSWELL Agency · build 2026-07-12l</span>
+    <span style="background:#eef2f4;border-left:2px solid #9E9E9E;padding:3px 10px">🕒 HANSWELL Agency · build 2026-07-12m</span>
   </div>
 </div>
 """, unsafe_allow_html=True)
