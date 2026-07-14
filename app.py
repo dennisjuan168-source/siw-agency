@@ -36,7 +36,7 @@ BRAND_TAGLINE  = _cfg("BRAND_TAGLINE", "共营AI · 一起共赢")
 BRAND_SUBTITLE = _cfg("BRAND_SUBTITLE",
     '协创微(SIW)聚焦「<b style="color:{C}">顾问咨询</b>、<b style="color:{C}">渠道协助</b>、<b style="color:{C}">战略投资</b>」等三大核心业务')
 BRAND_COLOR    = _cfg("BRAND_COLOR", "#1C2B8F")
-LOGO_URL       = _cfg("LOGO_URL", "https://raw.githubusercontent.com/dennisjuan168-source/siw-agency/raphael/raphael_logo.png")  # 瑞霏光电 logo；Secrets 设了就用 Secrets 的
+LOGO_URL       = _cfg("LOGO_URL", "https://raw.githubusercontent.com/dennisjuan168-source/siw-agency/raphael/raphael_logo_v2.png")  # 瑞霏光电 logo(透明版)；Secrets 设了就用 Secrets 的
 SHEET_ID       = _cfg("SHEET_ID", "")  # 瑞霏专属 Google 试算表，走 Secrets 填；预设留空避免误写华汉的表
 
 _favicon_path = _os.path.join(_os.path.dirname(_os.path.abspath(__file__)), "siw_favicon.png")
