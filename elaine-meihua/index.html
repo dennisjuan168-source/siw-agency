@@ -1,0 +1,1632 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>梅花易数 · 在线占卜（体用生克）</title>
+    <style>
+        /* ===== Claude Design System ===== */
+        :root {
+            --bg-primary: #fafaf9;
+            --bg-secondary: #f5f5f4;
+            --bg-card: #ffffff;
+            --bg-hover: #fafaf9;
+            --border-default: #e7e5e4;
+            --border-subtle: #f0efed;
+            --border-hover: #d6d3d1;
+            --text-primary: #1c1917;
+            --text-secondary: #57534e;
+            --text-tertiary: #78716c;
+            --text-muted: #a8a29e;
+            --accent: #d97757;
+            --accent-hover: #c46844;
+            --accent-light: #fdf2ed;
+            --accent-subtle: #fef5f0;
+            --green: #16a34a;
+            --green-light: #f0fdf4;
+            --yellow: #d97706;
+            --yellow-light: #fffbeb;
+            --red: #dc2626;
+            --red-light: #fef2f2;
+            --shadow-sm: 0 1px 2px rgba(0,0,0,0.04);
+            --shadow-md: 0 4px 12px rgba(0,0,0,0.06);
+            --shadow-lg: 0 12px 40px rgba(0,0,0,0.08);
+            --radius-sm: 6px;
+            --radius-md: 10px;
+            --radius-lg: 16px;
+            --radius-xl: 20px;
+            --font-sans: 'Inter', 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', system-ui, -apple-system, sans-serif;
+            --font-mono: 'JetBrains Mono', 'Cascadia Code', 'SF Mono', 'Consolas', monospace;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: var(--font-sans);
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            padding: 32px 20px 60px;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1060px;
+            margin: 0 auto;
+            background: var(--bg-card);
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow-lg);
+            padding: 40px 44px 48px;
+            border: 1px solid var(--border-default);
+        }
+
+        /* ===== Header ===== */
+        .header {
+            text-align: center;
+            padding-bottom: 24px;
+            margin-bottom: 32px;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+        .header .icon {
+            font-size: 40px;
+            margin-bottom: 8px;
+            display: block;
+        }
+        .header h1 {
+            font-size: 28px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            color: var(--text-primary);
+        }
+        .header .sub {
+            font-size: 14px;
+            color: var(--text-tertiary);
+            margin-top: 6px;
+            letter-spacing: 1px;
+        }
+        .header .sub span {
+            display: inline-block;
+            background: var(--bg-secondary);
+            padding: 4px 14px;
+            border-radius: 100px;
+            color: var(--text-secondary);
+            font-weight: 500;
+            font-size: 13px;
+        }
+
+        /* ===== Layout ===== */
+        .row {
+            display: flex;
+            gap: 36px;
+            flex-wrap: wrap;
+        }
+        .col-left { flex: 1 1 320px; min-width: 280px; }
+        .col-right { flex: 2 1 480px; min-width: 340px; }
+
+        /* ===== Cards ===== */
+        .card {
+            background: var(--bg-card);
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            margin-bottom: 18px;
+            border: 1px solid var(--border-default);
+            box-shadow: var(--shadow-sm);
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        .card:hover {
+            border-color: var(--border-hover);
+            box-shadow: var(--shadow-md);
+        }
+        .card-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .card-title .badge {
+            background: var(--accent-light);
+            color: var(--accent);
+            font-size: 11px;
+            padding: 3px 12px;
+            border-radius: 100px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        /* ===== Form ===== */
+        .form-group { margin-bottom: 16px; }
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: 6px;
+            letter-spacing: 0.3px;
+        }
+        .form-group select,
+        .form-group input {
+            width: 100%;
+            padding: 10px 14px;
+            font-size: 14px;
+            border: 1.5px solid var(--border-default);
+            border-radius: var(--radius-md);
+            background: var(--bg-card);
+            color: var(--text-primary);
+            transition: 0.2s ease;
+            font-family: var(--font-sans);
+            appearance: none;
+            -webkit-appearance: none;
+        }
+        .form-group select {
+            background-image: url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L5 5L9 1' stroke='%2378716c' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 14px center;
+            padding-right: 36px;
+        }
+        .form-group select:focus,
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(217, 119, 87, 0.12);
+        }
+        .form-group .hint {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-top: 5px;
+            line-height: 1.5;
+        }
+        .form-group .hint em {
+            font-style: normal;
+            color: var(--accent);
+            font-weight: 500;
+        }
+        .form-row {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        .form-row .form-group { flex: 1; min-width: 90px; }
+
+        /* ===== Buttons ===== */
+        .btn-primary {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            padding: 13px 0;
+            background: var(--accent);
+            color: #fff;
+            font-size: 17px;
+            font-weight: 600;
+            letter-spacing: 4px;
+            border: none;
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-family: var(--font-sans);
+        }
+        .btn-primary:hover {
+            background: var(--accent-hover);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 14px rgba(217, 119, 87, 0.3);
+        }
+        .btn-primary:active {
+            transform: translateY(0);
+            box-shadow: none;
+        }
+        .btn-primary:disabled {
+            opacity: 0.45;
+            transform: none;
+            box-shadow: none;
+            cursor: not-allowed;
+        }
+
+        /* ===== Result Area ===== */
+        #resultArea {
+            display: none;
+            animation: fadeUp 0.45s ease;
+        }
+        @keyframes fadeUp {
+            0% { opacity: 0; transform: translateY(16px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+        .result-header {
+            text-align: center;
+            padding: 8px 0 18px;
+            border-bottom: 1px solid var(--border-subtle);
+            margin-bottom: 22px;
+        }
+        .result-header h2 {
+            font-size: 22px;
+            color: var(--text-primary);
+            letter-spacing: 2px;
+            font-weight: 700;
+        }
+        .result-header .time {
+            font-size: 13px;
+            color: var(--text-tertiary);
+            margin-top: 4px;
+        }
+
+        /* ===== Trigram Display ===== */
+        .trigram-grid {
+            display: flex;
+            gap: 14px;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-bottom: 24px;
+        }
+        .trigram-box {
+            background: var(--bg-card);
+            border: 2px solid var(--border-default);
+            border-radius: var(--radius-lg);
+            padding: 18px 14px 16px;
+            flex: 1;
+            min-width: 130px;
+            max-width: 200px;
+            text-align: center;
+            transition: all 0.2s ease;
+        }
+        .trigram-box:hover {
+            border-color: var(--border-hover);
+            box-shadow: var(--shadow-md);
+        }
+        .trigram-box .label {
+            font-size: 12px;
+            color: var(--text-muted);
+            font-weight: 600;
+            letter-spacing: 1.5px;
+            margin-bottom: 6px;
+            text-transform: uppercase;
+        }
+        .trigram-box .symbol {
+            font-size: 48px;
+            line-height: 1.2;
+            color: var(--text-primary);
+        }
+        .trigram-box .gua-name {
+            font-size: 17px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-top: 2px;
+        }
+        .trigram-box .gua-desc {
+            font-size: 12px;
+            color: var(--text-tertiary);
+            margin-top: 2px;
+        }
+        .trigram-box .gua-trigram {
+            font-size: 13px;
+            color: var(--text-secondary);
+            margin-top: 6px;
+            background: var(--bg-secondary);
+            padding: 3px 12px;
+            border-radius: 100px;
+            display: inline-block;
+            font-weight: 500;
+        }
+        .trigram-box.highlight {
+            border-color: var(--accent);
+            background: var(--accent-subtle);
+            box-shadow: 0 0 0 1px var(--accent);
+        }
+
+        /* ===== Tiyong Section ===== */
+        .tiyong-section {
+            background: var(--bg-secondary);
+            border-radius: var(--radius-md);
+            padding: 20px 22px;
+            margin: 18px 0 22px;
+            border-left: 4px solid var(--accent);
+        }
+        .tiyong-section .row-tiyong {
+            display: flex;
+            gap: 24px;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+        }
+        .tiyong-item {
+            text-align: center;
+            flex: 1;
+            min-width: 90px;
+        }
+        .tiyong-item .tag {
+            font-size: 12px;
+            color: var(--text-muted);
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+        .tiyong-item .gua {
+            font-size: 26px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+        .tiyong-item .relation {
+            font-size: 17px;
+            font-weight: 700;
+            color: var(--accent);
+            margin-top: 2px;
+        }
+        .tiyong-item .relation.good { color: var(--green); }
+        .tiyong-item .relation.bad { color: var(--red); }
+
+        /* ===== Interpretation ===== */
+        .interpretation {
+            background: var(--bg-card);
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            border: 1px solid var(--border-default);
+            margin-top: 16px;
+        }
+        .interpretation h3 {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 12px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+        .interpretation p {
+            font-size: 14px;
+            line-height: 1.85;
+            color: var(--text-secondary);
+            margin-bottom: 10px;
+            white-space: pre-wrap;
+        }
+        .interpretation .verdict {
+            font-size: 18px;
+            font-weight: 700;
+            text-align: center;
+            padding: 14px 0 8px;
+            letter-spacing: 1px;
+        }
+        .interpretation .verdict.good { color: var(--green); }
+        .interpretation .verdict.bad { color: var(--red); }
+        .interpretation .verdict.mid { color: var(--yellow); }
+
+        /* ===== Tip & Info boxes ===== */
+        .info-box {
+            background: var(--bg-secondary);
+            border-radius: var(--radius-md);
+            padding: 12px 16px;
+            margin-top: 12px;
+            font-size: 13px;
+            color: var(--text-secondary);
+            line-height: 1.7;
+        }
+        .info-box strong {
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+        .info-box-subtle {
+            background: var(--accent-subtle);
+            border-radius: var(--radius-sm);
+            padding: 8px 14px;
+            margin-top: 10px;
+            font-size: 12px;
+            color: var(--text-tertiary);
+            border: 1px solid var(--border-subtle);
+        }
+
+        /* ===== Responsive ===== */
+        @media (max-width: 740px) {
+            .container { padding: 20px 16px 32px; border-radius: var(--radius-lg); }
+            .header h1 { font-size: 24px; letter-spacing: 1px; }
+            .row { flex-direction: column; gap: 20px; }
+            .col-left, .col-right { flex: 1 1 auto; min-width: 0; }
+            .trigram-grid { gap: 8px; }
+            .trigram-box { min-width: 90px; padding: 14px 8px; }
+            .trigram-box .symbol { font-size: 36px; }
+            .form-row { flex-direction: column; gap: 0; }
+            .form-row .form-group { min-width: 0; }
+            .tiyong-section .row-tiyong { flex-direction: column; align-items: center; }
+        }
+
+        /* ===== Utilities ===== */
+        .text-center { text-align: center; }
+        .mt-8 { margin-top: 8px; }
+        .mt-16 { margin-top: 16px; }
+        .hidden { display: none !important; }
+
+        .loading-shimmer {
+            animation: shimmer 1.4s infinite;
+            background: linear-gradient(90deg, #f5f5f4 25%, #e7e5e4 50%, #f5f5f4 75%);
+            background-size: 200% 100%;
+            border-radius: 8px;
+        }
+        @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+
+        .tip {
+            background: var(--accent-subtle);
+            border-radius: var(--radius-md);
+            padding: 12px 16px;
+            font-size: 13px;
+            color: var(--text-secondary);
+            margin-bottom: 16px;
+            border-left: 4px solid var(--accent);
+            line-height: 1.6;
+        }
+        .tip strong { color: var(--accent); }
+
+        .gua-symbol-big { font-size: 60px; line-height: 1.1; }
+
+        .text-accent { color: var(--accent); }
+        .text-green { color: var(--green); }
+        .text-red { color: var(--red); }
+
+        /* ===== Footer ===== */
+        .footer {
+            text-align: center;
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-top: 32px;
+            padding-top: 18px;
+            border-top: 1px solid var(--border-subtle);
+            letter-spacing: 0.5px;
+        }
+        .footer a {
+            color: var(--text-tertiary);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+        .footer a:hover { color: var(--accent); }
+
+        /* ===== Scrollbar ===== */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: var(--border-hover); border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
+
+        /* ===== Claude AI Section ===== */
+        .claude-card {
+            background: linear-gradient(135deg, #faf9f7 0%, #fef5f0 100%);
+            border: 1.5px solid var(--border-default);
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            margin-top: 18px;
+            position: relative;
+            overflow: hidden;
+        }
+        .claude-card::before {
+            content: '';
+            position: absolute;
+            top: -40px;
+            right: -40px;
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: rgba(217, 119, 87, 0.06);
+            pointer-events: none;
+        }
+        .claude-card .claude-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 14px;
+            position: relative;
+        }
+        .claude-card .claude-header .claude-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            background: var(--accent);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-size: 16px;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+        .claude-card .claude-header h4 {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text-primary);
+            letter-spacing: 0.5px;
+        }
+        .claude-card .claude-header .badge-ai {
+            font-size: 10px;
+            background: var(--accent-light);
+            color: var(--accent);
+            padding: 2px 8px;
+            border-radius: 100px;
+            font-weight: 600;
+            letter-spacing: 1px;
+        }
+        .api-key-row {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            margin-bottom: 12px;
+            position: relative;
+        }
+        .api-key-row input {
+            flex: 1;
+            padding: 9px 12px;
+            font-size: 13px;
+            border: 1.5px solid var(--border-default);
+            border-radius: var(--radius-md);
+            background: var(--bg-card);
+            color: var(--text-primary);
+            font-family: var(--font-mono);
+            letter-spacing: 0.5px;
+            transition: border-color 0.2s;
+        }
+        .api-key-row input:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(217, 119, 87, 0.12);
+        }
+        .api-key-row input::placeholder {
+            color: var(--text-muted);
+            font-family: var(--font-sans);
+            letter-spacing: 0;
+        }
+        .api-key-row .btn-toggle-key {
+            padding: 9px 14px;
+            font-size: 12px;
+            background: var(--bg-secondary);
+            border: 1.5px solid var(--border-default);
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            color: var(--text-secondary);
+            font-weight: 500;
+            white-space: nowrap;
+            transition: all 0.2s;
+            font-family: var(--font-sans);
+        }
+        .api-key-row .btn-toggle-key:hover {
+            background: var(--bg-hover);
+            border-color: var(--border-hover);
+        }
+        .btn-claude {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            width: 100%;
+            padding: 11px 0;
+            background: var(--text-primary);
+            color: #fff;
+            font-size: 15px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            border: none;
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-family: var(--font-sans);
+            position: relative;
+        }
+        .btn-claude:hover {
+            background: #292524;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 14px rgba(0,0,0,0.2);
+        }
+        .btn-claude:active {
+            transform: translateY(0);
+        }
+        .btn-claude:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        .btn-claude .spinner {
+            display: none;
+            width: 16px;
+            height: 16px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-top-color: #fff;
+            border-radius: 50%;
+            animation: spin 0.7s linear infinite;
+        }
+        .btn-claude.loading .spinner { display: inline-block; }
+        .btn-claude.loading .btn-text { display: none; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        .claude-result {
+            display: none;
+            margin-top: 16px;
+            background: var(--bg-card);
+            border-radius: var(--radius-md);
+            padding: 20px;
+            border: 1px solid var(--border-default);
+            animation: fadeUp 0.4s ease;
+        }
+        .claude-result.show { display: block; }
+        .claude-result h5 {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 10px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--border-subtle);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .claude-result .ai-content {
+            font-size: 14px;
+            line-height: 1.9;
+            color: var(--text-secondary);
+            white-space: pre-line;
+        }
+        .claude-result .ai-content p { margin-bottom: 10px; }
+        .claude-error {
+            background: var(--red-light);
+            border-radius: var(--radius-sm);
+            padding: 10px 14px;
+            font-size: 13px;
+            color: var(--red);
+            margin-top: 10px;
+            display: none;
+        }
+        .claude-error.show { display: block; }
+
+        .model-select-row {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 12px;
+            position: relative;
+        }
+        .model-select-row select {
+            flex: 1;
+            padding: 8px 12px;
+            font-size: 12px;
+            border: 1.5px solid var(--border-default);
+            border-radius: var(--radius-md);
+            background: var(--bg-card);
+            color: var(--text-secondary);
+            font-family: var(--font-sans);
+            cursor: pointer;
+            appearance: none;
+            -webkit-appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L5 5L9 1' stroke='%2378716c' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 10px center;
+            padding-right: 28px;
+        }
+        .api-hint {
+            font-size: 11px;
+            color: var(--text-muted);
+            margin-top: 8px;
+            line-height: 1.6;
+        }
+        .api-hint a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+        .api-hint a:hover { text-decoration: underline; }
+
+        @media (max-width: 740px) {
+            .api-key-row { flex-direction: column; }
+            .api-key-row .btn-toggle-key { width: 100%; }
+            .model-select-row { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container" id="app">
+        <!-- ===== Header ===== -->
+        <div class="header">
+            <span class="icon">☯</span>
+            <h1>梅花易数</h1>
+            <div class="sub">
+                <span>以数起卦 · 体用生克 · 观象玩辞</span>
+            </div>
+        </div>
+
+        <!-- ===== Content ===== -->
+        <div class="row">
+            <!-- Left Column: Input -->
+            <div class="col-left">
+                <!-- Matter -->
+                <div class="card">
+                    <div class="card-title">
+                        🎯 所问之事
+                        <span class="badge">事</span>
+                    </div>
+                    <div class="form-group">
+                        <select id="matter">
+                            <option value="general">🌟 综合运势</option>
+                            <option value="marriage">💕 婚姻感情</option>
+                            <option value="career">💼 事业前程</option>
+                            <option value="wealth">💰 财运得失</option>
+                            <option value="health">🏥 健康疾病</option>
+                            <option value="travel">✈️ 出行远游</option>
+                            <option value="exam">📚 考试求学</option>
+                            <option value="lawsuit">⚖️ 诉讼官司</option>
+                            <option value="house">🏠 宅居风水</option>
+                            <option value="lost">🔍 失物寻踪</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Method -->
+                <div class="card">
+                    <div class="card-title">
+                        🎲 占卜方式
+                        <span class="badge">法</span>
+                    </div>
+                    <div class="form-group">
+                        <select id="method">
+                            <option value="time">🕐 时间占（年月日时）</option>
+                            <option value="number">🔢 数字占</option>
+                            <option value="sound">🔊 声音占</option>
+                            <option value="word">📝 字占</option>
+                        </select>
+                    </div>
+                    <!-- Dynamic params -->
+                    <div id="paramsArea">
+                        <!-- Time method -->
+                        <div class="method-params" data-method="time">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>年（农历）</label>
+                                    <input type="number" id="year" value="2026" min="1" max="9999">
+                                </div>
+                                <div class="form-group">
+                                    <label>月（农历）</label>
+                                    <input type="number" id="month" value="7" min="1" max="12">
+                                </div>
+                                <div class="form-group">
+                                    <label>日（农历）</label>
+                                    <input type="number" id="day" value="14" min="1" max="30">
+                                </div>
+                                <div class="form-group">
+                                    <label>时（地支序号）</label>
+                                    <select id="hour">
+                                        <option value="1">子 (23-01)</option>
+                                        <option value="2">丑 (01-03)</option>
+                                        <option value="3">寅 (03-05)</option>
+                                        <option value="4">卯 (05-07)</option>
+                                        <option value="5">辰 (07-09)</option>
+                                        <option value="6">巳 (09-11)</option>
+                                        <option value="7" selected>午 (11-13)</option>
+                                        <option value="8">未 (13-15)</option>
+                                        <option value="9">申 (15-17)</option>
+                                        <option value="10">酉 (17-19)</option>
+                                        <option value="11">戌 (19-21)</option>
+                                        <option value="12">亥 (21-23)</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="hint">📅 使用农历日期，时按十二地支序号：<em>子=1 ... 亥=12</em></div>
+                        </div>
+                        <!-- Number method -->
+                        <div class="method-params hidden" data-method="number">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>数字（上卦）</label>
+                                    <input type="number" id="numUpper" value="3" min="1" max="999">
+                                </div>
+                                <div class="form-group">
+                                    <label>时辰（地支序号）</label>
+                                    <select id="numHour">
+                                        <option value="1">子</option><option value="2">丑</option>
+                                        <option value="3">寅</option><option value="4">卯</option>
+                                        <option value="5">辰</option><option value="6">巳</option>
+                                        <option value="7" selected>午</option>
+                                        <option value="8">未</option><option value="9">申</option>
+                                        <option value="10">酉</option><option value="11">戌</option>
+                                        <option value="12">亥</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="hint">🔢 随心取数作为上卦，以时定动爻</div>
+                        </div>
+                        <!-- Sound method -->
+                        <div class="method-params hidden" data-method="sound">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>声响次数（上卦）</label>
+                                    <input type="number" id="soundCount" value="5" min="1" max="999">
+                                </div>
+                                <div class="form-group">
+                                    <label>时辰（地支序号）</label>
+                                    <select id="soundHour">
+                                        <option value="1">子</option><option value="2">丑</option>
+                                        <option value="3">寅</option><option value="4">卯</option>
+                                        <option value="5">辰</option><option value="6">巳</option>
+                                        <option value="7" selected>午</option>
+                                        <option value="8">未</option><option value="9">申</option>
+                                        <option value="10">酉</option><option value="11">戌</option>
+                                        <option value="12">亥</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="hint">🔊 闻声之数取上卦，时数合而定爻</div>
+                        </div>
+                        <!-- Word method -->
+                        <div class="method-params hidden" data-method="word">
+                            <div class="form-group">
+                                <label>输入文字（不限长度）</label>
+                                <input type="text" id="wordInput" value="梅花易数" placeholder="请输入文字…" style="font-size:15px;">
+                            </div>
+                            <div class="hint">📝 以字平分为上下卦，总字数为动爻</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Divine Button -->
+                <button class="btn-primary" id="btnDivine">起 卦</button>
+                <div style="margin-top:14px;font-size:12px;color:var(--text-muted);text-align:center;">
+                    诚意占卜 · 一事一占 · 再三不告
+                </div>
+            </div>
+
+            <!-- Right Column: Result -->
+            <div class="col-right">
+                <div id="resultArea">
+                    <!-- Rendered dynamically by JS -->
+                </div>
+
+                <!-- Claude AI Card -->
+                <div class="claude-card" id="claudeCard">
+                    <div class="claude-header">
+                        <div class="claude-icon">✦</div>
+                        <h4>Claude AI 深度解读</h4>
+                        <span class="badge-ai">AI</span>
+                    </div>
+                    <p style="font-size:13px;color:var(--text-secondary);margin-bottom:14px;line-height:1.6;">
+                        输入你的 Anthropic API Key，Claude 将为你提供更加详细、个性化的卦象解读。API Key 仅保存在你的浏览器本地，不会上传到任何服务器。
+                    </p>
+                    <div class="api-key-row">
+                        <input type="password" id="apiKey" placeholder="输入 Anthropic API Key（sk-ant-...）" autocomplete="off">
+                        <button class="btn-toggle-key" id="btnToggleKey" type="button">👁 显示</button>
+                    </div>
+                    <div class="model-select-row">
+                        <select id="claudeModel">
+                            <option value="claude-opus-4-8">Claude Opus 4.8（推荐·均衡强大）</option>
+                            <option value="claude-sonnet-5">Claude Sonnet 5（性价比高）</option>
+                            <option value="claude-fable-5">Claude Fable 5（最强·深度解读）</option>
+                            <option value="claude-haiku-4-5">Claude Haiku 4.5（轻量·快速）</option>
+                        </select>
+                    </div>
+                    <button class="btn-claude" id="btnClaude">
+                        <span class="btn-text">🔮 AI 深度解卦</span>
+                        <span class="spinner"></span>
+                    </button>
+                    <div class="api-hint">
+                        💡 还没有 API Key？前往 <a href="https://console.anthropic.com/" target="_blank">Anthropic Console</a> 获取。此功能为可选项，不输入 Key 也可正常使用梅花易数占卜。
+                    </div>
+                    <div class="claude-error" id="claudeError"></div>
+                    <div class="claude-result" id="claudeResult">
+                        <h5>✨ Claude AI 解读</h5>
+                        <div class="ai-content" id="claudeContent"></div>
+                    </div>
+                </div>
+
+                <!-- Principles Card -->
+                <div class="card" style="margin-top:10px;">
+                    <div class="card-title" style="font-size:14px;">📖 占卜原则</div>
+                    <div style="font-size:13px;color:var(--text-secondary);line-height:1.8;">
+                        <p>
+                            ◈ 不动不占 — 无感无动变时，勿轻占<br>
+                            ◈ 一事不二占 — 同样问题不可重复占问<br>
+                            ◈ 异事可同占 — 不同事情可分别起卦<br>
+                            ◈ 诚之为贵 — 心诚则灵，不可戏谑<br>
+                            ◈ 此工具仅供学习参考，结果由算法生成
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            梅花易数 · 易学文化 · 学习交流用 · build 20260714b
+        </div>
+    </div>
+
+    <script>
+        // ================================================================
+        //  1. 八卦基础数据
+        // ================================================================
+        const BAGUA = {
+            '乾': { idx: 0, name: '乾', symbol: '☰', number: 1, wuxing: '金', direction: '西北', body: '首',
+                family: '父', nature: '天', virtue: '健' },
+            '兑': { idx: 1, name: '兑', symbol: '☱', number: 2, wuxing: '金', direction: '西', body: '口', family: '少女',
+                nature: '泽', virtue: '悦' },
+            '离': { idx: 2, name: '离', symbol: '☲', number: 3, wuxing: '火', direction: '南', body: '目', family: '中女',
+                nature: '火', virtue: '丽' },
+            '震': { idx: 3, name: '震', symbol: '☳', number: 4, wuxing: '木', direction: '东', body: '足', family: '长男',
+                nature: '雷', virtue: '动' },
+            '巽': { idx: 4, name: '巽', symbol: '☴', number: 5, wuxing: '木', direction: '东南', body: '股', family: '长女',
+                nature: '风', virtue: '入' },
+            '坎': { idx: 5, name: '坎', symbol: '☵', number: 6, wuxing: '水', direction: '北', body: '耳', family: '中男',
+                nature: '水', virtue: '陷' },
+            '艮': { idx: 6, name: '艮', symbol: '☶', number: 7, wuxing: '土', direction: '东北', body: '手', family: '少男',
+                nature: '山', virtue: '止' },
+            '坤': { idx: 7, name: '坤', symbol: '☷', number: 8, wuxing: '土', direction: '西南', body: '腹', family: '母',
+                nature: '地', virtue: '顺' }
+        };
+
+        const BAGUA_LIST = ['乾', '兑', '离', '震', '巽', '坎', '艮', '坤'];
+        const NUM_TO_GUA = { 1: '乾', 2: '兑', 3: '离', 4: '震', 5: '巽', 6: '坎', 7: '艮', 0: '坤' };
+        const GUA_TO_NUM = Object.fromEntries(BAGUA_LIST.map(g => [g, BAGUA[g].number]));
+
+        // ================================================================
+        //  2. 64卦数据
+        // ================================================================
+        const GUA_64 = {};
+        function build64() {
+            const pairs = [
+                ['乾', '乾', '乾为天', '元亨利贞。', '乾卦六爻皆阳，乃纯阳之卦，象征天道运行、创造万物之力。得此卦者，内心刚健，志向远大，正当运势旺盛之时。乾卦六龙——潜龙勿用到飞龙在天再到亢龙有悔，揭示了事物发展的完整规律：初时需韬光养晦，积蓄力量；中期当抓住机遇，奋发有为；盛极之时要戒骄戒躁，防盛极而衰。此卦大吉，但提醒你：刚不可久，刚柔并济方为长治久安之道。宜主动出击，把握良机，但须心存敬畏，不可得意忘形。'],
+                ['乾', '坤', '天地否', '否之匪人，不利君子贞。', '天地不交，阴阳隔绝，闭塞不通之象。乾在上而坤在下，天道升而地道降，两不相交，犹如君臣离心、上下失和。得此卦者，当前处境较为艰难，所求之事多有阻碍，人际关系可能出现龃龉。然而否卦并非绝望之卦——否极则泰来，黑暗至极便是黎明。此时最重要的是守正自持，不与小人同流合污，保存实力等待时机。不宜冒进、不宜扩张、不宜与人争执。以退为进，以守为攻，待到阴霾散去，自会云开见日。'],
+                ['乾', '震', '天雷无妄', '元亨利贞，其匪正有眚。', '无妄者，至诚无伪也。天在上而雷在下，天道运行与雷电震动相合，象征真实不虚、顺其自然的状态。得此卦者，当以真诚之心待人处事，不可存侥幸心理，不可投机取巧。无妄卦核心在于"真实"二字——保持本心，不虚不妄，自然会得到好的结果。但卦辞中也暗示"匪正有眚"，若心术不正，或有意外之灾。提醒你：任何时候都要光明正大，走正道、做正事，天道自然会庇佑诚实之人。'],
+                ['乾', '巽', '天风姤', '女壮，勿用取女。', '姤者，遇也，不期而遇之意。天在上而风在下，风行天下、无处不入，象征偶然的相遇与意外的机缘。得此卦者，近期可能会遇到意料之外的人或事——可能是一段新的关系、一个突然的机会，或是某种变故。卦象提醒：一阴初生，暗藏变数，看似柔弱的因素可能逐渐壮大。对待突如其来的事情要保持警觉，特别是人际关系方面，不可轻信于人，也不可被表面现象所迷惑。好事当珍惜，坏事需及早防范。'],
+                ['乾', '坎', '天水讼', '有孚窒惕，中吉。', '讼者，争辩也。天在上而水在下，天向上而水向下，二者背道而驰，象征意见分歧、争端矛盾。得此卦者，当前可能面临是非纠纷或意见冲突——可能是工作上的争执、合同纠纷，或人际间的矛盾。讼卦告诫：争讼之事，即便赢了也消耗心力，得不偿失。最理想的结果是"中吉"——在过程中及时化解、达成和解。以和为贵，退一步海阔天空。若必须争辩，也要保持诚信（有孚），讲道理而非意气用事。切记：真正的胜利不是压倒对方，而是找到双赢之道。'],
+                ['乾', '艮', '天山遁', '遁，小利贞。', '遁者，退避也。天在上而山在下，山虽高峻但终究不能及天，象征退让、隐藏、待时之机。得此卦者，当前局势或不利于进取——可能遇到强有力的对手，或时机尚未成熟。遁卦不是懦弱退缩，而是大智慧的体现：知进退、明得失。此时宜收敛锋芒，退守自保，不与强势正面冲突。小利可图，大事暂缓。"遁"中有"豚"，提醒你即使退让也要保持尊严，像山一样稳重。等待是暂时的，时机到来时自然可以重新出发。'],
+                ['乾', '离', '天火同人', '同人于野，亨。', '同人者，志同道合也。天在上而火在下，火光上达于天，象征光明正大、团结协作。得此卦者，近期人际关系和谐，容易找到志趣相投的伙伴。同人卦的核心在于"同心"——与人合作、集思广益，方能成就大事。特别是"同人于野"，暗示你需要走出固有的圈子，到更广阔的天地中去结交朋友、寻找机会。团队合作、联谊聚会、商务洽谈均大利。但也提醒：合作需以公心为出发点，不可结党营私；光明正大的合作才能持久兴旺。'],
+                ['乾', '兑', '天泽履', '履虎尾，不咥人，亨。', '履者，践行也，亦有"礼"之意。天在上而泽在下，天高泽卑，各安其位，象征按规矩行事、谨慎前行。卦辞"履虎尾，不咥人"极为形象——如同踩在老虎尾巴上，只要小心谨慎，老虎不会咬人。得此卦者，当前处境需格外谨慎，可能面临一定风险或与强势之人打交道。关键是：循规蹈矩，依礼而行，不越位、不冒犯，便可化险为夷。做事要有分寸感，对上恭敬、对下谦和，在复杂局面中走钢丝需要智慧和定力。'],
+                ['坤', '乾', '地天泰', '小往大来，吉亨。', '泰者，通也，天地交泰、万物亨通之象。地在上面天在下——这看似反常，实则蕴含深意：地气下沉而天气上升，阴阳交合，和畅通达。得此卦者，运势亨通，万事顺遂，是极佳的吉兆。事业、感情、财运皆有上升之势，上下同心，内外和谐。泰卦提醒：在顺境中要居安思危，"小往大来"意味着以小的付出换取大的回报，但切不可因此挥霍好运。保持谦逊感恩之心，与人为善，共享成果，好运方能长久。天道循环，泰极则否，珍惜当下好时光。'],
+                ['坤', '坤', '坤为地', '元亨，利牝马之贞。', '坤卦六爻皆阴，乃纯阴之卦，象征大地之德——厚德载物、柔顺包容、滋养万物而不争功。得此卦者，宜以柔克刚、以静制动，不宜逞强出头。如同母马（牝马）一样，温顺而有韧性，踏实而不张扬。坤卦的核心智慧在于"顺势"——不是逆来顺受，而是顺应自然规律，在合适的时间做合适的事。你拥有承载和包容的力量，但要注意方向明确、持之以恒。提醒：过于柔顺可能错失良机，柔中要有刚，在坚持原则的前提下灵活行事。"厚德载物"意味着德行足够深厚，才能承载更大的福报。'],
+                ['坤', '震', '地雷复', '亨，出入无疾。', '复者，返也，一阳来复之象。地在上面雷在下，一阳初生于地底，象征冬去春来、万物复苏、生机重现。得此卦者，好消息！无论之前经历了怎样的低谷或困境，现在正是转机之时。复卦告诉我们：阴阳消长是自然规律，衰极必盛、否极泰来。你可能已经度过了最艰难的阶段，新的希望正在萌发。但复卦也提醒：初始阶段力量尚微，不可急于求成。如同早春的嫩芽，需要呵护和耐心。"出入无疾"意味着顺其自然会越来越好，不必焦虑，给自己一些时间恢复和成长。'],
+                ['坤', '巽', '地风升', '元亨，用见大人。', '升者，上升也，循序渐进、步步高升之象。地在上而风在下，风从地起、渐升于天，象征稳步上升、前途光明。得此卦者，事业、学业或地位有上升之势，努力正在获得回报。升卦的核心在于"渐"——不是一蹴而就，而是一步一个脚印地上升。如同树木生长，日积月累方成参天大树。"用见大人"暗示在上升过程中可能会遇到贵人提携，要善于把握机遇。提醒：上升期要保持谦逊，根基不牢则爬得越高摔得越重。稳步前行，未来可期。'],
+                ['坤', '坎', '地水师', '贞，丈人吉无咎。', '师者，众也，行师动众之象。地在上而水在下，地中有水，蓄势待发，象征集合力量、统一行动。得此卦者，当前事务可能需要团队协作，或者需要领导、组织他人共同完成某项任务。师卦的核心在于"师出有名"——行动要有正当理由，团队要有统一指挥。"丈人吉"指稳重有德之人可担大任。提醒：统合众人需公正无私，赏罚分明。但师卦也暗示潜在风险——集体行动若不加以约束，容易失控。以正治国、以奇用兵，严肃纪律方能百战不殆。'],
+                ['坤', '艮', '地山谦', '亨，君子有终。', '谦者，谦逊也。地在上而山在下，高山隐藏于大地之下，象征内有大德而不外露、功高而不自居。得此卦者，宜以谦逊为怀，不骄不躁。谦卦被古人认为是六十四卦中最吉祥的卦之一——因为谦虚的人永远不会招致祸患。真正有实力的人不必炫耀，反而能赢得更多尊重。在人际交往中要低姿态，在工作中要踏实不浮夸。"君子有终"意味着持谦之道必有好结果。提醒：谦逊不等于自卑，不是在否定自己的价值，而是保持开放学习的心态。谦谦君子，利涉大川。'],
+                ['坤', '离', '地火明夷', '利艰贞。', '明夷者，明入地中，光明被遮蔽之象。地在上而火在下，太阳沉入大地之下，象征黑暗时期、才华不显、怀才不遇。得此卦者，当前可能处于不被理解、不被赏识的阶段——你的光芒暂时被掩盖了。但明夷卦并非纯粹凶兆：黑暗不会永远持续。关键是在艰难时期坚守正道（利艰贞），不因环境恶劣而放弃原则。收敛锋芒、韬光养晦，在暗夜中默默积蓄力量。箕子佯狂以保身的故事正是明夷卦的智慧——有时候暂时的隐忍是为了将来更好地绽放。'],
+                ['坤', '兑', '地泽临', '元亨利贞。', '临者，莅临也，居高临下、亲近臣民之象。地在上而泽在下，大地包容沼泽，象征在上者以德服人、亲临一线。得此卦者，运势通达顺利，适合主动出击、展示领导力。临卦的核心在于"以德服人"——不是用权威压人，而是以人格魅力感召他人。在职场中，上级可能会注意到你的表现；在人际关系中，你的真诚会赢得他人信任。但临卦也提醒：好运不会永久持续，"至于八月有凶"，趁运势好的时候要多做积累，未雨绸缪。'],
+                ['震', '乾', '雷天大壮', '利贞。', '大壮者，声势浩大、阳刚极盛之象。雷在天上，雷霆万钧、声震九霄，象征力量达到顶峰、势不可挡。得此卦者，你正处于能量充沛、势头强劲的阶段——可能手握资源，或者处于优势地位。但大壮卦的关键教诲是：强盛之时要"利贞"——守正。过于刚强则易折，恃强凌弱必遭反噬。越是有力量的时候，越要克制自我、以礼服人。提醒你：真正强大的人不需要处处证明自己的力量，反而要以柔和的姿态待人。大象无形，大音希声。'],
+                ['震', '坤', '雷地豫', '利建侯行师。', '豫者，安乐也，愉悦和顺之象。雷在地上，春雷唤醒大地，万物复苏而喜悦，象征心情愉快、顺势而为。得此卦者，近期心情愉悦，诸事顺利，适合开展新计划、拓展事业。"利建侯行师"暗示：此时适合建立自己的事业版图或团队，也适合外出拓展。但豫卦的一个核心提醒是：快乐之时不要忘乎所以。顺境中的懈怠往往埋下隐患。保持清醒的头脑，享受当下的同时也要为未来筹划。豫卦中的"雷"也意味着行动力——光想不练不行，想到了就去做。'],
+                ['震', '震', '震为雷', '亨，震来虩虩。', '震卦两雷相叠，象征巨大的震动与变化。雷代表着惊雷、警醒、变动——得此卦者，生活中可能会遇到突发事件或重大变化，令人心生警惕。"震来虩虩"描绘的是雷声轰隆、令人战栗的场景，但卦辞接着给出了应对之道："笑言哑哑"——处变不惊，以从容态度面对。震卦的核心智慧在于：变故并不可怕，可怕的是失去镇定。面对突发事件，先冷静下来，才能做出正确判断。把每一次"震动"当作上天对你的警醒和考验，经历过风暴的人会更加坚强。修身自省，戒惧谨慎，终能化险为夷。'],
+                ['震', '巽', '雷风恒', '亨，无咎，利贞。', '恒者，长久也，持续稳定之象。雷在上风在下，雷厉风行、刚柔并济，象征长久之道在于坚持和稳定。得此卦者，所问之事需要长期经营，不宜急功近利。恒卦的核心智慧是"持之以恒"——任何事情要成功都需要时间和耐心。如同婚姻、事业、学业，靠的不是一时冲动而是持久付出。但恒卦也提醒：坚持不等于顽固不化。真正的"恒"是在方向正确的前提下持续努力，如果发现方向错了，及时调整也是"恒"的一部分。稳定是福，但也要灵活应变。'],
+                ['震', '坎', '雷水解', '利西南，无所往。', '解者，解脱也，困难消散之象。雷在上水在下，雷雨交加之后云开雾散，象征问题得到解决、困境得以解除。得此卦者，好消息！之前困扰你的某件事或将得到缓解——可能是矛盾化解、疾病痊愈、阻碍消除。"利西南"暗示向柔顺的方向发展会有利。解卦的一个关键启示是：问题解决之后不要画蛇添足。"无所往"——不必再往别处去，不必再多做什么，让事情自然恢复就好。如同暴雨过后，不必再去搅动泥土，让清水自然沉淀。放下执念，顺其自然。'],
+                ['震', '艮', '雷山小过', '亨，利贞，可小事。', '小过者，小有过越之象。雷在山上，雷声虽大但山更高，象征行动稍微超出了合理范围、略有偏差。得此卦者，当前做的事情可能有些"过"了——也许是用力过猛、花销过度、期望过高。小过卦的智慧在于：小有过越尚可挽回，但要及时调整。"可小事"意味着此时只适合做小事，不宜大动干戈。在细节上用功，把小事做好做精，大的成就自然会来。提醒：做事要有分寸感，过犹不及。谦逊一点、收敛一点，反而能走得更稳。'],
+                ['震', '离', '雷火丰', '亨，王假之。', '丰者，盛也，丰盛盈满之象。雷上火下，雷电交加、火光耀眼，象征事业或生活的鼎盛时期。得此卦者，你可能正处于一个高峰阶段——事业有成、资源充裕、状态极佳。但丰卦最重要的教诲是：盛极必衰，日盈则亏。"日中见斗"——正午时分太阳最亮，却也意味着此后将逐渐西斜。在丰盛时期要保持清醒，做好应对变化的准备。不要因为当下的成功而过度自信或挥霍。知足知止，方能守住成果。'],
+                ['震', '兑', '泽雷随', '元亨利贞，无咎。', '随者，从也，随时应变之象。泽在上雷在下，泽随雷动，象征顺应时势、随机应变。得此卦者，宜灵活变通、顺势而为，不宜固执己见。随卦的核心智慧是"与时偕行"——天下大势，顺之者昌。你不需要逆水行舟、强行改变不可改变的事情，而是要敏锐感知环境的变化，及时调整自己的策略和方向。同时随卦也提醒：随顺不等于盲从，要在顺应中保持自我原则。"元亨利贞"四个字全出现，说明随顺正道则大吉。内方外圆，从善如流。'],
+                ['巽', '乾', '风天小畜', '亨，密云不雨。', '小畜者，小有积蓄、尚未大成之象。风在天上，风吹云聚但雨尚未下，象征力量在积蓄中但尚未到释放的时机。得此卦者，你正在积累阶段——可能是在学习新技能、储备资金、建立人脉，但这些积累还没有转化为可见的成果。"密云不雨"形象地描述了这种状态：乌云密布却不降雨，看似已经到了临界点但还差最后一步。小畜卦鼓励你：继续积累，不要急躁。同时也暗示你可能需要调整某些方面——为何云聚而不雨？是否缺乏某种催化剂？耐心等待并创造合适的条件，雨终将会下。'],
+                ['巽', '坤', '风地观', '盥而不荐，有孚颙若。', '观者，观察也，静观其变之象。风在地上，风行大地、遍览万物，象征站在高处观察全局、审时度势。得此卦者，当前最重要的是"观"——多观察、多思考，不宜贸然行动。"盥而不荐"描绘了祭祀前净手的虔诚状态，提醒你要怀着敬畏之心去观察和等待。在决策前要充分了解情况，看清利害关系再做判断。观卦是一面镜子：你如何看待世界，世界也如何看待你。保持敬畏和真诚（有孚），你所观察到的才会是真相而非假象。'],
+                ['巽', '震', '风雷益', '利有攸往，利涉大川。', '益者，增益也，利人利己之象。风在上雷在下，风助雷威、雷借风势，相得益彰，象征互相助益、共同增益。得此卦者，运势有利，适合积极行动。益卦的核心理念是"损上益下"——适当减少上层的利益来增益下层，反而能使整体更加繁荣。对你而言，这意味着：利他即是利己，懂得分享和付出的人最终收获更多。"利有攸往，利涉大川"——大胆前进，可以成就大事业。提醒：增益之道贵在适度，不贪不吝，取之有道。'],
+                ['巽', '巽', '巽为风', '小亨，利有攸往。', '巽卦两风相随，风行草偃，象征柔顺、渗透、无孔不入的力量。风看似柔弱，却能穿越最细小的缝隙，能风化坚硬的岩石。得此卦者，宜以柔克刚、以退为进，不可硬来。"小亨"意味着虽然不是大的亨通，但小事可成，积小胜为大胜。巽卦的核心智慧是"入"——像风一样渗透，用温和而持续的方式影响他人和环境。在沟通中柔声细语比大声咆哮更有力量；在工作中润物无声比强行推进更有效。谦逊柔和反而是最高明的手段。'],
+                ['巽', '坎', '风水涣', '亨，王假有庙。', '涣者，离散也，重新凝聚之象。风在水上，风吹水散，象征原本凝聚的事物出现涣散分离的迹象。得此卦者，可能面临团队涣散、人心不齐、计划打散的情况。但涣卦并非纯凶——涣散之后正是重新凝聚的契机。"王假有庙"意味着需要借助精神感召力来重新团结人心。涣卦的核心智慧是：当旧的结构瓦解时，不要恐慌，而是要建立新的凝聚点。以真诚感化他人，以共同的愿景重新聚合力量。散是为了更好地聚。'],
+                ['巽', '艮', '风山渐', '女归吉，利贞。', '渐者，渐进也，循序渐进之象。风在山上，风遇山而缓行，象征事物按照自然节奏慢慢推进。得此卦者，所求之事需要时间和耐心，不宜操之过急。"女归吉"以女子出嫁为比喻——嫁娶之事需要按部就班、礼数周全，急不得。渐卦的核心在于"序"——万物发展有其自然顺序，跳过任何一步都可能埋下隐患。如同登山，一步一步往上走才能安全到达顶峰。提醒：不要因为进展缓慢而焦虑，慢就是快，稳就是赢。'],
+                ['巽', '离', '风火家人', '利女贞。', '家人者，家道也，各安其位之象。风在上火在下，风助火势、火暖家风，象征家庭和谐、内外有序。得此卦者，宜关注家庭事务、处理内部关系。家人卦的核心在于"各正其位"——每个人做好自己的本分，家庭自然兴旺。推及事业，也意味着团队内部要分工明确、各司其职。"利女贞"强调柔德的重要性——以柔克刚、以静制动是治家之道。提醒：家是最重要的港湾，攘外必先安内。家庭和睦则万事顺遂。'],
+                ['巽', '兑', '风泽中孚', '豚鱼吉，利涉大川。', '中孚者，诚信也，以诚感通之象。风在上泽在下，风行水上、泽纳清风，象征诚信能够感化万物、联通天地。得此卦者，诚信是你当前最大的力量。"豚鱼吉"——连猪和鱼这样愚钝的生物都能被诚信感化，说明真诚有着不可抗拒的感染力。在商业合作中，诚信是最好的策略；在人际交往中，真心能换来真心。"利涉大川"——心怀诚信可以克服巨大的困难。提醒：诚信来自内心，不能伪装。只有发自内心的真诚，才能产生真正的感通之力。'],
+                ['坎', '乾', '水天需', '有孚，光亨，贞吉。', '需者，待也，等待时机之象。水在天上，云在天而待雨，象征事物需要等待合适的条件才能实现。得此卦者，当前最重要的是耐心。"有孚，光亨"——保持诚信，前途是光明的。需卦告诉我们：有些事情急不得，就像种庄稼需要等待季节、下雨需要等待云聚。在等待的过程中，不要焦虑也不要闲着——充实自己、做好准备，当时机来临时才能一举抓住。提醒：等待不等于无所作为，"需于沙"也可能有小的不愉快，但这些都会过去。'],
+                ['坎', '坤', '水地比', '吉原筮，元永贞。', '比者，亲也，亲比依附之象。水在地上，水附地而流，象征人与人之间的亲密依附、团结互助。得此卦者，人际关系良好，适合在团队中找到自己的位置，或寻求合作伙伴。比卦的核心智慧在于"亲比"——找到志同道合的人互相支持，比单打独斗要强大得多。但比卦也提醒：依附要有原则，不可盲目跟从。选择值得追随的人或团队，同时保持自己的独立判断。"元永贞"——从一开始就要守持正道，不可结党营私。'],
+                ['坎', '震', '水雷屯', '元亨利贞，勿用有攸往。', '屯者，难也，万物初生之象。水在上雷在下，云雷交加、万物萌生，象征事物刚刚开始时的艰难困苦。得此卦者，你可能正处于某件事情的起步阶段——万事开头难，各种困难似乎接踵而至。但屯卦告诉我们：这是正常的！任何伟大的事业开头都不容易。"勿用有攸往"——此时不宜冒进，先站稳脚跟再说。如同幼苗需要扎根才能茁壮成长，你现在需要的是耐心和坚持。守住初心，等待转机，春天终会到来。'],
+                ['坎', '巽', '水风井', '改邑不改井，无丧无得。', '井者，养也，稳固不变之象。水在上风在下，水被风拂而更加清澈，象征稳定的根本、持久的滋养。得此卦者，宜安守本分、以不变应万变。"改邑不改井"——村落可以变迁，但水井永远在那里。你内心最根本的东西——价值观、专业能力、核心优势——是不会轻易改变的。井卦提醒：在变化中保持定力，做好自己擅长的事，不必追逐每一个风口。但也要注意：井需要时常清理，否则水质会变差。不断更新自己的同时守住根本。'],
+                ['坎', '坎', '坎为水', '习坎，有孚维心，亨。', '坎卦两水相叠，象征双重险阻、危机重重。水代表着危险、深渊、未知——得此卦者，当前可能面临重重困难，如同涉水渡河，处处有暗流漩涡。但坎卦的核心智慧是：危险并不可怕，可怕的是失去信心。"习坎"意味着学会与危险共处——"有孚维心"——保持内心的诚信和坚定，就能穿越险阻。水流不争先，奔流到海不复回。以柔克刚，绕开阻碍而非正面冲撞。提醒：坎卦之后往往是光明，黑暗的尽头就是黎明。坚持住，水流总会冲破阻碍奔流入海。'],
+                ['坎', '艮', '水山蹇', '利西南，不利东北。', '蹇者，难也，举步维艰之象。水在山上，水遇山而受阻，象征前路艰险、行动困难。得此卦者，当前可能遇到较大的阻碍——计划推进困难、目标似乎遥不可及。"利西南"指向柔顺的方向（西南在八卦中属坤），意味着此时不宜硬闯，要迂回前进。蹇卦的核心智慧是：知难而退需要勇气，但更智慧。当正面前路不通时，不妨换个方向试试。停下来反思、寻求帮助、调整策略，都是明智之举。山不转水转，总有路可走。'],
+                ['坎', '离', '水火既济', '亨小，利贞，初吉终乱。', '既济者，已成也，事情成就之象。水在上火在下，水火相交、烹饪完成，象征事情已经达成、目标已经实现。得此卦者，某件事情可能已经或即将完成。但既济卦最重要的警示在于"初吉终乱"——成功之后往往容易松懈，导致得而复失。历史上多少英雄在成功后因骄傲自满而失败的例子不胜枚举。提醒你：成就是新的起点而非终点。保持清醒的头脑、谦逊的态度、谨慎的作风，才能守住胜利果实。思患而预防之，居安而思危。'],
+                ['坎', '兑', '水泽节', '亨，苦节不可贞。', '节者，节制也，合乎分寸之象。水在上泽在下，泽能蓄水但水量有限，象征凡事要有节制、不可过度。得此卦者，当前需要把握分寸——可能是控制花销、节制欲望、管理时间。"苦节不可贞"——过于严苛的节制也难以持久。节卦的核心智慧在于"度"：太过和不及都是问题。你可以享受生活，但要有节制；你可以追求目标，但要适度。找到平衡点是节卦给你的考验。合理的节制带来长久的亨通，过度的克制只会适得其反。'],
+                ['艮', '乾', '山天大畜', '利贞，不家食吉。', '大畜者，大积蓄也，厚积薄发之象。山在天上，山虽高而有天更高，象征蓄积深厚、蕴藏巨大能量。得此卦者，你正处于积累阶段——在储备知识、积累资源、修炼内功。"不家食吉"——不要只在家里吃老本，要走出去吸收更多养分。大畜卦的核心智慧是：真正的强大来自长期的积累和沉淀。如同水库蓄水，需要时间和耐心，但一旦开闸，能量势不可挡。提醒：积蓄时期要甘于寂寞，不急于求成。广积善缘、多学多问，时机自然会到。'],
+                ['艮', '坤', '山地剥', '不利有攸往。', '剥者，剥落也，衰败凋零之象。山在地上，山石剥落、地基动摇，象征事物由盛转衰、小人当道。得此卦者，当前运势不佳，可能面临挫折、损失或被压制的情况。"不利有攸往"——此时不宜有任何大的行动，宜静不宜动。剥卦的核心智慧在于：阴阳消长是天理，衰败是自然过程的一部分。重要的不是抗拒衰败，而是在衰败中保护好自己的根基。"硕果不食"——把最好的果实留作来年的种子，保留核心实力等待复兴。顺而止之，厚下安宅。'],
+                ['艮', '震', '山雷颐', '贞吉，观颐自求口实。', '颐者，养也，颐养天年之象。山在上雷在下，山下有雷动，象征通过自己的努力获取滋养。"自求口实"——自己养活自己，自食其力。得此卦者，需要关注自我成长和独立发展。颐卦的核心智慧是"养正"——不仅要养身，更要养德。吃什么、看什么、学什么，都影响你的人生品质。选择健康的"食物"（包括物质和精神两个层面），才能培养出健康的自己。提醒：自力更生是根本，但也不必排斥他人的帮助。养生之道，节饮食、慎言语。'],
+                ['艮', '巽', '山风蛊', '元亨，利涉大川。', '蛊者，事也，腐败中求新之象。山在上风在下，风被山阻而回旋，象征陈旧腐败的事物需要整顿革新。得此卦者，可能面临某种"腐败"局面——可能是工作中的积弊、人际中的积怨，或者某个旧习惯需要改变。蛊卦虽然看起来不祥，但卦辞却说"元亨"——因为腐败被清除之后，反而能够迎来新生。"先甲三日，后甲三日"——革新需要充分的准备和后续的巩固。不要害怕推倒重来，有时破旧才能立新。'],
+                ['艮', '坎', '山水蒙', '亨，匪我求童蒙。', '蒙者，启蒙也，求知求学之象。山在上水在下，山下水气蒸腾成雾，象征蒙昧未开、有待启发。得此卦者，你可能正处于学习新事物的阶段，或者对某件事还不够了解，需要虚心求教。蒙卦的核心智慧在于"童蒙求我，非我求童蒙"——真正的学习来自主动的求知欲，而不是被动的灌输。保持孩童般的好奇心和求知欲，主动去寻找答案，才能真正获得智慧。提醒：启蒙需要明师，但更需要自己的努力。学问之道，贵在自觉。'],
+                ['艮', '艮', '艮为山', '艮其背，不获其身。', '艮卦两山相叠，象征停止、静止、知止。山代表着巍然不动、坚定稳定——得此卦者，当前最重要的是"止"。"艮其背，不获其身"——停止在应该停止的地方，不要越过界限。知止是一种大智慧：知道什么时候该停下，知道自己的能力边界在哪里，知道自己该要什么不该要什么。在浮躁的时代，懂得止步的人反而走得更远。提醒：知足不辱，知止不殆。不是所有机会都值得追逐，不是所有欲望都应当满足。内心安定，即是福地。'],
+                ['艮', '离', '山火贲', '亨，小利有攸往。', '贲者，饰也，文饰美化之象。山在上火在下，火光照耀山峦，象征装饰、美化、外在的修饰。得此卦者，可能比较在意外在形象或表现形式——也许是在装修、设计、宣传方面的事情。贲卦的核心智慧在于：适当的修饰是必要的，但不可舍本逐末。过度装饰反而掩盖了本质的美好。如同一个人，干净整洁是礼貌，浓妆艳抹则失去了本真。"小利有攸往"——小事可为，大的成就还需要回归本质。白贲，无咎——最高的装饰就是不装饰。返璞归真才是最高境界。'],
+                ['艮', '兑', '山泽损', '有孚，元吉，无咎。', '损者，减也，损己利人之象。山在上泽在下，山高泽低，象征损上益下、减少自我以利他人。得此卦者，可能需要做出一些牺牲或让步——也许是时间、金钱、精力上的付出。损卦的智慧是反直觉的：有时候"损"反而是"益"。"有孚，元吉"——怀着一颗真诚的心去做，结果往往是好的。适当的舍弃和让步能够化解矛盾、赢得人心。提醒：损不是无原则的牺牲，损己是为了更大的格局。如同修剪树枝是为了让树长得更好。'],
+                ['离', '乾', '火天大有', '元亨。', '大有者，大丰收也，丰盛充盈之象。火在天上，如日中天、普照万物，象征事业鼎盛、收获丰硕。得此卦者，运势极佳，正是大展宏图的好时机。"元亨"二字简洁有力——从根本上是亨通的。大有卦的核心智慧在于：拥有很多的时候，要懂得分享和感恩。"其德刚健而文明"——强大的同时要保持文明的德行。提醒：大有之时要"遏恶扬善"，不要因富有而变得傲慢或贪婪。真正的"大有"不是占有多少，而是能够给予多少。'],
+                ['离', '坤', '火地晋', '康侯用锡马蕃庶。', '晋者，进也，蒸蒸日上之象。火在地上，旭日东升、光芒万丈，象征进步、升迁、前途光明。得此卦者，运势上升，事业或学业有进步的空间。"康侯用锡马蕃庶"——如同受封赏的诸侯得到众多马匹，你的努力正在获得回报和认可。晋卦的核心智慧是：进步要像太阳升起一样，光明正大、稳健持续。不要投机取巧，踏踏实实地往前走。提醒：进步的过程中要保持"自昭明德"——不断自我提升，让内心的光芒越来越亮。'],
+                ['离', '震', '火雷噬嗑', '亨，利用狱。', '噬嗑者，咬合也，决断是非之象。火在上雷在下，雷电交加、火光闪耀，象征需要做出明确判断、解决纠纷。得此卦者，当前可能面临需要决断的局面——也许是要在几个选项中做出选择，或者是需要解决某个争端。噬嗑卦的核心智慧是：明断是非，需要智慧和勇气。如同咬开坚硬的东西需要力度，做决定也需要果断。提醒：做判断前要充分了解情况，不偏听偏信；一旦决定就不要犹豫反复。明察秋毫，公正无私。'],
+                ['离', '巽', '火风鼎', '元吉，亨。', '鼎者，器也，革故鼎新之象。火在上风在下，火借风势烹煮鼎中食物，象征去旧布新、改革创新。得此卦者，正是改革创新的好时机——也许是换工作、改革旧制度、改变生活方式。鼎卦是所有卦中最"新"的卦之一：旧的不去新的不来，打破旧框架才能建立新秩序。鼎也象征权力和地位——"问鼎"即是问天下。提醒：革新需要能力也需要时机，煮东西需要合适的火候，改革也需要循序渐进，不可操之过急。鼎新而后大成。'],
+                ['离', '坎', '火水未济', '亨，小狐汔济。', '未济者，未成也，尚需努力之象。火在上水在下，火炎上而水润下，二者不能相交，象征事情尚未完成、还需要继续努力。得此卦者，所求之事还没有结果——可能是在过程中遇到了困难，或者离成功还差最后一步。"小狐汔济"——小狐狸快要渡河成功了，却在最后关头弄湿了尾巴。这个形象提醒你：越到快成功的时候越要小心，功亏一篑最令人惋惜。坚持住，你已经很接近目标了，不要在最接近终点的时候放弃。'],
+                ['离', '艮', '火山旅', '小亨，旅贞吉。', '旅者，行旅也，在外漂泊之象。火在山上，火燃于山巅而不可久居，象征旅途、漂泊、在外闯荡。得此卦者，可能处于一种"在路上"的状态——也许是出差旅行、异地发展，或是人生阶段的过渡期。旅卦的核心智慧是：在外漂泊要懂得保护自己。客居他乡，凡事要多留个心眼，不可像在家一样随意。"旅贞吉"——在旅途中坚守正道则吉。提醒：漂泊是暂时的，但经历是永久的。珍惜旅途中的见闻和成长，终有一天会找到归宿。'],
+                ['离', '离', '离为火', '利贞，亨，畜牝牛吉。', '离卦两火相叠，象征光明、依附、文明。火不能独立燃烧，必须依附于燃料——得此卦者，需要找到可以依附的对象或平台。离卦的核心智慧在于"丽"——附丽于正，则光明灿烂。如同火焰需要燃料、人才需要平台、藤蔓需要大树。选择正确的依附对象至关重要——要依附于光明正大的人事物。"畜牝牛吉"——养柔顺的母牛是吉祥的，意味着以柔顺的姿态处世会更有利。提醒：要有光，先要有燃烧的勇气；要发光，先要有被点燃的准备。'],
+                ['离', '兑', '火泽睽', '小事吉。', '睽者，乖也，背离不合之象。火在上泽在下，火向上而泽向下，二者方向相反，象征分歧、矛盾、意见不合。得此卦者，可能在人际关系或合作中出现了分歧——也许是价值观不同、目标不一致，或者沟通出了问题。睽卦的核心智慧在于"求同存异"——完全一致是不可能的，但可以找到共同的立足点。"小事吉"——大的合作可能有困难，但小事上可以取得共识。提醒：分歧不一定是坏事，差异可以互补。睁一只眼闭一只眼，在小事上妥协，在大方向上坚持。'],
+                ['兑', '乾', '泽天夬', '扬于王庭，孚号有厉。', '夬者，决也，当机立断之象。泽在天上，泽水映天、决而流之，象征需要做出果断的决定。得此卦者，当前面临一个需要决断的时刻——可能是一个长期悬而未决的问题，或是需要与某人或某事做个了断。夬卦的核心在于"决"——当断不断，反受其乱。拖延和犹豫只会让问题变得更复杂。但同时也要注意方式方法："扬于王庭"——公开公正地处理，而不是暗箱操作。果断但不鲁莽，坚定但不偏激。'],
+                ['兑', '坤', '泽地萃', '亨，王假有庙。', '萃者，聚也，汇聚荟萃之象。泽在地上，水聚于泽而成湖，象征人才汇聚、力量集结。得此卦者，运势良好，适合组织活动、召集人手、扩大团队。"王假有庙"——如同君王在宗庙中聚集群臣，你需要一个"精神中心"来凝聚人心。萃卦的核心智慧是：众人拾柴火焰高，但凝聚人心需要共同的信仰和目标。提醒：聚集不是拉帮结派，而是志同道合者的自然汇合。以诚心聚人，以公心处事，方能长久。'],
+                ['兑', '震', '泽雷随', '元亨利贞，无咎。', '随者，从也，随时应变之象。泽在上雷在下，泽随雷动而荡漾，象征顺应形势、随机应变。得此卦者，当前最重要的是灵活应变。时代在变，环境在变，固执己见的人会被淘汰。随卦的核心智慧是"随时"——把握好时机，顺势而为。但这不意味着没有原则地随波逐流——"元亨利贞"四德全备，说明随顺的是正道而非邪道。提醒：内方外圆，心中有坚定的原则，行动上灵活变通。识时务者为俊杰。'],
+                ['兑', '巽', '泽风大过', '栋桡，利有攸往。', '大过者，太过也，失衡过度之象。泽在上风在下，泽灭木（泽水淹没了树木），象征某种严重的不平衡状态。得此卦者，当前情况可能有些"过头"——也许是工作过劳、压力过大、关系失衡。"栋桡"——房屋的大梁弯曲了，暗示结构性的问题需要解决。大过卦的智慧是：当事情严重偏离正常轨道时，需要果断纠正。不过纠正也不能矫枉过正。提醒：过犹不及，中庸是最好的状态。在失衡中找到平衡点，是此卦给你的考验。'],
+                ['兑', '坎', '泽水困', '亨，贞大人吉。', '困者，困境也，困顿艰难之象。泽在上水在下，泽中无水而干涸，象征陷入困境、资源匮乏、举步维艰。得此卦者，可能正处于一段艰难时期——也许是经济困难、事业瓶颈、或心理上的困顿。但困卦的核心智慧在于：困境是对君子的考验。"亨，贞大人吉"——坚守正道的大人物在困境中反而能获得成长。宝剑锋从磨砺出，梅花香自苦寒来。提醒：困境是暂时的，但从中获得的智慧和韧性是永久的。咬牙坚持，上善若水，水能绕开一切阻碍。'],
+                ['兑', '艮', '泽山咸', '亨，利贞，取女吉。', '咸者，感也，心灵感应之象。泽在山上，山上有泽，山水相映，象征男女相感、心灵相通。得此卦者，人际关系尤其是感情方面有利——可能是恋情发展、婚姻美满，或人与人之间的心灵默契。咸卦的核心是"感应"——以虚受人，以诚相感。不带偏见和预设地去感受对方，才能真正产生共鸣。在感情中，少说多做；在沟通中，多听少说。提醒：真正的感应来自内心的真诚，而非表面的讨好。无心之感，才是最深的感觉。'],
+                ['兑', '兑', '兑为泽', '亨，利贞。', '兑卦两泽相连，象征喜悦、交流、和谐。泽代表着悦——由内而外的喜悦，如同湖面泛起的涟漪，层层扩散。得此卦者，心态愉悦，人际关系和谐，适合交友、沟通、谈判。兑卦的核心智慧是"以朋友讲习"——在愉快的氛围中互相学习、共同成长。喜悦是会传染的，你的好心情能感染身边的人。提醒：真正的喜悦来自内心的平和，而非外在的刺激。兑而能贞——在快乐中不失原则，在交流中不忘真诚。以和为贵，大吉大利。']
+            ];
+            for (const [upper, lower, name, ci, meaning] of pairs) {
+                const key = upper + lower;
+                GUA_64[key] = { upper, lower, name, ci, meaning };
+            }
+        }
+        build64();
+
+        // ================================================================
+        //  3. 工具函数
+        // ================================================================
+        function getGuaName(upper, lower) {
+            const key = upper + lower;
+            return GUA_64[key] || { name: upper + lower + '卦', ci: '未知', meaning: '请自行参详' };
+        }
+        function numToGua(n) {
+            let r = n % 8;
+            if (r === 0) r = 8;
+            return NUM_TO_GUA[r] || '坤';
+        }
+        function getYao(guaName, yaoIndex) {
+            const binary = BAGUA[guaName].idx;
+            const bits = [(binary >> 2) & 1, (binary >> 1) & 1, binary & 1];
+            const map = [2, 1, 0];
+            return bits[map[yaoIndex]] === 1 ? '阳' : '阴';
+        }
+        function changeYao(guaName, yaoIndex) {
+            const binary = BAGUA[guaName].idx;
+            const bits = [(binary >> 2) & 1, (binary >> 1) & 1, binary & 1];
+            const map = [2, 1, 0];
+            const pos = map[yaoIndex];
+            bits[pos] = bits[pos] === 1 ? 0 : 1;
+            const newIdx = (bits[0] << 2) | (bits[1] << 1) | bits[2];
+            return BAGUA_LIST[newIdx];
+        }
+        function getHuGua(upper, lower) {
+            const lowerBits = [getYao(lower, 0), getYao(lower, 1), getYao(lower, 2)];
+            const upperBits = [getYao(upper, 0), getYao(upper, 1), getYao(upper, 2)];
+            const xiaHu = [lowerBits[1], lowerBits[2], upperBits[0]];
+            const shangHu = [lowerBits[2], upperBits[0], upperBits[1]];
+            const toGua = (bits) => {
+                const idx = (bits[0] === '阳' ? 1 : 0) * 4 + (bits[1] === '阳' ? 1 : 0) * 2 + (bits[2] === '阳' ? 1 : 0);
+                return BAGUA_LIST[idx];
+            };
+            return { upper: toGua(shangHu), lower: toGua(xiaHu) };
+        }
+
+        // ================================================================
+        //  4. 体用生克
+        // ================================================================
+        function getTiyongRelation(body, use) {
+            const sheng = { '金': '水', '水': '木', '木': '火', '火': '土', '土': '金' };
+            const ke = { '金': '木', '木': '土', '土': '水', '水': '火', '火': '金' };
+            const bw = BAGUA[body].wuxing;
+            const uw = BAGUA[use].wuxing;
+            if (sheng[bw] === uw) return '体生用';
+            if (sheng[uw] === bw) return '用生体';
+            if (ke[bw] === uw) return '体克用';
+            if (ke[uw] === bw) return '用克体';
+            if (bw === uw) return '体用比和';
+            return '体用比和';
+        }
+        function getTiyongScore(relation) {
+            const map = {
+                '用生体': { score: 90, level: '大吉', desc: '事必成，有进益之喜' },
+                '体用比和': { score: 70, level: '次吉', desc: '事易成，谋为可成' },
+                '体克用': { score: 50, level: '中平', desc: '事可成，需克制努力' },
+                '体生用': { score: 25, level: '小凶', desc: '事难成，有耗损之忧' },
+                '用克体': { score: 10, level: '大凶', desc: '事不成，诸事不宜' }
+            };
+            return map[relation] || { score: 50, level: '持平', desc: '须综合判断' };
+        }
+
+        // ================================================================
+        //  5. 起卦逻辑
+        // ================================================================
+        function divine(method, params) {
+            let upperNum, lowerNum, moveYao;
+            switch (method) {
+                case 'time': {
+                    const { year, month, day, hour } = params;
+                    const total = year + month + day;
+                    upperNum = total % 8; if (upperNum === 0) upperNum = 8;
+                    const total2 = year + month + day + hour;
+                    lowerNum = total2 % 8; if (lowerNum === 0) lowerNum = 8;
+                    moveYao = total2 % 6; if (moveYao === 0) moveYao = 6;
+                    break;
+                }
+                case 'number': {
+                    const { num, hour } = params;
+                    upperNum = num % 8; if (upperNum === 0) upperNum = 8;
+                    const total = num + hour;
+                    lowerNum = total % 8; if (lowerNum === 0) lowerNum = 8;
+                    moveYao = total % 6; if (moveYao === 0) moveYao = 6;
+                    break;
+                }
+                case 'sound': {
+                    const { count, hour } = params;
+                    upperNum = count % 8; if (upperNum === 0) upperNum = 8;
+                    const total = count + hour;
+                    lowerNum = total % 8; if (lowerNum === 0) lowerNum = 8;
+                    moveYao = total % 6; if (moveYao === 0) moveYao = 6;
+                    break;
+                }
+                case 'word': {
+                    const { text } = params;
+                    const len = text.length;
+                    if (len === 0) throw new Error('请输入文字');
+                    let upperLen, lowerLen;
+                    if (len % 2 === 0) { upperLen = lowerLen = len / 2; }
+                    else { upperLen = Math.floor(len / 2); lowerLen = len - upperLen; }
+                    upperNum = upperLen % 8; if (upperNum === 0) upperNum = 8;
+                    lowerNum = lowerLen % 8; if (lowerNum === 0) lowerNum = 8;
+                    moveYao = len % 6; if (moveYao === 0) moveYao = 6;
+                    break;
+                }
+                default: throw new Error('未知占卜方式');
+            }
+            return { upperGua: numToGua(upperNum), lowerGua: numToGua(lowerNum), moveYao, upperNum, lowerNum };
+        }
+
+        // ================================================================
+        //  6. 综合解卦
+        // ================================================================
+        function interpret(method, params, matter) {
+            const result = divine(method, params);
+            const { upperGua, lowerGua, moveYao } = result;
+            const benGua = getGuaName(upperGua, lowerGua);
+
+            let bodyGua, useGua;
+            let changedUpper = upperGua, changedLower = lowerGua;
+            if (moveYao <= 3) {
+                changedLower = changeYao(lowerGua, moveYao - 1);
+                bodyGua = upperGua; useGua = lowerGua;
+            } else {
+                changedUpper = changeYao(upperGua, moveYao - 4);
+                bodyGua = lowerGua; useGua = upperGua;
+            }
+            const bianGua = getGuaName(changedUpper, changedLower);
+            const hu = getHuGua(upperGua, lowerGua);
+            const huGua = getGuaName(hu.upper, hu.lower);
+            const relation = getTiyongRelation(bodyGua, useGua);
+            const scoreInfo = getTiyongScore(relation);
+
+            const matterTexts = {
+                'general': '综合运势', 'marriage': '婚姻感情', 'career': '事业前程',
+                'wealth': '财运得失', 'health': '健康疾病', 'travel': '出行远游',
+                'exam': '考试求学', 'lawsuit': '诉讼官司', 'house': '宅居风水', 'lost': '失物寻踪'
+            };
+            const matterName = matterTexts[matter] || '综合';
+
+            let detail = '';
+            detail += `【一、当前状况（本卦）】\n`;
+            detail += `所问「${matterName}」，得卦为：${benGua.name}（${upperGua}上${lowerGua}下）。此卦表事物当前之象。${benGua.meaning}`;
+            detail += `动爻在第 ${moveYao} 爻，表示事态正面临变化的关键节点。\n\n`;
+            detail += `【二、发展过程（互卦）】\n`;
+            detail += `互卦「${huGua.name}」（${hu.upper}上${hu.lower}下），揭示事物中间阶段的内在关联，可能会有一些曲折和变数，需冷静观察，保持耐心。\n\n`;
+            detail += `【三、最终结果（变卦）】\n`;
+            detail += `变卦「${bianGua.name}」（${changedUpper}上${changedLower}下），指向事物的最终走向。${bianGua.meaning}`;
+            if (relation === '用生体' || relation === '体用比和') {
+                detail += `整体形势向好，结果令人满意。`;
+            } else if (relation === '体克用') {
+                detail += `你能够掌控局面，但需付出努力。`;
+            } else if (relation === '体生用') {
+                detail += `结果可能不如预期，但也是宝贵的经验。`;
+            } else {
+                detail += `外部挑战较大，建议暂缓行动或改变策略。`;
+            }
+            detail += `\n\n`;
+            detail += `【四、体用生克分析】\n`;
+            detail += `体卦「${bodyGua}」属${BAGUA[bodyGua].wuxing}，代表你自身；用卦「${useGua}」属${BAGUA[useGua].wuxing}，代表所问之事。二者关系为：${relation}。`;
+            detail += `这表示：${scoreInfo.desc}。`;
+            detail += `五行上，${BAGUA[bodyGua].wuxing}与${BAGUA[useGua].wuxing}之间的关系，直接影响事物的吉凶走向。\n\n`;
+
+            const matterAdvice = {
+                'marriage': `婚姻感情之事，重在缘分与经营。${benGua.name}在此事上暗示：感情需要双方用心呵护，如同栽培花木，需要阳光也需要雨露。体卦代表你自己在感情中的状态，用卦代表对方或感情本身。若体用比和，则两情相悦、性情相投；若用生体，则对方对你有益，感情滋养着你；若体生用，则需你多付出但也是爱的体现；若用克体，则需审视关系中是否存在不和谐因素，多加沟通化解。婚姻之道，贵在包容与成长，卦象只是参考，真心才是根本。`,
+                'career': `事业前程之事，${benGua.name}给出了明确的指引。事业如登山，有坦途也有陡坡，关键是方向正确且坚持不懈。体卦代表你自身的能力和状态，用卦代表事业环境和发展机会。若体克用，说明你有能力主导局面，可以主动争取机会；若用生体，则事业发展对你有利，可能有贵人相助或好运眷顾；若体用比和，则工作环境和谐，适合稳步发展；若体生用，则需付出较多但也是积累；若用克体，则当前环境压力较大，宜积累实力等待时机。记住：事业的成功需要三个要素——能力、机遇和坚持。`,
+                'wealth': `财运得失之事，${benGua.name}揭示了财路的走向。财富如水，流动不居，聚散有时。体卦代表你的财务状况和理财能力，用卦代表外部财运和机会。体用比和时财运平稳，适合稳健理财；用生体时财富自然增长，可能有意外之财或投资获利；体克用时可主动开拓财路，但需付出努力；体生用时需注意开支增多，量入为出；用克体时则需谨慎理财，避免大的投资风险。天地生财有道，君子爱财取之有道。理财最重要的不是赚多少，而是管得住、留得下。`,
+                'health': `健康疾病之事，${benGua.name}提醒你关注身体发出的信号。身体是灵魂的居所，健康是一切的基础。体卦代表你自身的体质和元气，用卦代表外部环境对健康的影响。若体用比和则身心康泰、元气充足；用生体则外部环境有利健康，可适当锻炼增强体质；体克用时身体有抵抗力但也不可大意；体生用时需注意不要过度消耗精力；用克体时需特别关注健康，及时检查、注意休息。八卦对应人体：乾为首、坤为腹、震为足、巽为股、坎为耳、离为目、艮为手、兑为口，可以此参详身体需要注意的部位。预防胜于治疗，养生贵在坚持。`,
+                'travel': `出行远游之事，${benGua.name}为你的旅途提供了参考。在家千日好，出门一时难，出行前做好充分准备总是明智的。体卦代表出行者自身的状态，用卦代表旅途环境和目的地的状况。体用比和则旅途顺利、心情愉快；用生体则此行有收获，可能遇到好事或贵人；体克用时你能掌控行程，但可能有些辛苦；体生用时旅途消耗较大，注意保存体力；用克体时则需格外小心——注意交通安全、保管好财物、避免与人冲突。吉方参考：八卦各有方位（乾西北、坤西南、震东、巽东南、坎北、离南、艮东北、兑西），可根据体卦五行选择有利方向。`,
+                'exam': `考试求学之事，${benGua.name}昭示了学业的前景。学问之道，贵在静心与恒心。体卦代表你的学习状态和知识基础，用卦代表考试或求学的外部环境。体用比和则知识扎实、临场发挥稳定；用生体则有利外部因素加持——可能题目恰好是你擅长的，或得到师长指点；体克用时你有主动权，认真准备则能取得好成绩；体生用时需加倍努力，多下苦功方能如愿；用克体时压力较大，注意调整心态，避免焦虑影响发挥。临阵磨枪不快也光，但真正的学问来自平时的积累。静心静气，沉着应考。`,
+                'lawsuit': `诉讼官司之事，${benGua.name}给出了警示和指引。官司之事，以和为贵，能和解则和解。体卦代表你在这场纠纷中的处境，用卦代表对方或诉讼本身。体用比和则和解有望、双方各退一步；用生体则形势对你有利，结果可能令人满意；体克用时你能占据主动，但也不可盛气凌人；体生用时消耗较大——时间、精力、财力都可能有不少损耗；用克体时形势不利，需谨慎行事，建议寻求专业法律帮助。天水讼卦提醒我们：诉讼有风险，即便赢了也可能得不偿失。退一步海阔天空，冤家宜解不宜结。`,
+                'house': `宅居风水之事，${benGua.name}揭示了居所的气场状况。家是每个人最重要的港湾，宅居的气场直接影响居住者的运势和心情。体卦代表居住者自身的状态，用卦代表宅居环境和风水。体用比和则人与宅和谐，居住舒适，家运兴旺；用生体则此宅对居住者有利，是旺宅之象；体克用时居住者能驾驭宅气，但可能有些小瑕疵需要调整；体生用时宅居消耗主人的精力，可能需要多加维护修缮；用克体时需注意宅居中是否有不利因素——检查采光、通风、布局等是否合理。宅以藏风聚气为贵，整洁明亮、气场流通为吉。`,
+                'lost': `失物寻踪之事，${benGua.name}提供了一些线索。东西丢失难免令人焦急，但越急越难找到。体卦代表失主，用卦代表失物及去向。用生体则失物有望找回——可能在熟悉的地方，或被人捡到后归还；体用比和则失物未远，仔细回忆最后一次见到它的地方；体克用时需要主动寻找，不能被动等待；体生用时寻找消耗较多精力，但也有找到的可能；用克体时失物可能难以寻回，不妨做好心理准备。寻物小贴士：参考八卦方位——回想丢东西时所在地的方位与卦象的对应关系。有时东西其实就在眼前，只是心太急没看见。冷静下来，仔细搜寻。`,
+                'general': `综合运势之事，${benGua.name}为你揭示了整体的运势走向。人生如潮汐，有起有落，顺应自然方能行稳致远。体卦代表你自身的状态和能量，用卦代表你所处的环境和面临的时运。体用比和则内外和谐、诸事顺遂；用生体则好运自来、贵人运佳，正是积极作为的大好时机；体克用时你能掌控局面，但需要付出努力和智慧；体生用时当前多付出、多积累，终将有回报；用克体时外部挑战较大，宜收敛锋芒、韬光养晦，等待天时好转。易道讲的是变化——没有任何一种状态是永恒的。吉时不忘忧患，凶时心存希望。天行健，君子以自强不息；地势坤，君子以厚德载物。`
+            };
+            detail += `【五、具体建议】\n`;
+            detail += `${matterAdvice[matter] || matterAdvice['general']}\n`;
+            if (relation === '用生体') {
+                detail += `当前外部环境对你有利，贵人运佳，宜抓住机会积极作为——但也要保持谦逊。`;
+            } else if (relation === '体用比和') {
+                detail += `事与人和，彼此和谐，只要按部就班，事情自然水到渠成。`;
+            } else if (relation === '体克用') {
+                detail += `你在主导局面，但对方偏强势，适当收敛锋芒，讲究方法则结果可期。`;
+            } else if (relation === '体生用') {
+                detail += `需要付出较多精力，建议合理规划时间，量力而行，必要时寻求帮助。`;
+            } else if (relation === '用克体') {
+                detail += `外部压力较大，建议暂缓行动或改变方向，以柔克刚，等待时机好转。`;
+            }
+            detail += `\n\n`;
+            detail += `【温馨提示】梅花易数以易理为基，结果仅供参详。最终决策取决于你的智慧与行动。敬天地，顺自然，存善念，得吉祥。`;
+
+            let verdictText = '';
+            let verdictClass = '';
+            if (scoreInfo.score >= 70) { verdictText = '可 · 可成'; verdictClass = 'good'; }
+            else if (scoreInfo.score >= 40) { verdictText = '守 · 待时'; verdictClass = 'mid'; }
+            else { verdictText = '慎 · 宜止'; verdictClass = 'bad'; }
+
+            let yingqi = '';
+            if (method === 'time') {
+                const { year, month, day, hour } = params;
+                const total = year + month + day + hour;
+                const num = total % 12;
+                const periods = ['日', '周', '旬', '月', '季'];
+                const idx = Math.min(Math.floor(num / 3), 4);
+                yingqi = `约 ${Math.max(1, num)} ${periods[idx]}`;
+            } else {
+                yingqi = '据具体情境判断';
+            }
+
+            return {
+                benGua, huGua, bianGua, bodyGua, useGua, relation, scoreInfo,
+                verdictText, verdictClass, detail, matterName, moveYao, yingqi,
+                upperGua, lowerGua, changedUpper, changedLower
+            };
+        }
+
+        // ================================================================
+        //  7. UI 渲染
+        // ================================================================
+        function renderResult(data) {
+            const { benGua, huGua, bianGua, bodyGua, useGua, relation, scoreInfo, verdictText,
+                verdictClass, detail, matterName, moveYao, yingqi, upperGua, lowerGua,
+                changedUpper, changedLower } = data;
+
+            const relationMap = {
+                '用生体': '用生体 · 大吉',
+                '体用比和': '体用比和 · 次吉',
+                '体克用': '体克用 · 中平',
+                '体生用': '体生用 · 小凶',
+                '用克体': '用克体 · 大凶'
+            };
+
+            const html = `
+                <div class="result-header">
+                    <h2>🔮 占卜结果</h2>
+                    <div class="time">问：${matterName} · 动爻：${moveYao}  · 应期参考：${yingqi}</div>
+                </div>
+                <div class="trigram-grid">
+                    <div class="trigram-box ${verdictClass === 'good' ? 'highlight' : ''}">
+                        <div class="label">本卦 · 始</div>
+                        <div class="symbol">${BAGUA[upperGua].symbol}${BAGUA[lowerGua].symbol}</div>
+                        <div class="gua-name">${benGua.name}</div>
+                        <div class="gua-trigram">${upperGua}上${lowerGua}下</div>
+                        <div style="font-size:11px;color:var(--text-muted);margin-top:4px;">${benGua.ci}</div>
+                    </div>
+                    <div class="trigram-box">
+                        <div class="label">互卦 · 中</div>
+                        <div class="symbol">${BAGUA[huGua.upper].symbol}${BAGUA[huGua.lower].symbol}</div>
+                        <div class="gua-name">${huGua.name}</div>
+                        <div class="gua-trigram">${huGua.upper}上${huGua.lower}下</div>
+                    </div>
+                    <div class="trigram-box ${verdictClass === 'bad' ? 'highlight' : ''}">
+                        <div class="label">变卦 · 终</div>
+                        <div class="symbol">${BAGUA[changedUpper].symbol}${BAGUA[changedLower].symbol}</div>
+                        <div class="gua-name">${bianGua.name}</div>
+                        <div class="gua-trigram">${changedUpper}上${changedLower}下</div>
+                        <div style="font-size:11px;color:var(--text-muted);margin-top:4px;">${bianGua.ci}</div>
+                    </div>
+                </div>
+                <div class="tiyong-section">
+                    <div class="row-tiyong">
+                        <div class="tiyong-item">
+                            <div class="tag">体卦（你）</div>
+                            <div class="gua">${BAGUA[bodyGua].symbol} ${bodyGua}</div>
+                            <div style="font-size:12px;color:var(--text-tertiary);">${BAGUA[bodyGua].nature} · ${BAGUA[bodyGua].wuxing}</div>
+                        </div>
+                        <div class="tiyong-item">
+                            <div class="tag">体用关系</div>
+                            <div class="relation ${scoreInfo.score >= 70 ? 'good' : scoreInfo.score >= 40 ? '' : 'bad'}">
+                                ${relationMap[relation] || relation}
+                            </div>
+                            <div style="font-size:12px;color:var(--text-tertiary);">${scoreInfo.desc}</div>
+                        </div>
+                        <div class="tiyong-item">
+                            <div class="tag">用卦（事）</div>
+                            <div class="gua">${BAGUA[useGua].symbol} ${useGua}</div>
+                            <div style="font-size:12px;color:var(--text-tertiary);">${BAGUA[useGua].nature} · ${BAGUA[useGua].wuxing}</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="interpretation">
+                    <h3>📜 卦象解读 · ${matterName}</h3>
+                    <div class="verdict ${verdictClass}">⚖️ 断语：${verdictText}</div>
+                    <p style="white-space:pre-line;font-size:14px;line-height:1.9;">${detail}</p>
+                    <div class="info-box">
+                        <strong>🕐 应期参考：</strong>${yingqi}
+                    </div>
+                    <div class="info-box-subtle">
+                        ⚡ 此结果完全由本地算法生成，不依赖任何外部API，纯前端梅花易数推演
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('resultArea').innerHTML = html;
+            document.getElementById('resultArea').style.display = 'block';
+            document.getElementById('resultArea').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        // ================================================================
+        //  8. Claude API 集成
+        // ================================================================
+        const CLAUDE_API_URL = 'https://api.anthropic.com/v1/messages';
+        const CLAUDE_VERSION = '2023-06-01';
+
+        function saveApiKey(key) {
+            try { localStorage.setItem('meihua_claude_key', key); } catch(e) {}
+        }
+        function loadApiKey() {
+            try { return localStorage.getItem('meihua_claude_key') || ''; } catch(e) { return ''; }
+        }
+
+        function buildClaudePrompt(data) {
+            const { benGua, huGua, bianGua, bodyGua, useGua, relation, scoreInfo,
+                matterName, moveYao, yingqi, upperGua, lowerGua, changedUpper, changedLower } = data;
+
+            const bodyInfo = BAGUA[bodyGua];
+            const useInfo = BAGUA[useGua];
+
+            return `你是一位精通梅花易数和易经的占卜大师。请严格依据下列「梅花易数断卦法」的权威框架，结合卦象信息，为用户提供详细、深入、有洞察力的解读。请用优雅的中文，语气平和而睿智。
+
+【梅花易数断卦法·权威依据】
+一、体用生克定大体吉凶（体=问卦者，用=所问之事）：
+  · 用生体 → 大吉（约90%），事必成，有进益之喜
+  · 体用比和 → 次吉（约70%），事易成，两情相投
+  · 体克用 → 中吉（约40-60%），事可成，但需主动争取或耗时
+  · 体生用 → 小凶（约30%以下），事难成，多耗费付出
+  · 用克体 → 大凶（约10%以下），事不成，宜守不宜进
+二、卦气旺衰调节能量强弱（若已知起卦月份，按季节论）：木旺春衰秋、火旺夏衰冬、金旺秋衰夏、水旺冬衰季末月(辰戌丑未)、土旺季末月衰春。体卦旺则力强，体卦衰则纵然体克用，克力也弱、事成打折。
+三、断卦四步骤：①明体用生克定吉凶 ②看卦气旺衰调强弱 ③直读卦象（依八卦象意"讲故事"：本卦=开始/互卦=过程/变卦=结果）④定应期。
+四、应期：有问期以问期为准（问明天即明天）；无问期以"年+月+日+时"成卦数为期，单位（天/周/月）依情理与紧迫度定。
+（乾坤两卦无互卦；断卦以动爻爻辞为主，余爻作了解。）
+
+【用户所问之事】${matterName}
+【起卦方式】以数起卦
+
+【本卦】${benGua.name}（${upperGua}上${lowerGua}下）
+卦辞：${benGua.ci}
+本卦寓意：${benGua.meaning}
+
+【互卦】${huGua.name}（${huGua.upper}上${huGua.lower}下）
+互卦寓意：${huGua.meaning}
+
+【变卦】${bianGua.name}（${changedUpper}上${changedLower}下）
+卦辞：${bianGua.ci}
+变卦寓意：${bianGua.meaning}
+
+【动爻】第 ${moveYao} 爻
+
+【体用分析】
+体卦（代表问卦者）：${bodyGua} — 属${bodyInfo.wuxing}，象征${bodyInfo.nature}，德性为${bodyInfo.virtue}
+用卦（代表所问之事）：${useGua} — 属${useInfo.wuxing}，象征${useInfo.nature}，德性为${useInfo.virtue}
+体用关系：${relation}
+吉凶等级：${scoreInfo.level}（${scoreInfo.desc}）
+综合评分：${scoreInfo.score}/100
+
+【应期参考】${yingqi}
+
+请按以下结构给出解读（请直接输出，不要用JSON格式）：
+
+一、卦象总览
+简要概括本卦、互卦、变卦所揭示的事情发展脉络。
+
+二、深度解卦
+结合卦辞、卦象和体用生克关系，深入分析此卦对"${matterName}"的具体含义。要结合八卦的象征意义（如${bodyGua}为${bodyInfo.nature}、${bodyInfo.virtue}等）进行阐发。
+
+三、体用精析
+详细分析体卦${bodyGua}（${bodyInfo.wuxing}）与用卦${useGua}（${useInfo.wuxing}）之间的${relation}关系（对应吉凶：${scoreInfo.level}），说明这对所问之事的具体影响；并结合卦气旺衰点评体卦当前能量的强弱，据此判断吉凶的"实现程度"（如体旺则力足、体衰则打折）。
+
+四、发展过程
+分析互卦${huGua.name}在事物发展中间阶段的意义，提醒需要注意的变数和应对之策。
+
+五、最终趋向与应期
+分析变卦${bianGua.name}所指向的最终结果或发展趋势，并结合应期（参考：${yingqi}）说明事情大约何时见分晓。
+
+六、具体建议
+给出3-4条具体可行的建议，结合梅花易数的智慧，指导问卦者如何趋吉避凶。
+
+七、总结寄语
+用一段温暖而有力的话语总结，给问卦者信心和方向。
+
+请确保解读深入浅出，既有易经的智慧深度，又能让普通人理解。总共不少于500字。`;
+        }
+
+        async function callClaudeAPI(apiKey, model, prompt) {
+            const response = await fetch(CLAUDE_API_URL, {
+                method: 'POST',
+                headers: {
+                    'x-api-key': apiKey,
+                    'anthropic-version': CLAUDE_VERSION,
+                    'anthropic-dangerous-direct-browser-access': 'true',
+                    'content-type': 'application/json'
+                },
+                body: JSON.stringify({
+                    model: model,
+                    max_tokens: 4000,
+                    messages: [{
+                        role: 'user',
+                        content: prompt
+                    }]
+                })
+            });
+
+            if (!response.ok) {
+                const err = await response.json().catch(() => ({}));
+                const msg = err.error?.message || `HTTP ${response.status}: ${response.statusText}`;
+                throw new Error(msg);
+            }
+
+            const data = await response.json();
+            const textBlock = (data.content || []).find(b => b.type === 'text' && b.text);
+            if (!textBlock) {
+                throw new Error('API 返回了空内容，请重试');
+            }
+            return textBlock.text;
+        }
+
+        function showClaudeError(msg) {
+            const errEl = document.getElementById('claudeError');
+            errEl.textContent = '⚠️ ' + msg;
+            errEl.classList.add('show');
+            setTimeout(() => errEl.classList.remove('show'), 8000);
+        }
+
+        function showClaudeResult(text) {
+            const resultEl = document.getElementById('claudeResult');
+            const contentEl = document.getElementById('claudeContent');
+            // 简单的 Markdown 风格转换
+            let html = text
+                .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+                .replace(/^### (.+)$/gm, '<strong style="font-size:15px;color:var(--text-primary);">$1</strong>')
+                .replace(/^## (.+)$/gm, '<strong style="font-size:16px;color:var(--text-primary);">$1</strong>')
+                .replace(/^# (.+)$/gm, '<strong style="font-size:17px;color:var(--text-primary);">$1</strong>')
+                .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+                .replace(/\*(.+?)\*/g, '<em>$1</em>')
+                .replace(/^[●·•] /gm, '• ')
+                .replace(/^[一二三四五六七八九十]、/gm, '<strong>$&</strong>')
+                .replace(/\n/g, '<br>');
+            contentEl.innerHTML = html;
+            resultEl.classList.add('show');
+            resultEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+
+        // 保存当前占卜结果供 Claude API 使用
+        let currentDivinationData = null;
+
+        // ================================================================
+        //  9. 事件绑定
+        // ================================================================
+        document.addEventListener('DOMContentLoaded', function() {
+            const methodSelect = document.getElementById('method');
+            const btnDivine = document.getElementById('btnDivine');
+
+            function toggleParams() {
+                const method = methodSelect.value;
+                document.querySelectorAll('.method-params').forEach(el => el.classList.add('hidden'));
+                const target = document.querySelector(`.method-params[data-method="${method}"]`);
+                if (target) target.classList.remove('hidden');
+            }
+
+            methodSelect.addEventListener('change', toggleParams);
+            toggleParams();
+
+            btnDivine.addEventListener('click', function() {
+                const method = methodSelect.value;
+                const matter = document.getElementById('matter').value;
+                let params = {};
+                try {
+                    switch (method) {
+                        case 'time': {
+                            const year = parseInt(document.getElementById('year').value) || 2026;
+                            const month = parseInt(document.getElementById('month').value) || 7;
+                            const day = parseInt(document.getElementById('day').value) || 14;
+                            const hour = parseInt(document.getElementById('hour').value) || 7;
+                            if (month < 1 || month > 12 || day < 1 || day > 30 || hour < 1 || hour > 12) {
+                                throw new Error('请正确填写农历年月日时');
+                            }
+                            params = { year, month, day, hour };
+                            break;
+                        }
+                        case 'number': {
+                            const num = parseInt(document.getElementById('numUpper').value) || 3;
+                            const hour = parseInt(document.getElementById('numHour').value) || 7;
+                            if (num < 1) throw new Error('请输入大于0的数字');
+                            params = { num, hour };
+                            break;
+                        }
+                        case 'sound': {
+                            const count = parseInt(document.getElementById('soundCount').value) || 5;
+                            const hour = parseInt(document.getElementById('soundHour').value) || 7;
+                            if (count < 1) throw new Error('请输入大于0的声响次数');
+                            params = { count, hour };
+                            break;
+                        }
+                        case 'word': {
+                            const text = document.getElementById('wordInput').value.trim();
+                            if (!text) throw new Error('请输入文字');
+                            params = { text };
+                            break;
+                        }
+                        default: throw new Error('未知占卜方式');
+                    }
+                    const result = interpret(method, params, matter);
+                    currentDivinationData = result;  // 保存供 Claude API 使用
+                    renderResult(result);
+                    // 重置 Claude 结果
+                    document.getElementById('claudeResult').classList.remove('show');
+                    document.getElementById('claudeError').classList.remove('show');
+                } catch (err) {
+                    alert('⚠️ ' + err.message);
+                }
+            });
+
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter' && e.target.tagName !== 'BUTTON' && e.target.type !== 'password') {
+                    btnDivine.click();
+                }
+            });
+
+            // ===== Claude API 相关事件 =====
+            const apiKeyInput = document.getElementById('apiKey');
+            const btnToggleKey = document.getElementById('btnToggleKey');
+            const btnClaude = document.getElementById('btnClaude');
+            const claudeModel = document.getElementById('claudeModel');
+
+            // 加载已保存的 API Key
+            const savedKey = loadApiKey();
+            if (savedKey) {
+                apiKeyInput.value = savedKey;
+            }
+
+            // 保存 API Key（输入时自动保存）
+            apiKeyInput.addEventListener('input', function() {
+                saveApiKey(apiKeyInput.value.trim());
+            });
+
+            // API Key 显示/隐藏切换
+            btnToggleKey.addEventListener('click', function() {
+                const isPassword = apiKeyInput.type === 'password';
+                apiKeyInput.type = isPassword ? 'text' : 'password';
+                btnToggleKey.textContent = isPassword ? '🙈 隐藏' : '👁 显示';
+            });
+
+            // Claude AI 解读按钮
+            btnClaude.addEventListener('click', async function() {
+                const apiKey = apiKeyInput.value.trim();
+                if (!apiKey) {
+                    showClaudeError('请先输入 Anthropic API Key（在 console.anthropic.com 获取）');
+                    apiKeyInput.focus();
+                    return;
+                }
+                if (!apiKey.startsWith('sk-ant-')) {
+                    showClaudeError('API Key 格式不正确，应以 sk-ant- 开头');
+                    return;
+                }
+                if (!currentDivinationData) {
+                    showClaudeError('请先点击「起卦」按钮，生成卦象后再使用 AI 解读');
+                    return;
+                }
+
+                // 开始加载
+                btnClaude.classList.add('loading');
+                btnClaude.disabled = true;
+                document.getElementById('claudeError').classList.remove('show');
+                document.getElementById('claudeResult').classList.remove('show');
+
+                try {
+                    const prompt = buildClaudePrompt(currentDivinationData);
+                    const model = claudeModel.value;
+                    const result = await callClaudeAPI(apiKey, model, prompt);
+                    showClaudeResult(result);
+                } catch (err) {
+                    let msg = err.message;
+                    if (msg.includes('401') || msg.includes('authentication') || msg.includes('invalid')) {
+                        msg = 'API Key 无效或已过期，请检查后重试。';
+                    } else if (msg.includes('429') || msg.includes('rate')) {
+                        msg = 'API 请求频率过高，请稍后再试。';
+                    } else if (msg.includes('5')) {
+                        msg = 'Anthropic 服务器暂时出现问题，请稍后再试。';
+                    } else if (msg.includes('Failed to fetch') || msg.includes('NetworkError')) {
+                        msg = '网络连接失败，请检查网络或尝试使用代理。';
+                    }
+                    showClaudeError(msg);
+                } finally {
+                    btnClaude.classList.remove('loading');
+                    btnClaude.disabled = false;
+                }
+            });
+
+            // 默认自动起一卦
+            setTimeout(() => { btnDivine.click(); }, 300);
+        });
+    </script>
+</body>
+</html>
