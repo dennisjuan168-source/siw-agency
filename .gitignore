@@ -1,1 +1,4 @@
 _backup/
+
+.streamlit/secrets.toml
+*.secrets.toml
