@@ -151,6 +151,7 @@ st.sidebar.markdown('<div style="font-size:14px;font-weight:700;color:#00AEEF;ma
 st.sidebar.radio(
     "议题资料库", ["TGV内壁Ra", "TGV应力分析"],
     index=None, label_visibility="collapsed", key="db_topic",
+    format_func=lambda x: f"{x}(V1)",   # 显示加(V1)后缀，内部值不变（不影响知识注入/横幅）
 )
 
 
